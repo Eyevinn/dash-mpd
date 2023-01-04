@@ -1,26 +1,29 @@
 package mpd
 
-// MPD is root
+// MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
+//
+// The tree of structs is generatd from the corresponding XML Schema at https://github.com/MPEGGroup/DASHSchema
+// but fine-tuned manually to handle default cases, listinig enumerals, inserting simple types and name space for xlink.
+
 type MPD struct {
-	XMLNs string `xml:"xmlns,attr,omitempty"`
-	//XMLNsXSI                   string                     `xml:"xmlns:xsi,attr,omitempty"`
+	XMLNs                      string                     `xml:"xmlns,attr,omitempty"`
 	SchemaLocation             string                     `xml:"http://www.w3.org/2001/XMLSchema-instance xsi:schemaLocation,attr"`
 	Id                         string                     `xml:"id,attr,omitempty"`
-	Profiles                   string                     `xml:"profiles,attr"`
-	Type                       string                     `xml:"type,attr,omitempty"`
-	AvailabilityStartTime      string                     `xml:"availabilityStartTime,attr,omitempty"`
-	AvailabilityEndTime        string                     `xml:"availabilityEndTime,attr,omitempty"`
-	PublishTime                string                     `xml:"publishTime,attr,omitempty"`
-	MediaPresentationDuration  string                     `xml:"mediaPresentationDuration,attr,omitempty"`
-	MinimumUpdatePeriod        string                     `xml:"minimumUpdatePeriod,attr,omitempty"`
-	MinBufferTime              string                     `xml:"minBufferTime,attr"`
-	TimeShiftBufferDepth       string                     `xml:"timeShiftBufferDepth,attr,omitempty"`
-	SuggestedPresentationDelay string                     `xml:"suggestedPresentationDelay,attr,omitempty"`
-	MaxSegmentDuration         string                     `xml:"maxSegmentDuration,attr,omitempty"`
-	MaxSubsegmentDuration      string                     `xml:"maxSubsegmentDuration,attr,omitempty"`
+	Profiles                   ListOfProfilesType         `xml:"profiles,attr"`
+	Type                       *string                    `xml:"type,attr,omitempty"` // Optional with default "static"
+	AvailabilityStartTime      DateTime                   `xml:"availabilityStartTime,attr,omitempty"`
+	AvailabilityEndTime        DateTime                   `xml:"availabilityEndTime,attr,omitempty"`
+	PublishTime                DateTime                   `xml:"publishTime,attr,omitempty"`
+	MediaPresentationDuration  Duration                   `xml:"mediaPresentationDuration,attr,omitempty"`
+	MinimumUpdatePeriod        Duration                   `xml:"minimumUpdatePeriod,attr,omitempty"`
+	MinBufferTime              Duration                   `xml:"minBufferTime,attr"`
+	TimeShiftBufferDepth       Duration                   `xml:"timeShiftBufferDepth,attr,omitempty"`
+	SuggestedPresentationDelay Duration                   `xml:"suggestedPresentationDelay,attr,omitempty"`
+	MaxSegmentDuration         Duration                   `xml:"maxSegmentDuration,attr,omitempty"`
+	MaxSubsegmentDuration      Duration                   `xml:"maxSubsegmentDuration,attr,omitempty"`
 	ProgramInformation         []*ProgramInformationType  `xml:"ProgramInformation"`
 	BaseURL                    []*BaseURLType             `xml:"BaseURL"`
-	Location                   []string                   `xml:"Location"`
+	Location                   []AnyURI                   `xml:"Location"`
 	PatchLocation              []*PatchLocationType       `xml:"PatchLocation"`
 	ServiceDescription         []*ServiceDescriptionType  `xml:"ServiceDescription"`
 	InitializationSet          []*InitializationSetType   `xml:"InitializationSet"`
@@ -35,25 +38,22 @@ type MPD struct {
 	LeapSecondInformation      *LeapSecondInformationType `xml:"LeapSecondInformation"`
 }
 
-// PatchLocationType is Patch Location Type
+// PatchLocationType is Patch Location Type.
 type PatchLocationType struct {
 	Ttl   float64 `xml:"ttl,attr,omitempty"`
-	Value string  `xml:",chardata"`
+	Value AnyURI  `xml:",chardata"`
 }
 
-// PresentationType is Presentation Type enumeration
-type PresentationType string
-
-// PeriodType is Period
+// PeriodType is Period.
 type PeriodType struct {
-	XlinkHref            string                    `xml:"xlink:href,attr,omitempty"`
-	XlinkActuate         string                    `xml:"xlink:actuate,attr,omitempty"`
-	XlinkType            string                    `xml:"xlink:type,attr,omitempty"`
-	XlinkShow            string                    `xml:"xlink:show,attr,omitempty"`
+	XlinkHref            string                    `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
+	XlinkActuate         string                    `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
+	XlinkType            string                    `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
+	XlinkShow            string                    `xml:"http://www.w3.org/1999/xlink xlink:show,attr,omitempty"`    // fixed = "embed"
 	Id                   string                    `xml:"id,attr,omitempty"`
-	Start                string                    `xml:"start,attr,omitempty"`
-	Duration             string                    `xml:"duration,attr,omitempty"`
-	BitstreamSwitching   bool                      `xml:"bitstreamSwitching,attr,omitempty"`
+	Start                Duration                  `xml:"start,attr,omitempty"`
+	Duration             Duration                  `xml:"duration,attr,omitempty"`
+	BitstreamSwitching   *bool                     `xml:"bitstreamSwitching,attr"`
 	BaseURL              []*BaseURLType            `xml:"BaseURL"`
 	SegmentBase          *SegmentBaseType          `xml:"SegmentBase"`
 	SegmentList          *SegmentListType          `xml:"SegmentList"`
@@ -70,54 +70,51 @@ type PeriodType struct {
 	Preselection         []*PreselectionType       `xml:"Preselection"`
 }
 
-// EventStreamType is Event Stream
+// EventStreamType is Event Stream.
 type EventStreamType struct {
-	XlinkHref              string       `xml:"xlink:href,attr,omitempty"`
-	XlinkActuate           string       `xml:"xlink:actuate,attr,omitempty"`
-	XlinkType              string       `xml:"xlink:type,attr,omitempty"`
-	XlinkShow              string       `xml:"xlink:show,attr,omitempty"`
-	SchemeIdUri            string       `xml:"schemeIdUri,attr"`
+	XlinkHref              string       `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
+	XlinkActuate           string       `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
+	XlinkType              string       `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
+	XlinkShow              string       `xml:"http://www.w3.org/1999/xlink xlink:show,attr,omitempty"`    // fixed = "embed"
+	SchemeIdUri            AnyURI       `xml:"schemeIdUri,attr"`
 	Value                  string       `xml:"value,attr,omitempty"`
 	Timescale              uint32       `xml:"timescale,attr,omitempty"`
-	PresentationTimeOffset uint64       `xml:"presentationTimeOffset,attr,omitempty"`
+	PresentationTimeOffset uint64       `xml:"presentationTimeOffset,attr,omitempty"` // default is 0
 	Event                  []*EventType `xml:"Event"`
 }
 
-// EventType is Event
+// EventType is Event.
 type EventType struct {
-	PresentationTime uint64 `xml:"presentationTime,attr,omitempty"`
-	Duration         uint64 `xml:"duration,attr,omitempty"`
-	Id               uint32 `xml:"id,attr,omitempty"`
-	ContentEncoding  string `xml:"contentEncoding,attr,omitempty"`
-	MessageData      string `xml:"messageData,attr,omitempty"`
+	PresentationTime uint64              `xml:"presentationTime,attr,omitempty"` // default is 0
+	Duration         uint64              `xml:"duration,attr,omitempty"`
+	Id               uint32              `xml:"id,attr"`
+	ContentEncoding  ContentEncodingType `xml:"contentEncoding,attr,omitempty"`
+	MessageData      string              `xml:"messageData,attr,omitempty"`
 }
 
-// ContentEncodingType is Event Coding
-type ContentEncodingType string
-
-// InitializationSetType is Initialization Set
+// InitializationSetType is Initialization Set.
 type InitializationSetType struct {
-	XlinkHref      string            `xml:"xlink:href,attr,omitempty"`
-	XlinkActuate   string            `xml:"xlink:actuate,attr,omitempty"`
-	XlinkType      string            `xml:"xlink:type,attr,omitempty"`
-	Id             uint32            `xml:"id,attr"`
-	InAllPeriods   bool              `xml:"inAllPeriods,attr,omitempty"`
-	ContentType    string            `xml:"contentType,attr,omitempty"`
-	Par            string            `xml:"par,attr,omitempty"`
-	MaxWidth       uint32            `xml:"maxWidth,attr,omitempty"`
-	MaxHeight      uint32            `xml:"maxHeight,attr,omitempty"`
-	MaxFrameRate   string            `xml:"maxFrameRate,attr,omitempty"`
-	Initialization string            `xml:"initialization,attr,omitempty"`
-	Accessibility  []*DescriptorType `xml:"Accessibility"`
-	Role           []*DescriptorType `xml:"Role"`
-	Rating         []*DescriptorType `xml:"Rating"`
-	Viewpoint      []*DescriptorType `xml:"Viewpoint"`
+	XlinkHref      string                 `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
+	XlinkActuate   string                 `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
+	XlinkType      string                 `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
+	Id             uint32                 `xml:"id,attr"`
+	InAllPeriods   *bool                  `xml:"inAllPeriods,attr"` // default is true
+	ContentType    RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
+	Par            RatioType              `xml:"par,attr,omitempty"`
+	MaxWidth       uint32                 `xml:"maxWidth,attr,omitempty"`
+	MaxHeight      uint32                 `xml:"maxHeight,attr,omitempty"`
+	MaxFrameRate   string                 `xml:"maxFrameRate,attr,omitempty"`
+	Initialization AnyURI                 `xml:"initialization,attr,omitempty"`
+	Accessibility  []*DescriptorType      `xml:"Accessibility"`
+	Role           []*DescriptorType      `xml:"Role"`
+	Rating         []*DescriptorType      `xml:"Rating"`
+	Viewpoint      []*DescriptorType      `xml:"Viewpoint"`
 	*RepresentationBaseType
 }
 
-// ServiceDescriptionType is Service Description
+// ServiceDescriptionType is Service Description.
 type ServiceDescriptionType struct {
-	Id                 uint32                    `xml:"id,attr,omitempty"`
+	Id                 uint32                    `xml:"id,attr"`
 	Scope              []*DescriptorType         `xml:"Scope"`
 	Latency            []*LatencyType            `xml:"Latency"`
 	PlaybackRate       []*PlaybackRateType       `xml:"PlaybackRate"`
@@ -125,67 +122,64 @@ type ServiceDescriptionType struct {
 	OperatingBandwidth []*OperatingBandwidthType `xml:"OperatingBandwidth"`
 }
 
-// LatencyType is Service Description Latency
+// LatencyType is Service Description Latency (Annex K.4.2.2).
 type LatencyType struct {
-	ReferenceId    uint32                 `xml:"referenceId,attr,omitempty"`
-	Target         uint32                 `xml:"target,attr,omitempty"`
-	Max            uint32                 `xml:"max,attr,omitempty"`
-	Min            uint32                 `xml:"min,attr,omitempty"`
+	ReferenceId    uint32                 `xml:"referenceId,attr"`
+	Target         *uint32                `xml:"target,attr"`
+	Max            *uint32                `xml:"max,attr"`
+	Min            *uint32                `xml:"min,attr"`
 	QualityLatency []*UIntPairsWithIDType `xml:"QualityLatency"`
 }
 
-// PlaybackRateType is Service Description Playback Rate
+// PlaybackRateType is Service Description Playback Rate.
 type PlaybackRateType struct {
 	Max float64 `xml:"max,attr,omitempty"`
 	Min float64 `xml:"min,attr,omitempty"`
 }
 
-// OperatingQualityType is Service Description Operating Quality
+// OperatingQualityType is Service Description Operating Quality.
 type OperatingQualityType struct {
-	MediaType     string `xml:"mediaType,attr,omitempty"`
+	MediaType     string `xml:"mediaType,attr,omitempty"` // default is "any"
 	Min           uint32 `xml:"min,attr,omitempty"`
 	Max           uint32 `xml:"max,attr,omitempty"`
 	Target        uint32 `xml:"target,attr,omitempty"`
-	Type          string `xml:"type,attr,omitempty"`
+	Type          AnyURI `xml:"type,attr,omitempty"`
 	MaxDifference uint32 `xml:"maxDifference,attr,omitempty"`
 }
 
-// OperatingBandwidthType is Service Description Operating Bandwidth
+// OperatingBandwidthType is Service Description Operating Bandwidth.
 type OperatingBandwidthType struct {
-	MediaType string `xml:"mediaType,attr,omitempty"`
+	MediaType string `xml:"mediaType,attr,omitempty"` // default is "all"
 	Min       uint32 `xml:"min,attr,omitempty"`
 	Max       uint32 `xml:"max,attr,omitempty"`
 	Target    uint32 `xml:"target,attr,omitempty"`
 }
 
-// UIntPairsWithIDType is UInt Pairs With ID
+// UIntPairsWithIDType is UInt Pairs With ID.
 type UIntPairsWithIDType struct {
-	Type string `xml:"type,attr,omitempty"`
+	Type AnyURI `xml:"type,attr,omitempty"`
 	*UIntVectorType
 }
 
 // UIntVWithIDType is UInt Vector With ID
 type UIntVWithIDType struct {
-	Id          uint32 `xml:"id,attr"`
-	Profiles    string `xml:"profiles,attr,omitempty"`
-	ContentType string `xml:"contentType,attr,omitempty"`
+	Id          uint32                 `xml:"id,attr"`
+	Profiles    ListOfProfilesType     `xml:"profiles,attr,omitempty"`
+	ContentType RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
 	*UIntVectorType
 }
 
-// ListOfProfilesType is List of Profiles
-type ListOfProfilesType string
-
-// AdaptationSetType is Adaptation Set
+// AdaptationSetType is Adaptation Set.
 type AdaptationSetType struct {
 	XlinkHref               string                  `xml:"xlink:href,attr,omitempty"`
-	XlinkActuate            string                  `xml:"xlink:actuate,attr,omitempty"`
-	XlinkType               string                  `xml:"xlink:type,attr,omitempty"`
-	XlinkShow               string                  `xml:"xlink:show,attr,omitempty"`
-	Id                      uint32                  `xml:"id,attr,omitempty"`
+	XlinkActuate            string                  `xml:"xlink:actuate,attr,omitempty"` // default is "onRequest"
+	XlinkType               string                  `xml:"xlink:type,attr,omitempty"`    // fixed "simple"
+	XlinkShow               string                  `xml:"xlink:show,attr,omitempty"`    // fixed "embed"
+	Id                      *uint32                 `xml:"id,attr"`
 	Group                   uint32                  `xml:"group,attr,omitempty"`
 	Lang                    string                  `xml:"lang,attr,omitempty"`
-	ContentType             string                  `xml:"contentType,attr,omitempty"`
-	Par                     string                  `xml:"par,attr,omitempty"`
+	ContentType             RFC6838ContentTypeType  `xml:"contentType,attr,omitempty"`
+	Par                     RatioType               `xml:"par,attr,omitempty"`
 	MinBandwidth            uint32                  `xml:"minBandwidth,attr,omitempty"`
 	MaxBandwidth            uint32                  `xml:"maxBandwidth,attr,omitempty"`
 	MinWidth                uint32                  `xml:"minWidth,attr,omitempty"`
@@ -194,12 +188,12 @@ type AdaptationSetType struct {
 	MaxHeight               uint32                  `xml:"maxHeight,attr,omitempty"`
 	MinFrameRate            string                  `xml:"minFrameRate,attr,omitempty"`
 	MaxFrameRate            string                  `xml:"maxFrameRate,attr,omitempty"`
-	SegmentAlignment        bool                    `xml:"segmentAlignment,attr,omitempty"`
-	SubsegmentAlignment     bool                    `xml:"subsegmentAlignment,attr,omitempty"`
-	SubsegmentStartsWithSAP uint32                  `xml:"subsegmentStartsWithSAP,attr,omitempty"`
-	BitstreamSwitching      bool                    `xml:"bitstreamSwitching,attr,omitempty"`
+	SegmentAlignment        bool                    `xml:"segmentAlignment,attr,omitempty"`        // default = false
+	SubsegmentAlignment     bool                    `xml:"subsegmentAlignment,attr,omitempty"`     // default = false
+	SubsegmentStartsWithSAP uint32                  `xml:"subsegmentStartsWithSAP,attr,omitempty"` // default = 0
+	BitstreamSwitching      *bool                   `xml:"bitstreamSwitching,attr"`
 	InitializationSetRef    *UIntVectorType         `xml:"initializationSetRef,attr,omitempty"`
-	InitializationPrincipal string                  `xml:"initializationPrincipal,attr,omitempty"`
+	InitializationPrincipal AnyURI                  `xml:"initializationPrincipal,attr,omitempty"`
 	Accessibility           []*DescriptorType       `xml:"Accessibility"`
 	Role                    []*DescriptorType       `xml:"Role"`
 	Rating                  []*DescriptorType       `xml:"Rating"`
@@ -213,33 +207,24 @@ type AdaptationSetType struct {
 	*RepresentationBaseType
 }
 
-// RatioType is Ratio Type for sar and par
-type RatioType string
-
-// FrameRateType is Type for Frame Rate
-type FrameRateType string
-
-// RFC6838ContentTypeType is Type for RFC6838 Content Type
-type RFC6838ContentTypeType string
-
-// ContentComponentType is Content Component
+// ContentComponentType is Content Component.
 type ContentComponentType struct {
-	Id            uint32            `xml:"id,attr,omitempty"`
-	Lang          string            `xml:"lang,attr,omitempty"`
-	ContentType   string            `xml:"contentType,attr,omitempty"`
-	Par           string            `xml:"par,attr,omitempty"`
-	Tag           string            `xml:"tag,attr,omitempty"`
-	Accessibility []*DescriptorType `xml:"Accessibility"`
-	Role          []*DescriptorType `xml:"Role"`
-	Rating        []*DescriptorType `xml:"Rating"`
-	Viewpoint     []*DescriptorType `xml:"Viewpoint"`
+	Id            *uint32                `xml:"id,attr"`
+	Lang          string                 `xml:"lang,attr,omitempty"`
+	ContentType   RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
+	Par           RatioType              `xml:"par,attr,omitempty"`
+	Tag           string                 `xml:"tag,attr,omitempty"`
+	Accessibility []*DescriptorType      `xml:"Accessibility"`
+	Role          []*DescriptorType      `xml:"Role"`
+	Rating        []*DescriptorType      `xml:"Rating"`
+	Viewpoint     []*DescriptorType      `xml:"Viewpoint"`
 }
 
-// RepresentationType is Representation
+// RepresentationType is Representation.
 type RepresentationType struct {
 	Id                     string                   `xml:"id,attr"`
 	Bandwidth              uint32                   `xml:"bandwidth,attr"`
-	QualityRanking         uint32                   `xml:"qualityRanking,attr,omitempty"`
+	QualityRanking         *uint32                  `xml:"qualityRanking,attr,omitempty"`
 	DependencyId           *StringVectorType        `xml:"dependencyId,attr,omitempty"`
 	AssociationId          *StringVectorType        `xml:"associationId,attr,omitempty"`
 	AssociationType        *ListOf4CCType           `xml:"associationType,attr,omitempty"`
@@ -255,35 +240,32 @@ type RepresentationType struct {
 
 // ExtendedBandwidthType is Extended Bandwidth Model
 type ExtendedBandwidthType struct {
-	Vbr       bool             `xml:"vbr,attr,omitempty"`
+	Vbr       bool             `xml:"vbr,attr,omitempty"` // default is false
 	ModelPair []*ModelPairType `xml:"ModelPair"`
 }
 
 // ModelPairType is Model Pair
 type ModelPairType struct {
-	BufferTime string `xml:"bufferTime,attr"`
-	Bandwidth  uint32 `xml:"bandwidth,attr"`
+	BufferTime Duration `xml:"bufferTime,attr"`
+	Bandwidth  uint32   `xml:"bandwidth,attr"`
 }
-
-// StringNoWhitespaceType is String without white spaces
-type StringNoWhitespaceType string
 
 // SubRepresentationType is SubRepresentation
 type SubRepresentationType struct {
-	Level            uint32            `xml:"level,attr,omitempty"`
+	Level            *uint32           `xml:"level,attr,omitempty"`
 	DependencyLevel  *UIntVectorType   `xml:"dependencyLevel,attr,omitempty"`
 	Bandwidth        uint32            `xml:"bandwidth,attr,omitempty"`
 	ContentComponent *StringVectorType `xml:"contentComponent,attr,omitempty"`
 	*RepresentationBaseType
 }
 
-// RepresentationBaseType is Representation base (common attributes and elements)
+// RepresentationBaseType is Representation base (common attributes and elements).
 type RepresentationBaseType struct {
-	Profiles                  string                       `xml:"profiles,attr,omitempty"`
+	Profiles                  ListOfProfilesType           `xml:"profiles,attr,omitempty"`
 	Width                     uint32                       `xml:"width,attr,omitempty"`
 	Height                    uint32                       `xml:"height,attr,omitempty"`
-	Sar                       string                       `xml:"sar,attr,omitempty"`
-	FrameRate                 string                       `xml:"frameRate,attr,omitempty"`
+	Sar                       RatioType                    `xml:"sar,attr,omitempty"`
+	FrameRate                 FrameRateType                `xml:"frameRate,attr,omitempty"`
 	AudioSamplingRate         *UIntVectorType              `xml:"audioSamplingRate,attr,omitempty"`
 	MimeType                  string                       `xml:"mimeType,attr,omitempty"`
 	SegmentProfiles           *ListOf4CCType               `xml:"segmentProfiles,attr,omitempty"`
@@ -292,9 +274,9 @@ type RepresentationBaseType struct {
 	MaximumSAPPeriod          float64                      `xml:"maximumSAPPeriod,attr,omitempty"`
 	StartWithSAP              uint32                       `xml:"startWithSAP,attr,omitempty"`
 	MaxPlayoutRate            float64                      `xml:"maxPlayoutRate,attr,omitempty"`
-	CodingDependency          bool                         `xml:"codingDependency,attr,omitempty"`
-	ScanType                  string                       `xml:"scanType,attr,omitempty"`
-	SelectionPriority         uint32                       `xml:"selectionPriority,attr,omitempty"`
+	CodingDependency          *bool                        `xml:"codingDependency,attr,omitempty"`
+	ScanType                  VideoScanType                `xml:"scanType,attr,omitempty"`
+	SelectionPriority         *uint32                      `xml:"selectionPriority,attr"` // default = 1
 	Tag                       string                       `xml:"tag,attr,omitempty"`
 	FramePacking              []*DescriptorType            `xml:"FramePacking"`
 	AudioChannelConfiguration []*DescriptorType            `xml:"AudioChannelConfiguration"`
@@ -312,7 +294,7 @@ type RepresentationBaseType struct {
 	Resync                    []*ResyncType                `xml:"Resync"`
 }
 
-// ContentProtectionType is Content Protection
+// ContentProtectionType is Content Protection.
 type ContentProtectionType struct {
 	Robustness string `xml:"robustness,attr,omitempty"`
 	RefId      string `xml:"refId,attr,omitempty"`
@@ -320,76 +302,64 @@ type ContentProtectionType struct {
 	*DescriptorType
 }
 
-// ResyncType is Resynchronization Point
+// ResyncType is Resynchronization Point.
 type ResyncType struct {
-	Type   uint32  `xml:"type,attr,omitempty"`
-	DT     uint32  `xml:"dT,attr,omitempty"`
-	DImax  float32 `xml:"dImax,attr,omitempty"`
-	DImin  float32 `xml:"dImin,attr,omitempty"`
-	Marker bool    `xml:"marker,attr,omitempty"`
+	Type   uint32   `xml:"type,attr"` // default = 0
+	DT     *uint32  `xml:"dT,attr"`
+	DImax  *float32 `xml:"dImax,attr"`
+	DImin  float32  `xml:"dImin,attr"`  // default = 0
+	Marker bool     `xml:"marker,attr"` // default = false
 }
 
-// PR ...
+// PR is PR element defined in Table 47.
 type PR struct {
-	PopularityRate uint32 `xml:"popularityRate,attr,omitempty"`
-	Start          uint64 `xml:"start,attr,omitempty"`
-	R              int    `xml:"r,attr,omitempty"`
+	PopularityRate uint32  `xml:"popularityRate,attr"`
+	Start          *uint64 `xml:"start,attr"`
+	R              int     `xml:"r,attr,omitempty"` // default = 0
 }
 
-// ContentPopularityRateType is Content Popularity Rate
+// ContentPopularityRateType is Content Popularity Rate.
 type ContentPopularityRateType struct {
 	Source            string `xml:"source,attr"`
 	Sourcedescription string `xml:"source_description,attr,omitempty"`
 	PR                []*PR  `xml:"PR"`
 }
 
-// LabelType is Label and Group Label
+// LabelType is Label and Group Label.
 type LabelType struct {
-	Id    uint32 `xml:"id,attr,omitempty"`
+	Id    uint32 `xml:"id,attr,omitempty"` // default = 0
 	Lang  string `xml:"lang,attr,omitempty"`
 	Value string `xml:",chardata"`
 }
 
-// ProducerReferenceTimeType is Producer Reference time
+// ProducerReferenceTimeType is Producer Reference time.
 type ProducerReferenceTimeType struct {
-	Id                uint32          `xml:"id,attr"`
-	Inband            bool            `xml:"inband,attr,omitempty"`
-	Type              string          `xml:"type,attr,omitempty"`
-	ApplicationScheme string          `xml:"applicationScheme,attr,omitempty"`
-	WallClockTime     string          `xml:"wallClockTime,attr"`
-	PresentationTime  uint64          `xml:"presentationTime,attr"`
-	UTCTiming         *DescriptorType `xml:"UTCTiming"`
+	Id                uint32                        `xml:"id,attr"`
+	Inband            bool                          `xml:"inband,attr,omitempty"` // default = false
+	Type              ProducerReferenceTimeTypeType `xml:"type,attr,omitempty"`   // default = encoder
+	ApplicationScheme string                        `xml:"applicationScheme,attr,omitempty"`
+	WallClockTime     string                        `xml:"wallClockTime,attr"`
+	PresentationTime  uint64                        `xml:"presentationTime,attr"`
+	UTCTiming         *DescriptorType               `xml:"UTCTiming"`
 }
 
-// ProducerReferenceTimeTypeType ...
-type ProducerReferenceTimeTypeType string
-
-// PreselectionType is Preselection
+// PreselectionType is Preselection.
 type PreselectionType struct {
-	Id                     string            `xml:"id,attr,omitempty"`
-	PreselectionComponents *StringVectorType `xml:"preselectionComponents,attr"`
-	Lang                   string            `xml:"lang,attr,omitempty"`
-	Order                  string            `xml:"order,attr,omitempty"`
-	Accessibility          []*DescriptorType `xml:"Accessibility"`
-	Role                   []*DescriptorType `xml:"Role"`
-	Rating                 []*DescriptorType `xml:"Rating"`
-	Viewpoint              []*DescriptorType `xml:"Viewpoint"`
+	Id                     string                `xml:"id,attr,omitempty"` // default = "1"
+	PreselectionComponents *StringVectorType     `xml:"preselectionComponents,attr"`
+	Lang                   string                `xml:"lang,attr,omitempty"`
+	Order                  PreselectionOrderType `xml:"order,attr,omitempty"`
+	Accessibility          []*DescriptorType     `xml:"Accessibility"`
+	Role                   []*DescriptorType     `xml:"Role"`
+	Rating                 []*DescriptorType     `xml:"Rating"`
+	Viewpoint              []*DescriptorType     `xml:"Viewpoint"`
 	*RepresentationBaseType
 }
 
-// AudioSamplingRateType is Audio Sampling Rate
+// AudioSamplingRateType is UIntVectorType with 1 or 2 components.
 type AudioSamplingRateType *UIntVectorType
 
-// SAPType is Stream Access Point type enumeration
-type SAPType uint32
-
-// VideoScanType is Video Scan type enumeration
-type VideoScanType string
-
-// TagType is Tag
-type TagType string
-
-// SubsetType is Subset
+// SubsetType is Subset.
 type SubsetType struct {
 	Contains *UIntVectorType `xml:"contains,attr"`
 	Id       string          `xml:"id,attr,omitempty"`
@@ -397,91 +367,85 @@ type SubsetType struct {
 
 // SwitchingType is Switching
 type SwitchingType struct {
-	Interval uint32 `xml:"interval,attr"`
-	Type     string `xml:"type,attr,omitempty"`
+	Interval uint32            `xml:"interval"`
+	Type     SwitchingTypeType `xml:"type,attr,omitempty"` // default = "media"
 }
 
-// SwitchingTypeType is Switching Type type enumeration
+// SwitchingTypeType is enumeration "media", "bitstream".
 type SwitchingTypeType string
 
 // RandomAccessType is Random Access
 type RandomAccessType struct {
-	Interval      uint32 `xml:"interval,attr"`
-	Type          string `xml:"type,attr,omitempty"`
-	MinBufferTime string `xml:"minBufferTime,attr,omitempty"`
-	Bandwidth     uint32 `xml:"bandwidth,attr,omitempty"`
+	Interval      uint32               `xml:"interval,attr"`
+	Type          RandomAccessTypeType `xml:"type,attr,omitempty"` // default = "closed"
+	MinBufferTime Duration             `xml:"minBufferTime,attr,omitempty"`
+	Bandwidth     uint32               `xml:"bandwidth,attr,omitempty"`
 }
 
-// RandomAccessTypeType is Random Access Type type enumeration
+// RandomAccessTypeType is enumeration "closed", "open", "gradual".
 type RandomAccessTypeType string
 
-// PreselectionOrderType is Preselection Order type
-type PreselectionOrderType string
-
-// SegmentBaseType is Segment information base
+// SegmentBaseType is Segment information base.
 type SegmentBaseType struct {
 	Timescale                uint32               `xml:"timescale,attr,omitempty"`
-	EptDelta                 int                  `xml:"eptDelta,attr,omitempty"`
-	PdDelta                  int                  `xml:"pdDelta,attr,omitempty"`
-	PresentationTimeOffset   uint64               `xml:"presentationTimeOffset,attr,omitempty"`
-	PresentationDuration     uint64               `xml:"presentationDuration,attr,omitempty"`
-	TimeShiftBufferDepth     string               `xml:"timeShiftBufferDepth,attr,omitempty"`
+	EptDelta                 *int                 `xml:"eptDelta,attr"`
+	PdDelta                  *int                 `xml:"pdDelta,attr"`
+	PresentationTimeOffset   *uint64              `xml:"presentationTimeOffset,attr,omitempty"`
+	PresentationDuration     *uint64              `xml:"presentationDuration,attr,omitempty"`
+	TimeShiftBufferDepth     Duration             `xml:"timeShiftBufferDepth,attr,omitempty"`
 	IndexRange               string               `xml:"indexRange,attr,omitempty"`
 	IndexRangeExact          bool                 `xml:"indexRangeExact,attr,omitempty"`
 	AvailabilityTimeOffset   float64              `xml:"availabilityTimeOffset,attr,omitempty"`
-	AvailabilityTimeComplete bool                 `xml:"availabilityTimeComplete,attr,omitempty"`
+	AvailabilityTimeComplete *bool                `xml:"availabilityTimeComplete,attr"`
 	Initialization           *URLType             `xml:"Initialization"`
 	RepresentationIndex      *URLType             `xml:"RepresentationIndex"`
 	FailoverContent          *FailoverContentType `xml:"FailoverContent"`
 }
 
-// MultipleSegmentBaseType is Multiple Segment information base
+// MultipleSegmentBaseType is Multiple Segment information base.
 type MultipleSegmentBaseType struct {
-	Duration           uint32               `xml:"duration,attr,omitempty"`
-	StartNumber        uint32               `xml:"startNumber,attr,omitempty"`
-	EndNumber          uint32               `xml:"endNumber,attr,omitempty"`
+	Duration           *uint32              `xml:"duration,attr"`
+	StartNumber        *uint32              `xml:"startNumber,attr"`
+	EndNumber          *uint32              `xml:"endNumber,attr"`
 	SegmentTimeline    *SegmentTimelineType `xml:"SegmentTimeline"`
 	BitstreamSwitching *URLType             `xml:"BitstreamSwitching"`
 	*SegmentBaseType
 }
 
-// URLType is Segment Info item URL/range
+// URLType is Segment Info item URL/range.
 type URLType struct {
-	SourceURL string `xml:"sourceURL,attr,omitempty"`
+	SourceURL AnyURI `xml:"sourceURL,attr,omitempty"`
 	Range     string `xml:"range,attr,omitempty"`
 }
 
-// SingleRFC7233RangeType ...
-type SingleRFC7233RangeType string
-
-// FCS ...
+// FCS is Failover Content Section.
 type FCS struct {
 	T uint64 `xml:"t,attr"`
 	D uint64 `xml:"d,attr,omitempty"`
 }
 
-// FailoverContentType is Failover Content
+// FailoverContentType is Failover Content.
 type FailoverContentType struct {
-	Valid bool   `xml:"valid,attr,omitempty"`
+	Valid *bool  `xml:"valid,attr"` // default = true
 	FCS   []*FCS `xml:"FCS"`
 }
 
-// SegmentListType is Segment List
+// SegmentListType is Segment List.
 type SegmentListType struct {
-	XlinkHref    string            `xml:"xlink:href,attr,omitempty"`
-	XlinkActuate string            `xml:"xlink:actuate,attr,omitempty"`
-	XlinkType    string            `xml:"xlink:type,attr,omitempty"`
-	XlinkShow    string            `xml:"xlink:show,attr,omitempty"`
+	XlinkHref    string            `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
+	XlinkActuate string            `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
+	XlinkType    string            `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
+	XlinkShow    string            `xml:"xlink:show,attr,omitempty"`                                 // fixed "embed"
 	SegmentURL   []*SegmentURLType `xml:"SegmentURL"`
 	*MultipleSegmentBaseType
 }
 
-// SegmentURLType is Segment URL
+// SegmentURLType is Segment URL.
 type SegmentURLType struct {
-	Media      string `xml:"media,attr,omitempty"`
-	MediaRange string `xml:"mediaRange,attr,omitempty"`
-	Index      string `xml:"index,attr,omitempty"`
-	IndexRange string `xml:"indexRange,attr,omitempty"`
+	Media      AnyURI                 `xml:"media,attr,omitempty"`
+	MediaRange SingleRFC7233RangeType `xml:"mediaRange,attr,omitempty"`
+	Index      AnyURI                 `xml:"index,attr,omitempty"`
+	IndexRange SingleRFC7233RangeType `xml:"indexRange,attr,omitempty"`
 }
 
 // SegmentTemplateType is Segment Template
@@ -493,60 +457,53 @@ type SegmentTemplateType struct {
 	*MultipleSegmentBaseType
 }
 
-// S ...
+// S is the S element of SegmentTimeline. All time units in media timescale.
 type S struct {
-	T uint64 `xml:"t,attr,omitempty"`
-	N uint64 `xml:"n,attr,omitempty"`
+	// T is start time of first Segment in the the series relative to presentation time offset.
+	T *uint64 `xml:"t,attr"`
+	// N is the Segment number of the first Segment in the series.
+	N *uint64 `xml:"n,attr"`
+	// D is the Segment duration or the duration of a Segment sequence.
 	D uint64 `xml:"d,attr"`
-	R int    `xml:"r,attr,omitempty"`
-	K uint64 `xml:"k,attr,omitempty"`
+	// R is repeat count (how many times to repeat. -1 is unlimited)
+	R *int `xml:"r,attr"` // default = 0
+	// K is the number of Segments that are included in a Segment Sequence.
+	K *uint64 `xml:"k,attr"` // default = 1
 }
 
-// SegmentTimelineType is Segment Timeline
+// SegmentTimelineType is Segment Timeline.
 type SegmentTimelineType struct {
 	S []*S `xml:"S"`
 }
 
-// StringVectorType is Whitespace-separated list of strings
-type StringVectorType []string
-
-// ListOf4CCType is Whitespace separated list of 4CC
-type ListOf4CCType []string
-
-// FourCCType is 4CC as per latest 14496-12
-type FourCCType string
-
-// UIntVectorType is Whitespace-separated list of unsigned integers
-type UIntVectorType []uint32
-
-// BaseURLType is Base URL
+// BaseURLType is Base URL.
 type BaseURLType struct {
-	ServiceLocation          string  `xml:"serviceLocation,attr,omitempty"`
-	ByteRange                string  `xml:"byteRange,attr,omitempty"`
-	AvailabilityTimeOffset   float64 `xml:"availabilityTimeOffset,attr,omitempty"`
-	AvailabilityTimeComplete bool    `xml:"availabilityTimeComplete,attr,omitempty"`
-	TimeShiftBufferDepth     string  `xml:"timeShiftBufferDepth,attr,omitempty"`
-	RangeAccess              bool    `xml:"rangeAccess,attr,omitempty"`
-	Value                    string  `xml:",chardata"`
+	ServiceLocation          string   `xml:"serviceLocation,attr,omitempty"`
+	ByteRange                string   `xml:"byteRange,attr,omitempty"`
+	AvailabilityTimeOffset   *float64 `xml:"availabilityTimeOffset,attr"`
+	AvailabilityTimeComplete *bool    `xml:"availabilityTimeComplete,attr"`
+	TimeShiftBufferDepth     Duration `xml:"timeShiftBufferDepth,attr,omitempty"`
+	RangeAccess              bool     `xml:"rangeAccess,attr,omitempty"` // default = false
+	Value                    AnyURI   `xml:",chardata"`
 }
 
-// ProgramInformationType is Program Information
+// ProgramInformationType is Program Information.
 type ProgramInformationType struct {
 	Lang               string `xml:"lang,attr,omitempty"`
-	MoreInformationURL string `xml:"moreInformationURL,attr,omitempty"`
-	Title              string `xml:"Title"`
-	Source             string `xml:"Source"`
-	Copyright          string `xml:"Copyright"`
+	MoreInformationURL AnyURI `xml:"moreInformationURL,attr,omitempty"`
+	Title              string `xml:"Title,omitempty"`
+	Source             string `xml:"Source,omitempty"`
+	Copyright          string `xml:"Copyright,omitempty"`
 }
 
-// DescriptorType is Descriptor
+// DescriptorType is Descriptor.
 type DescriptorType struct {
-	SchemeIdUri string `xml:"schemeIdUri,attr"`
+	SchemeIdUri AnyURI `xml:"schemeIdUri,attr"`
 	Value       string `xml:"value,attr,omitempty"`
 	Id          string `xml:"id,attr,omitempty"`
 }
 
-// MetricsType is Metrics
+// MetricsType is Metrics.
 type MetricsType struct {
 	Metrics   string            `xml:"metrics,attr"`
 	Range     []*RangeType      `xml:"Range"`
@@ -555,16 +512,61 @@ type MetricsType struct {
 
 // RangeType is Metrics Range
 type RangeType struct {
-	Starttime string `xml:"starttime,attr,omitempty"`
-	Duration  string `xml:"duration,attr,omitempty"`
+	Starttime Duration `xml:"starttime,attr,omitempty"`
+	Duration  Duration `xml:"duration,attr,omitempty"`
 }
-
-// CodecsType is RFC6381 simp-list without enclosing double quotes
-type CodecsType string
 
 // LeapSecondInformationType is Leap Second Information
 type LeapSecondInformationType struct {
-	AvailabilityStartLeapOffset     int    `xml:"availabilityStartLeapOffset,attr"`
-	NextAvailabilityStartLeapOffset int    `xml:"nextAvailabilityStartLeapOffset,attr,omitempty"`
-	NextLeapChangeTime              string `xml:"nextLeapChangeTime,attr,omitempty"`
+	AvailabilityStartLeapOffset     int      `xml:"availabilityStartLeapOffset,attr"`
+	NextAvailabilityStartLeapOffset int      `xml:"nextAvailabilityStartLeapOffset,attr,omitempty"`
+	NextLeapChangeTime              DateTime `xml:"nextLeapChangeTime,attr,omitempty"`
 }
+
+// ListOfProfilesType is comma-separated list of profiles.
+type ListOfProfilesType string
+
+// StringVectorType is Whitespace-separated list of strings.
+type StringVectorType string
+
+// ListOf4CCType is Whitespace separated list of 4CC.
+type ListOf4CCType string
+
+// UIntVectorType is Whitespace-separated list of unsigned integers.
+type UIntVectorType string
+
+// ContentEncodingType is an enum with single value "base64".
+type ContentEncodingType string
+
+// RatioType is Ratio Type for sar and par ([0-9]*:[0-9]*)
+type RatioType string
+
+// FrameRateType is Type for Frame Rate ([0-9]+(/[1-9][0-9]*)?).
+type FrameRateType string
+
+// RFC6838ContentTypeType is Type for RFC6838 Content Type.
+type RFC6838ContentTypeType string
+
+// StringNoWhitespaceType is String without white spaces.
+type StringNoWhitespaceType string
+
+// VideoScanType is enumeration "progressive", "interlaced", "unknown".
+type VideoScanType string
+
+// ProducerReferenceTimeTypeType is enumaration "encoder", "captured", "application".
+type ProducerReferenceTimeTypeType string
+
+// PreselectionOrderType is enumeration "undefined", "time-ordered", "fully-ordered".
+type PreselectionOrderType string
+
+// SingleRFC7233RangeType is range defined in RFC7233 ([0-9]*)(\-([0-9]*))?).
+type SingleRFC7233RangeType string
+
+// AnyURI is xsd:anyURI http://www.datypic.com/sc/xsd/t-xsd_anyURI.html.
+type AnyURI string
+
+// Duration is xsd:Duration https://www.ibm.com/docs/en/i/7.4?topic=types-xsduration.
+type Duration string
+
+// DateTime is xs:dateTime https://www.w3.org/TR/xmlschema-2/#dateTime (almost ISO 8601).
+type DateTime string
