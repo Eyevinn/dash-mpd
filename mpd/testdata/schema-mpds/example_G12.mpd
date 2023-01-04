@@ -4,12 +4,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xmlns="urn:mpeg:dash:schema:mpd:2011" 
 xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
 type="dynamic" minimumUpdatePeriod="PT10S" 
-timeShiftBufferDepth="PT600S" 
+timeShiftBufferDepth="PT10M" 
 minBufferTime="PT2S" 
 profiles="urn:mpeg:dash:profile:isoff-main:2011"
 publishTime="2014-10-17T17:17:05Z" 
 availabilityStartTime="2014-10-17T17:17:05Z">
-  <Period id="1" start="PT0S">
+  <Period id="1">
    <BaseURL> http://example.com/1/</BaseURL> 
 <SegmentTemplate media="./$RepresentationID$/$Number$.m4s" initialization="$RepresentationID$-init.mp4"/>
     <!-- Video -->
@@ -27,7 +27,7 @@ availabilityStartTime="2014-10-17T17:17:05Z">
 	  <Representation id="a64" bandwidth="64000"/>
     </AdaptationSet>
   </Period>
-  <Period id="2" start="PT1000S">
+  <Period id="2" start="PT16M40S">
    <BaseURL> http://example.com/2/</BaseURL> 
 <SegmentTemplate media="./$RepresentationID$/$Number$.m4s" initialization="$RepresentationID$-init.mp4"/>
     <!-- Video -->

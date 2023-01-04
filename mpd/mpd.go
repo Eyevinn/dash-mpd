@@ -14,13 +14,13 @@ type MPD struct {
 	AvailabilityStartTime      DateTime                   `xml:"availabilityStartTime,attr,omitempty"`
 	AvailabilityEndTime        DateTime                   `xml:"availabilityEndTime,attr,omitempty"`
 	PublishTime                DateTime                   `xml:"publishTime,attr,omitempty"`
-	MediaPresentationDuration  Duration                   `xml:"mediaPresentationDuration,attr,omitempty"`
-	MinimumUpdatePeriod        Duration                   `xml:"minimumUpdatePeriod,attr,omitempty"`
-	MinBufferTime              Duration                   `xml:"minBufferTime,attr"`
-	TimeShiftBufferDepth       Duration                   `xml:"timeShiftBufferDepth,attr,omitempty"`
-	SuggestedPresentationDelay Duration                   `xml:"suggestedPresentationDelay,attr,omitempty"`
-	MaxSegmentDuration         Duration                   `xml:"maxSegmentDuration,attr,omitempty"`
-	MaxSubsegmentDuration      Duration                   `xml:"maxSubsegmentDuration,attr,omitempty"`
+	MediaPresentationDuration  *Duration                  `xml:"mediaPresentationDuration,attr"`
+	MinimumUpdatePeriod        *Duration                  `xml:"minimumUpdatePeriod,attr"`
+	MinBufferTime              *Duration                  `xml:"minBufferTime,attr"`
+	TimeShiftBufferDepth       *Duration                  `xml:"timeShiftBufferDepth,attr"`
+	SuggestedPresentationDelay *Duration                  `xml:"suggestedPresentationDelay,attr"`
+	MaxSegmentDuration         *Duration                  `xml:"maxSegmentDuration,attr"`
+	MaxSubsegmentDuration      *Duration                  `xml:"maxSubsegmentDuration,attr"`
 	ProgramInformation         []*ProgramInformationType  `xml:"ProgramInformation"`
 	BaseURL                    []*BaseURLType             `xml:"BaseURL"`
 	Location                   []AnyURI                   `xml:"Location"`
@@ -51,8 +51,8 @@ type PeriodType struct {
 	XlinkType            string                    `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
 	XlinkShow            string                    `xml:"http://www.w3.org/1999/xlink xlink:show,attr,omitempty"`    // fixed = "embed"
 	Id                   string                    `xml:"id,attr,omitempty"`
-	Start                Duration                  `xml:"start,attr,omitempty"`
-	Duration             Duration                  `xml:"duration,attr,omitempty"`
+	Start                *Duration                 `xml:"start,attr"` // Mandatory for dynamic manifests. default = 0
+	Duration             *Duration                 `xml:"duration,attr"`
 	BitstreamSwitching   *bool                     `xml:"bitstreamSwitching,attr"`
 	BaseURL              []*BaseURLType            `xml:"BaseURL"`
 	SegmentBase          *SegmentBaseType          `xml:"SegmentBase"`
@@ -246,8 +246,8 @@ type ExtendedBandwidthType struct {
 
 // ModelPairType is Model Pair
 type ModelPairType struct {
-	BufferTime Duration `xml:"bufferTime,attr"`
-	Bandwidth  uint32   `xml:"bandwidth,attr"`
+	BufferTime *Duration `xml:"bufferTime,attr"`
+	Bandwidth  uint32    `xml:"bandwidth,attr"`
 }
 
 // SubRepresentationType is SubRepresentation
@@ -378,7 +378,7 @@ type SwitchingTypeType string
 type RandomAccessType struct {
 	Interval      uint32               `xml:"interval,attr"`
 	Type          RandomAccessTypeType `xml:"type,attr,omitempty"` // default = "closed"
-	MinBufferTime Duration             `xml:"minBufferTime,attr,omitempty"`
+	MinBufferTime *Duration            `xml:"minBufferTime,attr"`
 	Bandwidth     uint32               `xml:"bandwidth,attr,omitempty"`
 }
 
@@ -478,13 +478,13 @@ type SegmentTimelineType struct {
 
 // BaseURLType is Base URL.
 type BaseURLType struct {
-	ServiceLocation          string   `xml:"serviceLocation,attr,omitempty"`
-	ByteRange                string   `xml:"byteRange,attr,omitempty"`
-	AvailabilityTimeOffset   *float64 `xml:"availabilityTimeOffset,attr"`
-	AvailabilityTimeComplete *bool    `xml:"availabilityTimeComplete,attr"`
-	TimeShiftBufferDepth     Duration `xml:"timeShiftBufferDepth,attr,omitempty"`
-	RangeAccess              bool     `xml:"rangeAccess,attr,omitempty"` // default = false
-	Value                    AnyURI   `xml:",chardata"`
+	ServiceLocation          string    `xml:"serviceLocation,attr,omitempty"`
+	ByteRange                string    `xml:"byteRange,attr,omitempty"`
+	AvailabilityTimeOffset   *float64  `xml:"availabilityTimeOffset,attr"`
+	AvailabilityTimeComplete *bool     `xml:"availabilityTimeComplete,attr"`
+	TimeShiftBufferDepth     *Duration `xml:"timeShiftBufferDepth,attr"`
+	RangeAccess              bool      `xml:"rangeAccess,attr,omitempty"` // default = false
+	Value                    AnyURI    `xml:",chardata"`
 }
 
 // ProgramInformationType is Program Information.
@@ -512,8 +512,8 @@ type MetricsType struct {
 
 // RangeType is Metrics Range
 type RangeType struct {
-	Starttime Duration `xml:"starttime,attr,omitempty"`
-	Duration  Duration `xml:"duration,attr,omitempty"`
+	Starttime *Duration `xml:"starttime,attr"`
+	Duration  *Duration `xml:"duration,attr"`
 }
 
 // LeapSecondInformationType is Leap Second Information
@@ -564,9 +564,6 @@ type SingleRFC7233RangeType string
 
 // AnyURI is xsd:anyURI http://www.datypic.com/sc/xsd/t-xsd_anyURI.html.
 type AnyURI string
-
-// Duration is xsd:Duration https://www.ibm.com/docs/en/i/7.4?topic=types-xsduration.
-type Duration string
 
 // DateTime is xs:dateTime https://www.w3.org/TR/xmlschema-2/#dateTime (almost ISO 8601).
 type DateTime string

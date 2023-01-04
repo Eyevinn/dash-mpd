@@ -4,8 +4,8 @@
     xmlns="urn:mpeg:dash:schema:mpd:2011"
     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
     type="static" 
-    mediaPresentationDuration="PT3256S" 
-    minBufferTime="PT10.00S"
+    mediaPresentationDuration="PT54M16S" 
+    minBufferTime="PT10S"
     profiles="urn:mpeg:dash:profile:isoff-main:2011">
     
     <BaseURL>http://www.example.com/</BaseURL>
@@ -13,7 +13,7 @@
     <!-- In this Period there are 3 views: coming from three lined up cameras: C1-C2-C3. 
        C1+C2 and C2+C3 each form a stereo pair but C1+C3 does not. 
        C2 is taken as the base view for MVC while C1 and C3 are enhancement views -->
-    <Period start="PT0.00S" duration="PT2000.00S">
+    <Period duration="PT33M20S">
         <SegmentList>
             <Initialization sourceURL="seg-m-init.mp4"/>    
         </SegmentList>
@@ -65,7 +65,7 @@
     
     <!--  In this Period there are only 2 views:  C1+C2 form a stereo pair; 
         C2 is the base view for MVC and C1 is the enhancement view -->
-    <Period duration="PT1256.00S">
+    <Period duration="PT20M56S">
         <SegmentList>
             <Initialization sourceURL="seg-m-init-2.mp4"/>    
         </SegmentList>

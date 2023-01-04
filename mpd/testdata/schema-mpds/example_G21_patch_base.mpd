@@ -5,15 +5,15 @@
     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
     id="live-stream"
     type="dynamic"
-    minimumUpdatePeriod="PT3.0S"
+    minimumUpdatePeriod="PT3S"
     publishTime="2020-05-13T05:34:06+00:00"
     availabilityStartTime="2017-05-01T07:00:00+00:00"
-    minBufferTime="PT1.0S"
+    minBufferTime="PT1S"
     profiles="urn:mpeg:dash:profile:isoff-live:2011">
 
     <PatchLocation ttl="60">example_G21_patch.mpp?publishTime=2020-05-13T05%3A34%3A06%2B00%3A00</PatchLocation>
 
-    <Period id="1588435200" start="PT95725984.571S">
+    <Period id="1588435200" start="PT26590H33M4.571S">
         <AdaptationSet
             id="1"
             contentType="video"

@@ -5,8 +5,8 @@
     xmlns:drm="http://example.net/052011/drm"
     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
     type="static"
-    mediaPresentationDuration="PT3256S"
-    minBufferTime="PT10.00S"
+    mediaPresentationDuration="PT54M16S"
+    minBufferTime="PT10S"
     profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
     
     <BaseURL>http://cdn.example.com/movie23453235/</BaseURL>

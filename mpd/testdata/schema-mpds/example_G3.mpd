@@ -4,7 +4,7 @@
     xmlns="urn:mpeg:dash:schema:mpd:2011" 
     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
     type="static" 
-    mediaPresentationDuration="PT6158S" 
+    mediaPresentationDuration="PT1H42M38S" 
     availabilityStartTime="2011-05-10T06:16:42" 
     minBufferTime="PT1.4S" 
     profiles="urn:mpeg:dash:profile:mp2t-simple:2011" 
@@ -13,7 +13,7 @@
     <BaseURL>http://cdn1.example.com/</BaseURL>
     <BaseURL>http://cdn2.example.com/</BaseURL>
     
-    <Period id="42" duration="PT6158S">
+    <Period id="42" duration="PT1H42M38S">
         <AdaptationSet 
             mimeType="video/mp2t" 
             codecs="avc1.4D401F,mp4a" 

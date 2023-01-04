@@ -4,7 +4,7 @@
     xmlns="urn:mpeg:dash:schema:mpd:2011" 
     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
     type="static" 
-    mediaPresentationDuration="PT3256S" 
+    mediaPresentationDuration="PT54M16S" 
     minBufferTime="PT1.2S" 
     profiles="urn:mpeg:dash:profile:isoff-on-demand:2011"> 
     

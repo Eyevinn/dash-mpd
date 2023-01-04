@@ -7,10 +7,10 @@
  availabilityStartTime="2018-12-20T06:04:22Z"
  publishTime="2018-12-20T06:04:22Z"
  minimumUpdatePeriod="PT2S"
- mediaPresentationDuration="PT0H4M9.708S"
+ mediaPresentationDuration="PT4M9.708S"
  minBufferTime="PT4S"
  profiles="urn:mpeg:dash:profile:isoff-live:2011">
- <Period id="1" start="PT0S">
+ <Period id="1">
     <!-- Video -->
     <AdaptationSet id="1" mimeType="video/mp4" segmentAlignment="true" startWithSAP="1">
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>

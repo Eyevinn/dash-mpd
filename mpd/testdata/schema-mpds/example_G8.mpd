@@ -6,8 +6,8 @@
     xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
     profiles="urn:mpeg:dash:profile:isoff-on-demand:2011"
     type="static"
-    mediaPresentationDuration="PT3256S"
-    minBufferTime="PT10.00S">
+    mediaPresentationDuration="PT54M16S"
+    minBufferTime="PT10S">
     <Period>
         <AdaptationSet mimeType="video/mp4" group="1">
             <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>

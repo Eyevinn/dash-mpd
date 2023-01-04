@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"  mediaPresentationDuration="PT3256S"
-minBufferTime="PT1.500000S" profiles="urn:mpeg:dash:profile:isoff-ext-live:2014">
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"  mediaPresentationDuration="PT54M16S"
+minBufferTime="PT1.5S" profiles="urn:mpeg:dash:profile:isoff-ext-live:2014">
 	<Period>
 		<AdaptationSet id="1" segmentAlignment="true" sar="1:1" mimeType="video/mp4" startWithSAP="2" maxPlayoutRate="1">
 			<InbandEventStream schemeIdUri="tag:rdmedia.bbc.co.uk,2014:events/ballposition" value="1"/>
