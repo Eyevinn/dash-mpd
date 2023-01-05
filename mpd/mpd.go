@@ -78,7 +78,7 @@ type EventStreamType struct {
 	XlinkShow              string       `xml:"http://www.w3.org/1999/xlink xlink:show,attr,omitempty"`    // fixed = "embed"
 	SchemeIdUri            AnyURI       `xml:"schemeIdUri,attr"`
 	Value                  string       `xml:"value,attr,omitempty"`
-	Timescale              uint32       `xml:"timescale,attr,omitempty"`
+	Timescale              *uint32      `xml:"timescale,attr"`                        // default = 1
 	PresentationTimeOffset uint64       `xml:"presentationTimeOffset,attr,omitempty"` // default is 0
 	Event                  []*EventType `xml:"Event"`
 }
@@ -387,7 +387,7 @@ type RandomAccessTypeType string
 
 // SegmentBaseType is Segment information base.
 type SegmentBaseType struct {
-	Timescale                uint32               `xml:"timescale,attr,omitempty"`
+	Timescale                *uint32              `xml:"timescale,attr"` // default = 1
 	EptDelta                 *int                 `xml:"eptDelta,attr"`
 	PdDelta                  *int                 `xml:"pdDelta,attr"`
 	PresentationTimeOffset   *uint64              `xml:"presentationTimeOffset,attr,omitempty"`
@@ -466,7 +466,7 @@ type S struct {
 	// D is the Segment duration or the duration of a Segment sequence.
 	D uint64 `xml:"d,attr"`
 	// R is repeat count (how many times to repeat. -1 is unlimited)
-	R *int `xml:"r,attr"` // default = 0
+	R int `xml:"r,attr,omitempty"` // default = 0
 	// K is the number of Segments that are included in a Segment Sequence.
 	K *uint64 `xml:"k,attr"` // default = 1
 }
