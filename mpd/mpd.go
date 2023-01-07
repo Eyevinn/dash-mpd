@@ -2,12 +2,11 @@ package mpd
 
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
 //
-// The tree of structs is generatd from the corresponding XML Schema at https://github.com/MPEGGroup/DASHSchema
-// but fine-tuned manually to handle default cases, listinig enumerals, inserting simple types and name space for xlink.
-
+// The tree of structs is generated from the corresponding XML Schema at https://github.com/MPEGGroup/DASHSchema
+// but fine-tuned manually to handle default cases, listing enumerals, name space for xlink etc.
 type MPD struct {
 	XMLNs                      string                     `xml:"xmlns,attr,omitempty"`
-	SchemaLocation             string                     `xml:"http://www.w3.org/2001/XMLSchema-instance xsi:schemaLocation,attr"`
+	SchemaLocation             string                     `xml:"http://www.w3.org/2001/XMLSchema-instance xsi:schemaLocation,attr,omitempty"`
 	Id                         string                     `xml:"id,attr,omitempty"`
 	Profiles                   ListOfProfilesType         `xml:"profiles,attr"`
 	Type                       *string                    `xml:"type,attr,omitempty"` // Optional with default "static"
@@ -299,7 +298,22 @@ type ContentProtectionType struct {
 	Robustness string `xml:"robustness,attr,omitempty"`
 	RefId      string `xml:"refId,attr,omitempty"`
 	Ref        string `xml:"ref,attr,omitempty"`
+	DefaultKID string `xml:"urn:mpeg:cenc:2013 cenc:default_KID,attr,omitempty"`
+	// Pssh is PSSH Box with namespace "urn:mpeg:cenc:2013" and prefix "cenc".
+	Pssh *PsshType `xml:"urn:mpeg:cenc:2013 cenc:pssh,omitempty"`
+	// MSPro is Microsoft PlayReady provisioning data with namespace "urn:microsoft:playready and "prefix "mspr".
+	MSPro *MSProType `xml:"urn:microsoft:playready mspr:pro,omitempty"`
 	*DescriptorType
+}
+
+// PsshType is general PSSH box as defined in ISO/IEC 23001-7 (Common Encryption Format).
+type PsshType struct {
+	Value string `xml:",chardata"`
+}
+
+// MSProType is Microsoft PlayReady provisioning data.
+type MSProType struct {
+	Value string `xml:",chardata"`
 }
 
 // ResyncType is Resynchronization Point.
@@ -498,7 +512,7 @@ type ProgramInformationType struct {
 
 // DescriptorType is Descriptor.
 type DescriptorType struct {
-	SchemeIdUri AnyURI `xml:"schemeIdUri,attr"`
+	SchemeIdUri AnyURI `xml:"schemeIdUri,attr,omitempty"`
 	Value       string `xml:"value,attr,omitempty"`
 	Id          string `xml:"id,attr,omitempty"`
 }
