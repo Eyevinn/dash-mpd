@@ -1,11 +1,18 @@
-# DASH-MPD - A complete MPEG DASH MPD parser/writer
+![Test](https://github.com/Eyevinn/mp4ff/workflows/Go/badge.svg)
+![golangci-lint](https://github.com/Eyevinn/mp4ff/workflows/golangci-lint/badge.svg?branch=master)
+[![GoDoc](https://godoc.org/github.com/Eyevinn/mp4ff?status.svg)](http://godoc.org/github.com/Eyevinn/mp4ff)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Eyevinn/mp4ff)](https://goreportcard.com/report/github.com/Eyevinn/mp4ff)
+[![license](https://img.shields.io/github/license/Eyevinn/mp4ff.svg)](https://github.com/Eyevinn/mp4ff/blob/master/LICENSE)
 
-It is the goal of this MPEG-DASH MPD implementation to include all elements from
-the DASH specification by starting from the XML schema and auto-generating
-all data structures, as well as handling namespaces and schemaLocation.
+# DASH-MPD - A complete MPEG-DASH MPD parser/writer
 
-A first use case for it is a new DASH-IF live-source simulator in Go,
-to replace the original one in [Python](https://github.com/dash-Industry-Forum/dash-live-source-simulator).
+This MPEG-DASH MPD implementation is meant to include all elements from
+the MPEG DASH specification (ISO/IEC 23009-1 5'th edition) by starting from the
+MPD XML schema and auto-generating all data structures.
+It should also handle namespaces and schemaLocation properly.
+
+It has been enhanced with extra structures from the Common Encryption specification
+ISO/IEC 23001-7 and proprietary structures and name spaces for some DRM systems.
 
 ## XML Schemas
 
@@ -23,23 +30,24 @@ point for the MPD type of this project.
 
 ## Adjustments of the MPD structures
 
-Mapping of the full MPD Schema to Go structures was a good start, but it had some
-limitations and issues, so all structures have been scrutinized, and modified where
+Mapping of the full MPD Schema to Go structures provides a good start, but it has some
+limitations and issues. Therefore, all structures have been scrutinized, and modified where
 needed. The main modifications made were:
 
 * Change of top-level MPD type
-* Addition of name spaces including xlink name space
-* Change of some attributes to remove `omitempty` or become pointers,
-  such as`availabilityTimeComplete`. It is a bool, but it should either have the
-  value `false` or be absent.
+* Add xlink name space
+* Change some attributes to remove `omitempty` or become pointers.
+  An example is `availabilityTimeComplete`. It is boolean, but it should either have the
+  value `false` or be absent
 * Add type comments and document enum values for certain types
-* Change names to plural for all subelement slices
+* Change names to plural for all subelement slices, e.g. Periods instead of Period
+* Add `cenc:pssh` and `mspr:pro` DRM elements
 
 ## XML handling
 
 The handling of XML name spaces in the Go standard library `encoding/xml` is incomplete,
 and has a number of quirks and limitations which makes it impossible to generate
-namespaces and namespace prefixes in the standard way we see in many places including
+namespaces and namespace prefixes in the standard way used in many places including
 XML schemas and DASH MPDs.
 
 There are a number of pull requests to improve the situation, and in particular
@@ -47,9 +55,12 @@ There are a number of pull requests to improve the situation, and in particular
 includes an extension to the XML struct tags that make it possible to specify name
 space prefixes.
 
-Since this functionality has not made its way into the standard library after more
+Since this functionality has not yet (Go 1.19) made its way into the standard library, after more
 than a year, the full patched version of the `encoding/xml` package is included here
-in the `xml` directory.
+in the `xml` directory. Therefore, the `github.com/Eyevinn/dash-mpd/xml` package should
+be used together with the XML structure in the package, rather than the standard library version.
+The package functions `mpd.ReadFromFile()`, `mpd.ReadFromString()`, and `mpd.Write()` do use
+that XML library.
 
 ## Limitations to MPD manipulations
 
@@ -63,3 +74,18 @@ and how the output looks:
    comes from the XML schema. The order is therefore often different from the input document.
 4. Mapping to float numbers may not preserve the exact value of the input.
 5. Addition of extra name spaces, such as specific DRM systems must be done explicitly.
+6. Durations are mapped to nanoseconds and back. This may change the duration slightly. All trailing zeros
+   are also removed, as are the minutes and seconds counts if they are zero and a bigger unit is present.
+
+## Tests
+
+The MPD marshaling/unmarshaling is tested by by using many MPDs in the `testdata/schema-mpds` and
+`testdata/go-dash-fixtures` directories. See the README.md files in these directorie for their
+origins and the small tweaks needed to make durations and some other values consistent after a
+unmarshaling/marshaling process.
+
+## Performance
+
+Including all elements, including rarely used ones, has some performance penalty.
+One such contribution comes from matching attributes which is done in a linear fashion.
+Some benchmark tests are included in the `mpd/mpd_test.go` file.
