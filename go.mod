@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
+	github.com/barkimedes/go-deepcopy v0.0.0-20220514131651-17c30cfc62df
 	github.com/google/go-cmp v0.5.9
 	github.com/stretchr/testify v1.8.1
 )

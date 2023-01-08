@@ -1,5 +1,7 @@
 aqwari.net/xml v0.0.0-20210331023308-d9421b293817 h1:+3Rh5EaTzNLnzWx3/uy/mAaH/dGI7svJ6e0oOIDcPuE=
 aqwari.net/xml v0.0.0-20210331023308-d9421b293817/go.mod h1:c7kkWzc7HS/t8Q2DcVY8P2d1dyWNEhEVT5pL0ZHO11c=
+github.com/barkimedes/go-deepcopy v0.0.0-20220514131651-17c30cfc62df h1:GSoSVRLoBaFpOOds6QyY1L8AX7uoY+Ln3BHc22W40X0=
+github.com/barkimedes/go-deepcopy v0.0.0-20220514131651-17c30cfc62df/go.mod h1:hiVxq5OP2bUGBRNS3Z/bt/reCLFNbdcST6gISi1fiOM=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

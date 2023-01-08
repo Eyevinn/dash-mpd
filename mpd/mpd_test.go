@@ -56,3 +56,36 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkUnmarshal(b *testing.B) {
+	data, err := os.ReadFile("testdata/schema-mpds/example_G15.mpd")
+	require.NoError(b, err)
+	for i := 0; i < b.N; i++ {
+		mpd := m.MPD{}
+		_ = xml.Unmarshal(data, &mpd)
+	}
+}
+
+func BenchmarkMarshal(b *testing.B) {
+	data, err := os.ReadFile("testdata/schema-mpds/example_G15.mpd")
+	require.NoError(b, err)
+	mpd := m.MPD{}
+	err = xml.Unmarshal(data, &mpd)
+	require.NoError(b, err)
+	for i := 0; i < b.N; i++ {
+		_, _ = xml.MarshalIndent(mpd, "", "  ")
+	}
+}
+
+func BenchmarkClone(b *testing.B) {
+	data, err := os.ReadFile("testdata/schema-mpds/example_G15.mpd")
+	require.NoError(b, err)
+	mpd := m.MPD{}
+	err = xml.Unmarshal(data, &mpd)
+	require.NoError(b, err)
+	mpdCopy := m.Clone(&mpd)
+	cmp.Equal(&mpd, mpdCopy)
+	for i := 0; i < b.N; i++ {
+		_ = m.Clone(&mpd)
+	}
+}
