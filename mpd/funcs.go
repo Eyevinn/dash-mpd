@@ -13,8 +13,16 @@ func Clone(mpd *MPD) *MPD {
 	return deepcopy.MustAnything(mpd).(*MPD)
 }
 
-// GetRepInit returns the representation's initialization URI with replaced identifiers.
+// GetType returns static or dynamic.
+func (m *MPD) GetType() string {
+	if m.Type == nil {
+		return "static"
+	}
+	return *m.Type
+}
 
+// GetRepInit returns the representation's initialization URI with replaced identifiers.
+//
 // BaseURLs are not applied.
 func GetRepInit(a *AdaptationSetType, r *RepresentationType) (string, error) {
 	if a == nil || r == nil {
@@ -33,7 +41,7 @@ func GetRepInit(a *AdaptationSetType, r *RepresentationType) (string, error) {
 }
 
 // GetRepMedia returns the representaion's media path with replaced ID and bandwidth identifiers.
-
+//
 // BaseURLs are not applied.
 func GetRepMedia(a *AdaptationSetType, r *RepresentationType) (string, error) {
 	if a == nil || r == nil {
@@ -50,4 +58,15 @@ func GetRepMedia(a *AdaptationSetType, r *RepresentationType) (string, error) {
 	media = strings.ReplaceAll(media, "$Bandwidth$", strconv.Itoa(int(r.Bandwidth)))
 
 	return media, nil
+}
+
+// GetPeriodDuration returns the period's duration if specified or the MPD is singel-period static.
+func GetPeriodDuration(mpd *MPD, per *PeriodType) (Duration, error) {
+	if per.Duration != nil {
+		return *per.Duration, nil
+	}
+	if mpd.GetType() == "dynamic" || len(mpd.Periods) != 1 {
+		return 0, fmt.Errorf("cannot determine duration for dynamic or multi-period MPD")
+	}
+	return *mpd.MediaPresentationDuration, nil
 }
