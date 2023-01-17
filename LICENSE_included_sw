@@ -1,0 +1,6 @@
+The code in package xml is copyright the "Go Authors" and under a special LICENSE
+that can be found in that directory.
+
+Most of the code in the files mpd/duration.go and mpd/duration_test.go is copyright
+Brightcove Inc under Apache v2 License and copyright the "Go Authors" under
+the LICENSE found in the xml package.
