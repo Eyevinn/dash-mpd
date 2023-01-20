@@ -50,7 +50,7 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 				t.Errorf("non-minimal diff for mpd %s:\n%s\n", fName, d[:400])
 				ofh, err := os.Create(fName)
 				require.NoError(t, err)
-				ofh.Write(out)
+				_, _ = ofh.Write(out)
 				ofh.Close()
 			}
 		}

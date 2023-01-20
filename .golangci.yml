@@ -1,0 +1,14 @@
+linters:
+  enable:
+    - lll
+
+run:
+  skip-dirs:
+    - xml
+
+linters-settings:
+  lll:
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
+    line-length: 147
+    # tab width in spaces. Default to 1.
+    tab-width: 4
