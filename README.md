@@ -1,8 +1,8 @@
-![Test](https://github.com/Eyevinn/mp4ff/workflows/Go/badge.svg)
-![golangci-lint](https://github.com/Eyevinn/mp4ff/workflows/golangci-lint/badge.svg?branch=master)
-[![GoDoc](https://godoc.org/github.com/Eyevinn/mp4ff?status.svg)](http://godoc.org/github.com/Eyevinn/mp4ff)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Eyevinn/mp4ff)](https://goreportcard.com/report/github.com/Eyevinn/mp4ff)
-[![license](https://img.shields.io/github/license/Eyevinn/mp4ff.svg)](https://github.com/Eyevinn/mp4ff/blob/master/LICENSE)
+![Test](https://github.com/Eyevinn/dash-mpd/workflows/Go/badge.svg)
+[![golangci-lint](https://github.com/Eyevinn/dash-mpd/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/Eyevinn/dash-mpd/actions/workflows/golangci-lint.yml)
+[![GoDoc](https://godoc.org/github.com/Eyevinn/dash-mpd?status.svg)](http://godoc.org/github.com/Eyevinn/dash-mpd)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Eyevinn/dash-mpd)](https://goreportcard.com/report/github.com/Eyevinn/dash-mpd)
+[![license](https://img.shields.io/github/license/Eyevinn/dash-mpd.svg)](https://github.com/Eyevinn/dash-mpd/blob/master/LICENSE)
 
 # DASH-MPD - A complete MPEG-DASH MPD parser/writer
 
