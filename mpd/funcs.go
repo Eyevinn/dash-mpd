@@ -1,12 +1,24 @@
 package mpd
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/barkimedes/go-deepcopy"
 )
+
+// ParseDurationError for parsing xs:Duration string
+type MPDError struct {
+	msg string
+}
+
+func (m MPDError) Error() string {
+	return m.msg
+}
+
+func newMPDError(msg string) MPDError {
+	return MPDError{msg: msg}
+}
 
 // Clone creates a deep copy of mpd.
 func Clone(mpd *MPD) *MPD {
@@ -26,7 +38,7 @@ func (m *MPD) GetType() string {
 // BaseURLs are not applied.
 func GetRepInit(a *AdaptationSetType, r *RepresentationType) (string, error) {
 	if a == nil || r == nil {
-		return "", fmt.Errorf("need both adaptationSet and representation")
+		return "", newMPDError("need both adaptationSet and representation")
 	}
 	var initialization string
 	if a.SegmentTemplate != nil {
@@ -45,7 +57,7 @@ func GetRepInit(a *AdaptationSetType, r *RepresentationType) (string, error) {
 // BaseURLs are not applied.
 func GetRepMedia(a *AdaptationSetType, r *RepresentationType) (string, error) {
 	if a == nil || r == nil {
-		return "", fmt.Errorf("need both adaptationSet and representation")
+		return "", newMPDError("need both adaptationSet and representation")
 	}
 	var media string
 	if a.SegmentTemplate != nil {
@@ -60,13 +72,13 @@ func GetRepMedia(a *AdaptationSetType, r *RepresentationType) (string, error) {
 	return media, nil
 }
 
-// GetPeriodDuration returns the period's duration if specified or the MPD is singel-period static.
+// GetPeriodDuration returns the period's duration if specified or the MPD is single-period static.
 func GetPeriodDuration(mpd *MPD, per *PeriodType) (Duration, error) {
 	if per.Duration != nil {
 		return *per.Duration, nil
 	}
 	if mpd.GetType() == "dynamic" || len(mpd.Periods) != 1 {
-		return 0, fmt.Errorf("cannot determine duration for dynamic or multi-period MPD")
+		return 0, newMPDError("cannot determine duration for dynamic or multi-period MPD")
 	}
 	return *mpd.MediaPresentationDuration, nil
 }

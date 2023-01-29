@@ -1,7 +1,6 @@
 package mpd
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,6 +8,19 @@ import (
 
 	"github.com/Eyevinn/dash-mpd/xml"
 )
+
+// ParseDurationError for parsing xs:Duration string
+type ParseDurationError struct {
+	msg string
+}
+
+func (p ParseDurationError) Error() string {
+	return p.msg
+}
+
+func newParseDurationError(msg string) ParseDurationError {
+	return ParseDurationError{msg: msg}
+}
 
 // This file is essentially a copy of https://github.com/zencoder/go-dash/blob/master/mpd/duration.go,
 // adopted to work with the patched XML parser.
@@ -158,16 +170,16 @@ func fmtInt(buf []byte, v uint64) int {
 // ParseDuration parses an xsd Duration string and returns corresponding time.Duration.
 func ParseDuration(str string) (time.Duration, error) {
 	if len(str) < 3 {
-		return 0, fmt.Errorf("at least one number and designator are required")
+		return 0, newParseDurationError("at least one number and designator are required")
 	}
 
 	if strings.Contains(str, "-") {
-		return 0, fmt.Errorf("duration cannot be negative")
+		return 0, newParseDurationError("duration cannot be negative")
 	}
 
 	// Check that only the parts we expect exist and that everything's in the correct order
 	if !xmlDurationRegex.Match([]byte(str)) {
-		return 0, fmt.Errorf("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
 	}
 
 	var parts = xmlDurationRegex.FindStringSubmatch(str)
@@ -176,7 +188,7 @@ func ParseDuration(str string) (time.Duration, error) {
 	if parts[1] != "" {
 		days, err := strconv.Atoi(strings.TrimRight(parts[1], "D"))
 		if err != nil {
-			return 0, fmt.Errorf("error parsing Days: %w", err)
+			return 0, newParseDurationError("error parsing Days")
 		}
 		total += time.Duration(days) * time.Hour * 24
 	}
@@ -184,7 +196,7 @@ func ParseDuration(str string) (time.Duration, error) {
 	if parts[2] != "" {
 		hours, err := strconv.Atoi(strings.TrimRight(parts[2], "H"))
 		if err != nil {
-			return 0, fmt.Errorf("error parsing Hours: %w", err)
+			return 0, newParseDurationError("error parsing Hours")
 		}
 		total += time.Duration(hours) * time.Hour
 	}
@@ -192,7 +204,7 @@ func ParseDuration(str string) (time.Duration, error) {
 	if parts[3] != "" {
 		mins, err := strconv.Atoi(strings.TrimRight(parts[3], "M"))
 		if err != nil {
-			return 0, fmt.Errorf("error parsing Minutes: %w", err)
+			return 0, newParseDurationError("error parsing Minutes")
 		}
 		total += time.Duration(mins) * time.Minute
 	}
@@ -200,7 +212,7 @@ func ParseDuration(str string) (time.Duration, error) {
 	if parts[4] != "" {
 		secs, err := strconv.ParseFloat(strings.TrimRight(parts[4], "S"), 64)
 		if err != nil {
-			return 0, fmt.Errorf("error parsing Seconds: %w", err)
+			return 0, newParseDurationError("error parsing Seconds")
 		}
 		total += time.Duration(secs * float64(time.Second))
 	}
