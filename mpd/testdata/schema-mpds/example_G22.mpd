@@ -36,11 +36,11 @@
             
             <!-- Representation A is missing a segment -->
             <Representation id="A" bandwidth="3718000" codecs="avc1.640020" width="1280" height="720">
-                <SegmentBase>
+                <SegmentTemplate>
                     <FailoverContent>
                         <FCS t="6532251032" d="180180" />
                     </FailoverContent>
-                </SegmentBase>
+                </SegmentTemplate>
             </Representation> 
         </AdaptationSet>
         
