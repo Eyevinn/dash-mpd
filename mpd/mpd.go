@@ -108,7 +108,7 @@ type InitializationSetType struct {
 	Roles           []*DescriptorType      `xml:"Role"`
 	Ratings         []*DescriptorType      `xml:"Rating"`
 	Viewpoints      []*DescriptorType      `xml:"Viewpoint"`
-	*RepresentationBaseType
+	RepresentationBaseType
 }
 
 // ServiceDescriptionType is Service Description.
@@ -203,7 +203,7 @@ type AdaptationSetType struct {
 	SegmentList             *SegmentListType        `xml:"SegmentList"`
 	SegmentTemplate         *SegmentTemplateType    `xml:"SegmentTemplate"`
 	Representations         []*RepresentationType   `xml:"Representation"`
-	*RepresentationBaseType
+	RepresentationBaseType
 }
 
 // ContentComponentType is Content Component.
@@ -234,7 +234,7 @@ type RepresentationType struct {
 	SegmentBase            *SegmentBaseType         `xml:"SegmentBase"`
 	SegmentList            *SegmentListType         `xml:"SegmentList"`
 	SegmentTemplate        *SegmentTemplateType     `xml:"SegmentTemplate"`
-	*RepresentationBaseType
+	RepresentationBaseType
 }
 
 // ExtendedBandwidthType is Extended Bandwidth Model
@@ -255,7 +255,7 @@ type SubRepresentationType struct {
 	DependencyLevel  *UIntVectorType   `xml:"dependencyLevel,attr,omitempty"`
 	Bandwidth        uint32            `xml:"bandwidth,attr,omitempty"`
 	ContentComponent *StringVectorType `xml:"contentComponent,attr,omitempty"`
-	*RepresentationBaseType
+	RepresentationBaseType
 }
 
 // RepresentationBaseType is Representation base (common attributes and elements).
@@ -303,7 +303,7 @@ type ContentProtectionType struct {
 	Pssh *PsshType `xml:"urn:mpeg:cenc:2013 cenc:pssh,omitempty"`
 	// MSPro is Microsoft PlayReady provisioning data with namespace "urn:microsoft:playready and "prefix "mspr".
 	MSPro *MSProType `xml:"urn:microsoft:playready mspr:pro,omitempty"`
-	*DescriptorType
+	DescriptorType
 }
 
 // PsshType is general PSSH box as defined in ISO/IEC 23001-7 (Common Encryption Format).
@@ -367,7 +367,7 @@ type PreselectionType struct {
 	Roles                  []*DescriptorType     `xml:"Role"`
 	Ratings                []*DescriptorType     `xml:"Rating"`
 	Viewpoints             []*DescriptorType     `xml:"Viewpoint"`
-	*RepresentationBaseType
+	RepresentationBaseType
 }
 
 // AudioSamplingRateType is UIntVectorType with 1 or 2 components.
@@ -423,7 +423,7 @@ type MultipleSegmentBaseType struct {
 	EndNumber          *uint32              `xml:"endNumber,attr"`
 	SegmentTimeline    *SegmentTimelineType `xml:"SegmentTimeline"`
 	BitstreamSwitching *URLType             `xml:"BitstreamSwitching"`
-	*SegmentBaseType
+	SegmentBaseType
 }
 
 // URLType is Segment Info item URL/range.
@@ -451,7 +451,7 @@ type SegmentListType struct {
 	XlinkType    string            `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
 	XlinkShow    string            `xml:"xlink:show,attr,omitempty"`                                 // fixed "embed"
 	SegmentURL   []*SegmentURLType `xml:"SegmentURL"`
-	*MultipleSegmentBaseType
+	MultipleSegmentBaseType
 }
 
 // SegmentURLType is Segment URL.
@@ -468,7 +468,7 @@ type SegmentTemplateType struct {
 	Index              string `xml:"index,attr,omitempty"`
 	Initialization     string `xml:"initialization,attr,omitempty"`
 	BitstreamSwitching string `xml:"bitstreamSwitching,attr,omitempty"`
-	*MultipleSegmentBaseType
+	MultipleSegmentBaseType
 }
 
 // S is the S element of SegmentTimeline. All time units in media timescale.
