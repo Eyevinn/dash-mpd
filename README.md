@@ -104,9 +104,9 @@ MIT, see [LICENSE](LICENSE).
 
 Join our [community on Slack](http://slack.streamingtech.se) where you can post any questions regarding any of our open source projects. Eyevinn's consulting business can also offer you:
 
-- Further development of this component
-- Customization and integration of this component into your platform
-- Support and maintenance agreement
+* Further development of this component
+* Customization and integration of this component into your platform
+* Support and maintenance agreement
 
 Contact [sales@eyevinn.se](mailto:sales@eyevinn.se) if you are interested.
 
