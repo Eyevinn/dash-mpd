@@ -1,10 +1,13 @@
 package mpd
 
+import "github.com/Eyevinn/dash-mpd/xml"
+
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
 //
 // The tree of structs is generated from the corresponding XML Schema at https://github.com/MPEGGroup/DASHSchema
 // but fine-tuned manually to handle default cases, listing enumerals, name space for xlink etc.
 type MPD struct {
+	XMLName                    xml.Name                   `xml:"MPD"`
 	XMLNs                      string                     `xml:"xmlns,attr,omitempty"`
 	SchemaLocation             string                     `xml:"http://www.w3.org/2001/XMLSchema-instance xsi:schemaLocation,attr,omitempty"`
 	Id                         string                     `xml:"id,attr,omitempty"`
@@ -39,12 +42,14 @@ type MPD struct {
 
 // PatchLocationType is Patch Location Type.
 type PatchLocationType struct {
-	Ttl   float64 `xml:"ttl,attr,omitempty"`
-	Value AnyURI  `xml:",chardata"`
+	XMLName xml.Name `xml:"PatchLocation"`
+	Ttl     float64  `xml:"ttl,attr,omitempty"`
+	Value   AnyURI   `xml:",chardata"`
 }
 
 // PeriodType is Period.
 type PeriodType struct {
+	XMLName                xml.Name                  `xml:"Period"`
 	XlinkHref              string                    `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
 	XlinkActuate           string                    `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
 	XlinkType              string                    `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
@@ -69,7 +74,8 @@ type PeriodType struct {
 	Preselections          []*PreselectionType       `xml:"Preselection"`
 }
 
-// EventStreamType is Event Stream.
+// EventStreamType is EventStream or InbandEventStream.
+// It therefore has no XMLName.
 type EventStreamType struct {
 	XlinkHref              string       `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
 	XlinkActuate           string       `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
@@ -84,6 +90,7 @@ type EventStreamType struct {
 
 // EventType is Event.
 type EventType struct {
+	XMLName          xml.Name            `xml:"Event"`
 	PresentationTime uint64              `xml:"presentationTime,attr,omitempty"` // default is 0
 	Duration         uint64              `xml:"duration,attr,omitempty"`
 	Id               uint32              `xml:"id,attr"`
@@ -93,6 +100,7 @@ type EventType struct {
 
 // InitializationSetType is Initialization Set.
 type InitializationSetType struct {
+	XMLName         xml.Name               `xml:"InitializationSet"`
 	XlinkHref       string                 `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
 	XlinkActuate    string                 `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
 	XlinkType       string                 `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
@@ -113,6 +121,7 @@ type InitializationSetType struct {
 
 // ServiceDescriptionType is Service Description.
 type ServiceDescriptionType struct {
+	XMLName             xml.Name                  `xml:"ServiceDescription"`
 	Id                  uint32                    `xml:"id,attr"`
 	Scopes              []*DescriptorType         `xml:"Scope"`
 	Latencies           []*LatencyType            `xml:"Latency"`
@@ -123,6 +132,7 @@ type ServiceDescriptionType struct {
 
 // LatencyType is Service Description Latency (Annex K.4.2.2).
 type LatencyType struct {
+	XMLName          xml.Name               `xml:"Latency"`
 	ReferenceId      uint32                 `xml:"referenceId,attr"`
 	Target           *uint32                `xml:"target,attr"`
 	Max              *uint32                `xml:"max,attr"`
@@ -132,43 +142,49 @@ type LatencyType struct {
 
 // PlaybackRateType is Service Description Playback Rate.
 type PlaybackRateType struct {
-	Max float64 `xml:"max,attr,omitempty"`
-	Min float64 `xml:"min,attr,omitempty"`
+	XMLName xml.Name `xml:"PlaybackRate"`
+	Max     float64  `xml:"max,attr,omitempty"`
+	Min     float64  `xml:"min,attr,omitempty"`
 }
 
 // OperatingQualityType is Service Description Operating Quality.
 type OperatingQualityType struct {
-	MediaType     string `xml:"mediaType,attr,omitempty"` // default is "any"
-	Min           uint32 `xml:"min,attr,omitempty"`
-	Max           uint32 `xml:"max,attr,omitempty"`
-	Target        uint32 `xml:"target,attr,omitempty"`
-	Type          AnyURI `xml:"type,attr,omitempty"`
-	MaxDifference uint32 `xml:"maxDifference,attr,omitempty"`
+	XMLName       xml.Name `xml:"OperatingQuality"`
+	MediaType     string   `xml:"mediaType,attr,omitempty"` // default is "any"
+	Min           uint32   `xml:"min,attr,omitempty"`
+	Max           uint32   `xml:"max,attr,omitempty"`
+	Target        uint32   `xml:"target,attr,omitempty"`
+	Type          AnyURI   `xml:"type,attr,omitempty"`
+	MaxDifference uint32   `xml:"maxDifference,attr,omitempty"`
 }
 
 // OperatingBandwidthType is Service Description Operating Bandwidth.
 type OperatingBandwidthType struct {
-	MediaType string `xml:"mediaType,attr,omitempty"` // default is "all"
-	Min       uint32 `xml:"min,attr,omitempty"`
-	Max       uint32 `xml:"max,attr,omitempty"`
-	Target    uint32 `xml:"target,attr,omitempty"`
+	XMLName   xml.Name `xml:"OperatingBandwidth"`
+	MediaType string   `xml:"mediaType,attr,omitempty"` // default is "all"
+	Min       uint32   `xml:"min,attr,omitempty"`
+	Max       uint32   `xml:"max,attr,omitempty"`
+	Target    uint32   `xml:"target,attr,omitempty"`
 }
 
 // UIntPairsWithIDType is UInt Pairs With ID.
 type UIntPairsWithIDType struct {
-	Type AnyURI `xml:"type,attr,omitempty"`
+	XMLName xml.Name `xml:"UIntPairsWithID"`
+	Type    AnyURI   `xml:"type,attr,omitempty"`
 	*UIntVectorType
 }
 
 // UIntVWithIDType is UInt Vector With ID
 type UIntVWithIDType struct {
+	XMLName     xml.Name               `xml:"UIntVWithID"`
 	Id          uint32                 `xml:"id,attr"`
 	Profiles    ListOfProfilesType     `xml:"profiles,attr,omitempty"`
 	ContentType RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
-	*UIntVectorType
+	UIntVectorType
 }
 
-// AdaptationSetType is Adaptation Set.
+// AdaptationSetType is AdaptationSet or EmptyAdaptationSet.
+// Note that XMLName is not set, since the same structure is used also for EmptyAdaptationSet.
 type AdaptationSetType struct {
 	XlinkHref               string                  `xml:"xlink:href,attr,omitempty"`
 	XlinkActuate            string                  `xml:"xlink:actuate,attr,omitempty"` // default is "onRequest"
@@ -208,6 +224,7 @@ type AdaptationSetType struct {
 
 // ContentComponentType is Content Component.
 type ContentComponentType struct {
+	XMLName         xml.Name               `xml:"ContentComponent"`
 	Id              *uint32                `xml:"id,attr"`
 	Lang            string                 `xml:"lang,attr,omitempty"`
 	ContentType     RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
@@ -221,6 +238,7 @@ type ContentComponentType struct {
 
 // RepresentationType is Representation.
 type RepresentationType struct {
+	XMLName                xml.Name                 `xml:"Representation"`
 	Id                     string                   `xml:"id,attr"`
 	Bandwidth              uint32                   `xml:"bandwidth,attr"`
 	QualityRanking         *uint32                  `xml:"qualityRanking,attr,omitempty"`
@@ -239,18 +257,21 @@ type RepresentationType struct {
 
 // ExtendedBandwidthType is Extended Bandwidth Model
 type ExtendedBandwidthType struct {
+	XMLName    xml.Name         `xml:"ExtendedBandwidth"`
 	Vbr        bool             `xml:"vbr,attr,omitempty"` // default is false
 	ModelPairs []*ModelPairType `xml:"ModelPair"`
 }
 
 // ModelPairType is Model Pair
 type ModelPairType struct {
+	XMLName    xml.Name  `xml:"ModelPair"`
 	BufferTime *Duration `xml:"bufferTime,attr"`
 	Bandwidth  uint32    `xml:"bandwidth,attr"`
 }
 
 // SubRepresentationType is SubRepresentation
 type SubRepresentationType struct {
+	XMLName          xml.Name          `xml:"SubRepresentation"`
 	Level            *uint32           `xml:"level,attr,omitempty"`
 	DependencyLevel  *UIntVectorType   `xml:"dependencyLevel,attr,omitempty"`
 	Bandwidth        uint32            `xml:"bandwidth,attr,omitempty"`
@@ -295,10 +316,11 @@ type RepresentationBaseType struct {
 
 // ContentProtectionType is Content Protection.
 type ContentProtectionType struct {
-	Robustness string `xml:"robustness,attr,omitempty"`
-	RefId      string `xml:"refId,attr,omitempty"`
-	Ref        string `xml:"ref,attr,omitempty"`
-	DefaultKID string `xml:"urn:mpeg:cenc:2013 cenc:default_KID,attr,omitempty"`
+	XMLName    xml.Name `xml:"ContentProtection"`
+	Robustness string   `xml:"robustness,attr,omitempty"`
+	RefId      string   `xml:"refId,attr,omitempty"`
+	Ref        string   `xml:"ref,attr,omitempty"`
+	DefaultKID string   `xml:"urn:mpeg:cenc:2013 cenc:default_KID,attr,omitempty"`
 	// Pssh is PSSH Box with namespace "urn:mpeg:cenc:2013" and prefix "cenc".
 	Pssh *PsshType `xml:"urn:mpeg:cenc:2013 cenc:pssh,omitempty"`
 	// MSPro is Microsoft PlayReady provisioning data with namespace "urn:microsoft:playready and "prefix "mspr".
@@ -318,36 +340,41 @@ type MSProType struct {
 
 // ResyncType is Resynchronization Point.
 type ResyncType struct {
-	Type   uint32   `xml:"type,attr"` // default = 0
-	DT     *uint32  `xml:"dT,attr"`
-	DImax  *float32 `xml:"dImax,attr"`
-	DImin  float32  `xml:"dImin,attr"`  // default = 0
-	Marker bool     `xml:"marker,attr"` // default = false
+	XMLName xml.Name `xml:"Resync"`
+	Type    uint32   `xml:"type,attr"` // default = 0
+	DT      *uint32  `xml:"dT,attr"`
+	DImax   *float32 `xml:"dImax,attr"`
+	DImin   float32  `xml:"dImin,attr"`  // default = 0
+	Marker  bool     `xml:"marker,attr"` // default = false
 }
 
 // PR is PR element defined in Table 47.
 type PR struct {
-	PopularityRate uint32  `xml:"popularityRate,attr"`
-	Start          *uint64 `xml:"start,attr"`
-	R              int     `xml:"r,attr,omitempty"` // default = 0
+	XMLName        xml.Name `xml:"PR"`
+	PopularityRate uint32   `xml:"popularityRate,attr"`
+	Start          *uint64  `xml:"start,attr"`
+	R              int      `xml:"r,attr,omitempty"` // default = 0
 }
 
 // ContentPopularityRateType is Content Popularity Rate.
 type ContentPopularityRateType struct {
-	Source            string `xml:"source,attr"`
-	Sourcedescription string `xml:"source_description,attr,omitempty"`
-	PR                []*PR  `xml:"PR"`
+	XMLName           xml.Name `xml:"ContentPopularityRate"`
+	Source            string   `xml:"source,attr"`
+	Sourcedescription string   `xml:"source_description,attr,omitempty"`
+	PR                []*PR    `xml:"PR"`
 }
 
 // LabelType is Label and Group Label.
 type LabelType struct {
-	Id    uint32 `xml:"id,attr,omitempty"` // default = 0
-	Lang  string `xml:"lang,attr,omitempty"`
-	Value string `xml:",chardata"`
+	XMLName xml.Name `xml:"Label"`
+	Id      uint32   `xml:"id,attr,omitempty"` // default = 0
+	Lang    string   `xml:"lang,attr,omitempty"`
+	Value   string   `xml:",chardata"`
 }
 
 // ProducerReferenceTimeType is Producer Reference time.
 type ProducerReferenceTimeType struct {
+	XMLName           xml.Name                      `xml:"ProducerReferenceTime"`
 	Id                uint32                        `xml:"id,attr"`
 	Inband            bool                          `xml:"inband,attr,omitempty"` // default = false
 	Type              ProducerReferenceTimeTypeType `xml:"type,attr,omitempty"`   // default = encoder
@@ -359,6 +386,7 @@ type ProducerReferenceTimeType struct {
 
 // PreselectionType is Preselection.
 type PreselectionType struct {
+	XMLName                xml.Name              `xml:"Preselection"`
 	Id                     string                `xml:"id,attr,omitempty"` // default = "1"
 	PreselectionComponents *StringVectorType     `xml:"preselectionComponents,attr"`
 	Lang                   string                `xml:"lang,attr,omitempty"`
@@ -375,12 +403,14 @@ type AudioSamplingRateType *UIntVectorType
 
 // SubsetType is Subset.
 type SubsetType struct {
+	XMLName  xml.Name        `xml:"Subset"`
 	Contains *UIntVectorType `xml:"contains,attr"`
 	Id       string          `xml:"id,attr,omitempty"`
 }
 
 // SwitchingType is Switching
 type SwitchingType struct {
+	XMLName  xml.Name          `xml:"Switching"`
 	Interval uint32            `xml:"interval"`
 	Type     SwitchingTypeType `xml:"type,attr,omitempty"` // default = "media"
 }
@@ -390,6 +420,7 @@ type SwitchingTypeType string
 
 // RandomAccessType is Random Access
 type RandomAccessType struct {
+	XMLName       xml.Name             `xml:"RandomAccess"`
 	Interval      uint32               `xml:"interval,attr"`
 	Type          RandomAccessTypeType `xml:"type,attr,omitempty"` // default = "closed"
 	MinBufferTime *Duration            `xml:"minBufferTime,attr"`
