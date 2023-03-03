@@ -90,6 +90,12 @@ Including all elements, including rarely used ones, has some performance penalty
 One such contribution comes from matching attributes which is done in a linear fashion.
 Some benchmark tests are included in the `mpd/mpd_test.go` file.
 
+## Commits and ChangeLog
+
+This project aims to follow Semantic Versioning and
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+There is a manual [ChangeLog](CHANGELOG.md).
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
