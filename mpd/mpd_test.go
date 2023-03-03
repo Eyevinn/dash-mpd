@@ -131,3 +131,19 @@ func TestNewFunction(t *testing.T) {
 	_, err = xml.Marshal(m.NewUIntVWithID())
 	require.NoError(t, err)
 }
+
+func TestSegmentTemplateTimescale(t *testing.T) {
+	testCases := []struct {
+		timescale uint32
+	}{
+		{timescale: 1},
+		{timescale: 1000},
+	}
+
+	for _, tc := range testCases {
+		st := m.NewSegmentTemplate()
+		st.SetTimescale(tc.timescale)
+		gotTimescale := st.GetTimescale()
+		require.Equal(t, tc.timescale, gotTimescale)
+	}
+}

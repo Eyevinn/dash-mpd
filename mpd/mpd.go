@@ -447,6 +447,22 @@ type SegmentBaseType struct {
 	FailoverContent          *FailoverContentType `xml:"FailoverContent"`
 }
 
+// GetTimescale returns timescale including default value 1 if not set.
+func (s SegmentBaseType) GetTimescale() uint32 {
+	if s.Timescale == nil {
+		return 1
+	}
+	return *s.Timescale
+}
+
+// SetTimescale sets timescale and uses default value 1.
+func (s *SegmentBaseType) SetTimescale(timescale uint32) {
+	if timescale == 1 {
+		s.Timescale = nil
+	}
+	s.Timescale = &timescale
+}
+
 // MultipleSegmentBaseType is Multiple Segment information base.
 type MultipleSegmentBaseType struct {
 	Duration           *uint32              `xml:"duration,attr"`
