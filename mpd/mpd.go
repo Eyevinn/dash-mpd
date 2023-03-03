@@ -581,3 +581,68 @@ type AnyURI string
 
 // DateTime is xs:dateTime https://www.w3.org/TR/xmlschema-2/#dateTime (almost ISO 8601).
 type DateTime string
+
+// NewMPD returns a new empty MPD.
+func NewMPD() *MPD {
+	return &MPD{}
+}
+
+// NewPeriod returns a new empty Period.
+func NewPeriod() *PeriodType {
+	return &PeriodType{}
+}
+
+// NewAdaptationSet returns a new empty AdaptationSet.
+func NewAdaptationSet() *AdaptationSetType {
+	return &AdaptationSetType{}
+}
+
+// NewRepresentation returns a new empty Representation.
+func NewRepresentation() *RepresentationType {
+	return &RepresentationType{}
+}
+
+// NewSubRepresentation returns a new empty SubRepresentation.
+func NewSubRepresentation() *SubRepresentationType {
+	return &SubRepresentationType{}
+}
+
+// NewSegmentTemplate returns a new empty SegmentTemplate.
+func NewSegmentTemplate() *SegmentTemplateType {
+	return &SegmentTemplateType{}
+}
+
+// NewSegmentList returns a new empty SegmentList.
+func NewSegmentList() *SegmentListType {
+	return &SegmentListType{}
+}
+
+// NewSegmentTemplate returns a new empty SegmentTimeline.
+func NewSegmentTimeline() *SegmentTimelineType {
+	return &SegmentTimelineType{}
+}
+
+// NewInitializationSet returns a new empty InitializationSet.
+func NewInitializationSet() *InitializationSetType {
+	return &InitializationSetType{}
+}
+
+// NewPreselection returns a new empty Preselection.
+func NewPreselection() *PreselectionType {
+	return &PreselectionType{}
+}
+
+// NewContentProtection returns a new empty ContentProtection.
+func NewContentProtection() *ContentProtectionType {
+	return &ContentProtectionType{}
+}
+
+// NewProducerReferenceTime returns a new empty ProducerReferenceTime.
+func NewProducerReferenceTime() *ProducerReferenceTimeType {
+	return &ProducerReferenceTimeType{}
+}
+
+// NewUIntVWithID returns a new empty UIntVWithID.
+func NewUIntVWithID() *UIntVWithIDType {
+	return &UIntVWithIDType{}
+}

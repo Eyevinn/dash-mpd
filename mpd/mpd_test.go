@@ -89,3 +89,45 @@ func BenchmarkClone(b *testing.B) {
 		_ = m.Clone(&mpd)
 	}
 }
+
+func TestNewFunction(t *testing.T) {
+
+	_, err := xml.Marshal(m.NewMPD())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewPeriod())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewAdaptationSet())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewRepresentation())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewSubRepresentation())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewSegmentTemplate())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewSegmentList())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewSegmentTimeline())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewInitializationSet())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewPreselection())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewContentProtection())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewProducerReferenceTime())
+	require.NoError(t, err)
+
+	_, err = xml.Marshal(m.NewUIntVWithID())
+	require.NoError(t, err)
+}
