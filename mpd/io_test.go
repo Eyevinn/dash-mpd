@@ -14,6 +14,8 @@ func TestDateTime(t *testing.T) {
 	}{
 		{0, "1970-01-01T00:00:00Z"},
 		{0.5, "1970-01-01T00:00:00.5Z"},
+		{0.333, "1970-01-01T00:00:00.333Z"},
+		{0.666, "1970-01-01T00:00:00.666Z"},
 		{946684800, "2000-01-01T00:00:00Z"},
 	}
 	for _, tc := range cases {
@@ -32,6 +34,20 @@ func TestDateTimeS(t *testing.T) {
 	}
 	for _, tc := range cases {
 		got := mpd.ConvertToDateTimeS(tc.inTimeS)
+		require.Equal(t, tc.dateTime, got)
+	}
+}
+
+func TestDateTimeMS(t *testing.T) {
+	cases := []struct {
+		inTimeMS int64
+		dateTime mpd.DateTime
+	}{
+		{0, "1970-01-01T00:00:00Z"},
+		{946684800120, "2000-01-01T00:00:00.12Z"},
+	}
+	for _, tc := range cases {
+		got := mpd.ConvertToDateTimeMS(tc.inTimeMS)
 		require.Equal(t, tc.dateTime, got)
 	}
 }

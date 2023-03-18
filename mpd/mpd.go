@@ -519,12 +519,13 @@ type SegmentTemplateType struct {
 }
 
 // S is the S element of SegmentTimeline. All time units in media timescale.
+// Defined in ISO/IEC 23009-1 Section 5.3.9.6
 type S struct {
-	// T is start time of first Segment in the the series relative to presentation time offset.
+	// T is presentation time of first Segment in sequence relative to presentationTimeOffset.
 	T *uint64 `xml:"t,attr"`
-	// N is the Segment number of the first Segment in the series.
+	// N is is first Segment number in Segment sequence relative startNumber
 	N *uint64 `xml:"n,attr"`
-	// D is the Segment duration or the duration of a Segment sequence.
+	// D is the Segment duration.
 	D uint64 `xml:"d,attr"`
 	// R is repeat count (how many times to repeat. -1 is unlimited)
 	R int `xml:"r,attr,omitempty"` // default = 0

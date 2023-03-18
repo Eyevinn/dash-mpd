@@ -41,16 +41,27 @@ func (m *MPD) Write(w io.Writer) (int, error) {
 	return w.Write(data)
 }
 
-// ConvertToDateTime converts a number of seconds to a UTC DateTime.
+const RFC3339MS string = "2006-01-02T15:04:05.999Z07:00"
+
+// ConvertToDateTime converts a number of seconds to a UTC DateTime by cropping to ms precision.
 func ConvertToDateTime(seconds float64) DateTime {
 	s := int64(seconds)
 	ns := int64((seconds - float64(s)) * 1_000_000_000)
 	t := time.Unix(s, ns).UTC()
-	return DateTime(t.Format(time.RFC3339Nano))
+
+	return DateTime(t.Format(RFC3339MS))
 }
 
-// ConvertToDateTime converts an intergral number of seconds to a UTC DateTime.
+// ConvertToDateTime converts an integral number of seconds to a UTC DateTime.
 func ConvertToDateTimeS(seconds int64) DateTime {
 	t := time.Unix(seconds, 0).UTC()
-	return DateTime(t.Format(time.RFC3339Nano))
+	return DateTime(t.Format(RFC3339MS))
+}
+
+// ConvertToDateTime converts an integral number of milliseconds to a UTC DateTime.
+func ConvertToDateTimeMS(ms int64) DateTime {
+	seconds := ms / 1000
+	ns := (ms - 1000*seconds) * 1_000_000
+	t := time.Unix(seconds, ns).UTC()
+	return DateTime(t.Format(RFC3339MS))
 }
