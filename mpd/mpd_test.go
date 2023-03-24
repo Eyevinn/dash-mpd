@@ -16,7 +16,7 @@ import (
 )
 
 func TestDecodeEncodeMPDs(t *testing.T) {
-	testDirs := []string{"testdata/go-dash-fixtures", "testdata/schema-mpds"}
+	testDirs := []string{"testdata/go-dash-fixtures", "testdata/schema-mpds", "testdata/livesim"}
 	for _, testDir := range testDirs {
 		fsys := os.DirFS(testDir)
 		mpdFiles, err := fs.Glob(fsys, "*.mpd")

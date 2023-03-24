@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ConvertToDateTime() crops fraction of second to milliseconds instead of full seconds
 
+### Fixed
+
+- Infinite value of availabilityTimeOffset is now marshalled/unmarshalled as "INF"
+
 ### Added
 
 - ConvertToDateTimeMS is new function

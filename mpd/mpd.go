@@ -1,6 +1,11 @@
 package mpd
 
-import "github.com/Eyevinn/dash-mpd/xml"
+import (
+	"math"
+	"strconv"
+
+	"github.com/Eyevinn/dash-mpd/xml"
+)
 
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
 //
@@ -440,7 +445,7 @@ type SegmentBaseType struct {
 	TimeShiftBufferDepth     Duration             `xml:"timeShiftBufferDepth,attr,omitempty"`
 	IndexRange               string               `xml:"indexRange,attr,omitempty"`
 	IndexRangeExact          bool                 `xml:"indexRangeExact,attr,omitempty"`
-	AvailabilityTimeOffset   float64              `xml:"availabilityTimeOffset,attr,omitempty"`
+	AvailabilityTimeOffset   FloatInf64           `xml:"availabilityTimeOffset,attr,omitempty"`
 	AvailabilityTimeComplete *bool                `xml:"availabilityTimeComplete,attr"`
 	Initialization           *URLType             `xml:"Initialization"`
 	RepresentationIndex      *URLType             `xml:"RepresentationIndex"`
@@ -540,13 +545,13 @@ type SegmentTimelineType struct {
 
 // BaseURLType is Base URL.
 type BaseURLType struct {
-	ServiceLocation          string    `xml:"serviceLocation,attr,omitempty"`
-	ByteRange                string    `xml:"byteRange,attr,omitempty"`
-	AvailabilityTimeOffset   *float64  `xml:"availabilityTimeOffset,attr"`
-	AvailabilityTimeComplete *bool     `xml:"availabilityTimeComplete,attr"`
-	TimeShiftBufferDepth     *Duration `xml:"timeShiftBufferDepth,attr"`
-	RangeAccess              bool      `xml:"rangeAccess,attr,omitempty"` // default = false
-	Value                    AnyURI    `xml:",chardata"`
+	ServiceLocation          string     `xml:"serviceLocation,attr,omitempty"`
+	ByteRange                string     `xml:"byteRange,attr,omitempty"`
+	AvailabilityTimeOffset   FloatInf64 `xml:"availabilityTimeOffset,attr,omitempty"`
+	AvailabilityTimeComplete *bool      `xml:"availabilityTimeComplete,attr"`
+	TimeShiftBufferDepth     *Duration  `xml:"timeShiftBufferDepth,attr"`
+	RangeAccess              bool       `xml:"rangeAccess,attr,omitempty"` // default = false
+	Value                    AnyURI     `xml:",chardata"`
 }
 
 // ProgramInformationType is Program Information.
@@ -693,4 +698,32 @@ func NewProducerReferenceTime() *ProducerReferenceTimeType {
 // NewUIntVWithID returns a new empty UIntVWithID.
 func NewUIntVWithID() *UIntVWithIDType {
 	return &UIntVWithIDType{}
+}
+
+// FloatInf64 is a float64 which renders as "INF" for +Inf
+type FloatInf64 float64
+
+func (f *FloatInf64) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
+	if f == nil {
+		return xml.Attr{}, nil
+	}
+	fl := float64(*f)
+	if fl == math.Inf(+1) {
+		return xml.Attr{Name: name, Value: "INF"}, nil
+	}
+	val := strconv.FormatFloat(fl, 'f', -1, 64)
+	return xml.Attr{Name: name, Value: val}, nil
+}
+
+func (f *FloatInf64) UnmarshalXMLAttr(attr xml.Attr) error {
+	if attr.Value == "INF" {
+		*f = FloatInf64(math.Inf(+1))
+		return nil
+	}
+	fl, err := strconv.ParseFloat(attr.Value, 64)
+	if err != nil {
+		return err
+	}
+	*f = FloatInf64(fl)
+	return nil
 }
