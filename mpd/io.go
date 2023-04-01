@@ -65,3 +65,12 @@ func ConvertToDateTimeMS(ms int64) DateTime {
 	t := time.Unix(seconds, ns).UTC()
 	return DateTime(t.Format(RFC3339MS))
 }
+
+// ConvertToSeconds converts a DateTime to a number of seconds.
+func (dt DateTime) ConvertToSeconds() (float64, error) {
+	t, err := time.Parse(RFC3339MS, string(dt))
+	if err != nil {
+		return 0, err
+	}
+	return float64(t.UnixNano()) / 1_000_000_000, nil
+}
