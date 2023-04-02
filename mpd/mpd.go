@@ -3,8 +3,15 @@ package mpd
 import (
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/Eyevinn/dash-mpd/xml"
+	"github.com/barkimedes/go-deepcopy"
+)
+
+const (
+	StaticMPDType  = "static"
+	DynamicMPDType = "dynamic"
 )
 
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
@@ -37,12 +44,25 @@ type MPD struct {
 	InitializationGroup        []*UIntVWithIDType         `xml:"InitializationGroup"`
 	InitializationPresentation []*UIntVWithIDType         `xml:"InitializationPresentation"`
 	ContentProtection          []*ContentProtectionType   `xml:"ContentProtection"`
-	Periods                    []*PeriodType              `xml:"Period"`
+	Periods                    []*Period                  `xml:"Period"`
 	Metrics                    []*MetricsType             `xml:"Metrics"`
 	EssentialProperties        []*DescriptorType          `xml:"EssentialProperty"`
 	SupplementalProperties     []*DescriptorType          `xml:"SupplementalProperty"`
 	UTCTimings                 []*DescriptorType          `xml:"UTCTiming"`
 	LeapSecondInformation      *LeapSecondInformationType `xml:"LeapSecondInformation"`
+}
+
+// GetType returns static or dynamic.
+func (m *MPD) GetType() string {
+	if m.Type == nil {
+		return StaticMPDType
+	}
+	return *m.Type
+}
+
+// Clone creates a deep copy of mpd.
+func Clone(mpd *MPD) *MPD {
+	return deepcopy.MustAnything(mpd).(*MPD)
 }
 
 // PatchLocationType is Patch Location Type.
@@ -52,8 +72,7 @@ type PatchLocationType struct {
 	Value   AnyURI   `xml:",chardata"`
 }
 
-// PeriodType is Period.
-type PeriodType struct {
+type Period struct {
 	XMLName                xml.Name                  `xml:"Period"`
 	XlinkHref              string                    `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
 	XlinkActuate           string                    `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
@@ -80,11 +99,11 @@ type PeriodType struct {
 	parent                 *MPD                      `xml:"-"`
 }
 
-func (p *PeriodType) SetParent(m *MPD) {
+func (p *Period) SetParent(m *MPD) {
 	p.parent = m
 }
 
-func (p *PeriodType) Parent() *MPD {
+func (p *Period) Parent() *MPD {
 	return p.parent
 }
 
@@ -233,15 +252,15 @@ type AdaptationSetType struct {
 	SegmentList             *SegmentListType        `xml:"SegmentList"`
 	SegmentTemplate         *SegmentTemplateType    `xml:"SegmentTemplate"`
 	Representations         []*RepresentationType   `xml:"Representation"`
-	parent                  *PeriodType             `xml:"-"`
+	parent                  *Period                 `xml:"-"`
 	RepresentationBaseType
 }
 
-func (a *AdaptationSetType) SetParent(p *PeriodType) {
+func (a *AdaptationSetType) SetParent(p *Period) {
 	a.parent = p
 }
 
-func (a *AdaptationSetType) Parent() *PeriodType {
+func (a *AdaptationSetType) Parent() *Period {
 	return a.parent
 }
 
@@ -353,6 +372,47 @@ type RepresentationBaseType struct {
 	ProducerReferenceTimes     []*ProducerReferenceTimeType `xml:"ProducerReferenceTime"`
 	ContentPopularityRates     []*ContentPopularityRateType `xml:"ContentPopularityRate"`
 	Resyncs                    []*ResyncType                `xml:"Resync"`
+}
+
+// GetInit returns the representation's initialization URI with replaced identifiers.
+//
+// TODO: Apply BaseURLs
+func (r *RepresentationType) GetInit() (string, error) {
+	a := r.parent
+	if a == nil {
+		return "", ErrParentNotSet
+	}
+	var initialization string
+	if a.SegmentTemplate != nil {
+		initialization = a.SegmentTemplate.Initialization
+	}
+	if r.SegmentTemplate != nil {
+		initialization = r.SegmentTemplate.Initialization
+	}
+	initialization = strings.ReplaceAll(initialization, "$RepresentationID$", r.Id)
+	initialization = strings.ReplaceAll(initialization, "$Bandwidth$", strconv.Itoa(int(r.Bandwidth)))
+	return initialization, nil
+}
+
+// GetRepMedia returns the representaion's media path with replaced ID and bandwidth identifiers.
+//
+// TODO: Apply BaseURLs.
+func (r *RepresentationType) GetMedia() (string, error) {
+	a := r.parent
+	if a == nil || r == nil {
+		return "", ErrParentNotSet
+	}
+	var media string
+	if a.SegmentTemplate != nil {
+		media = a.SegmentTemplate.Media
+	}
+	if r.SegmentTemplate != nil {
+		media = r.SegmentTemplate.Media
+	}
+	media = strings.ReplaceAll(media, "$RepresentationID$", r.Id)
+	media = strings.ReplaceAll(media, "$Bandwidth$", strconv.Itoa(int(r.Bandwidth)))
+
+	return media, nil
 }
 
 // ContentProtectionType is Content Protection.
@@ -671,14 +731,14 @@ type AnyURI string
 // DateTime is xs:dateTime https://www.w3.org/TR/xmlschema-2/#dateTime (almost ISO 8601).
 type DateTime string
 
-// NewMPD returns a new empty MPD.
-func NewMPD() *MPD {
-	return &MPD{}
+// NewMPD returns a new empty MPD with the right type.
+func NewMPD(mpdType string) *MPD {
+	return &MPD{Type: &mpdType}
 }
 
 // NewPeriod returns a new empty Period.
-func NewPeriod() *PeriodType {
-	return &PeriodType{}
+func NewPeriod() *Period {
+	return &Period{}
 }
 
 // NewAdaptationSet returns a new empty AdaptationSet.

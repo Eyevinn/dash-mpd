@@ -93,7 +93,7 @@ func BenchmarkClone(b *testing.B) {
 
 func TestNewFunction(t *testing.T) {
 
-	_, err := xml.Marshal(m.NewMPD())
+	_, err := xml.Marshal(m.NewMPD(m.DynamicMPDType))
 	require.NoError(t, err)
 
 	_, err = xml.Marshal(m.NewPeriod())

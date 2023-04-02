@@ -18,13 +18,13 @@ func (m *MPD) SetParents() {
 }
 
 // AppendPeriod appends a Period to the MPD and sets parent pointer.
-func (m *MPD) AppendPeriod(p *PeriodType) {
+func (m *MPD) AppendPeriod(p *Period) {
 	m.Periods = append(m.Periods, p)
 	p.SetParent(m)
 }
 
 // AppendAdaptationSet appends an AdaptationSet to the Period and sets parent pointer.
-func (p *PeriodType) AppendAdaptationSet(a *AdaptationSetType) {
+func (p *Period) AppendAdaptationSet(a *AdaptationSetType) {
 	p.AdaptationSets = append(p.AdaptationSets, a)
 	a.SetParent(p)
 }
