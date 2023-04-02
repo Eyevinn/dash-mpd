@@ -31,6 +31,7 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 				continue
 			}
 			require.NoError(t, err, fName)
+			mpd.SetParents()
 			out, err := xml.MarshalIndent(mpd, "", "  ")
 			require.NoError(t, err)
 			inTree, err := xmltree.Parse(td)

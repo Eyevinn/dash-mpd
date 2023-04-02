@@ -77,6 +77,15 @@ type PeriodType struct {
 	EmptyAdaptationSets    []*AdaptationSetType      `xml:"EmptyAdaptationSet"`
 	GroupLabels            []*LabelType              `xml:"GroupLabel"`
 	Preselections          []*PreselectionType       `xml:"Preselection"`
+	parent                 *MPD                      `xml:"-"`
+}
+
+func (p *PeriodType) SetParent(m *MPD) {
+	p.parent = m
+}
+
+func (p *PeriodType) Parent() *MPD {
+	return p.parent
 }
 
 // EventStreamType is EventStream or InbandEventStream.
@@ -224,7 +233,16 @@ type AdaptationSetType struct {
 	SegmentList             *SegmentListType        `xml:"SegmentList"`
 	SegmentTemplate         *SegmentTemplateType    `xml:"SegmentTemplate"`
 	Representations         []*RepresentationType   `xml:"Representation"`
+	parent                  *PeriodType             `xml:"-"`
 	RepresentationBaseType
+}
+
+func (a *AdaptationSetType) SetParent(p *PeriodType) {
+	a.parent = p
+}
+
+func (a *AdaptationSetType) Parent() *PeriodType {
+	return a.parent
 }
 
 // ContentComponentType is Content Component.
@@ -257,7 +275,16 @@ type RepresentationType struct {
 	SegmentBase            *SegmentBaseType         `xml:"SegmentBase"`
 	SegmentList            *SegmentListType         `xml:"SegmentList"`
 	SegmentTemplate        *SegmentTemplateType     `xml:"SegmentTemplate"`
+	parent                 *AdaptationSetType       `xml:"-"` // adaptation set
 	RepresentationBaseType
+}
+
+func (r *RepresentationType) SetParent(p *AdaptationSetType) {
+	r.parent = p
+}
+
+func (r *RepresentationType) Parent() *AdaptationSetType {
+	return r.parent
 }
 
 // ExtendedBandwidthType is Extended Bandwidth Model
@@ -276,12 +303,21 @@ type ModelPairType struct {
 
 // SubRepresentationType is SubRepresentation
 type SubRepresentationType struct {
-	XMLName          xml.Name          `xml:"SubRepresentation"`
-	Level            *uint32           `xml:"level,attr,omitempty"`
-	DependencyLevel  *UIntVectorType   `xml:"dependencyLevel,attr,omitempty"`
-	Bandwidth        uint32            `xml:"bandwidth,attr,omitempty"`
-	ContentComponent *StringVectorType `xml:"contentComponent,attr,omitempty"`
+	XMLName          xml.Name            `xml:"SubRepresentation"`
+	Level            *uint32             `xml:"level,attr,omitempty"`
+	DependencyLevel  *UIntVectorType     `xml:"dependencyLevel,attr,omitempty"`
+	Bandwidth        uint32              `xml:"bandwidth,attr,omitempty"`
+	ContentComponent *StringVectorType   `xml:"contentComponent,attr,omitempty"`
+	parent           *RepresentationType `xml:"-"`
 	RepresentationBaseType
+}
+
+func (s *SubRepresentationType) SetParent(p *RepresentationType) {
+	s.parent = p
+}
+
+func (s *SubRepresentationType) Parent() *RepresentationType {
+	return s.parent
 }
 
 // RepresentationBaseType is Representation base (common attributes and elements).

@@ -14,7 +14,7 @@ func TestPeriodStart(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		p := mpd.NewPeriod()
 		p.Start = mpd.Seconds2DurPtr(60 * i)
-		m.Periods = append(m.Periods, p)
+		m.AppendPeriod(p)
 	}
 	testCases := []struct {
 		desc        string
