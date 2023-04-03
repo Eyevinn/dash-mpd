@@ -41,5 +41,4 @@ func ExampleNewMPD() {
 	//  </AdaptationSet>
 	//  </Period>
 	//  </MPD>
-
 }

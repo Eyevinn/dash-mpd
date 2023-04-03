@@ -157,9 +157,7 @@ func (p *Period) GetDuration() (Duration, error) {
 		return end - *p.Start, nil
 	default: // dynamic
 		if p.Start == nil {
-			return 0, ErrNoStartInDynamicPeriod
-		}
-		if nrPeriods == 1 {
+			// Early available period
 			return 0, ErrUnknownPeriodDur
 		}
 		if idx == nrPeriods-1 {

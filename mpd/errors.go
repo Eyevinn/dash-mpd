@@ -8,7 +8,6 @@ var (
 	ErrParentNotSet                = errors.New("parent not set")
 	ErrNoMediaPresentationDuration = errors.New("no MediaPresentationDuration in static MPD")
 	ErrUnknownPeriodDur            = errors.New("period duration cannot be derived")
-	ErrNoStartInDynamicPeriod      = errors.New("start is required for dynamic periods")
 	ErrUnknownPeriodStart          = errors.New("period start cannot be derived")
 )
 
