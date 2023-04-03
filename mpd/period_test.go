@@ -223,7 +223,6 @@ func TestPeriodType(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func TestMpdTypeErrors(t *testing.T) {
@@ -239,4 +238,131 @@ func TestMpdTypeErrors(t *testing.T) {
 	m.Periods = nil
 	_, err = p.GetType()
 	require.EqualError(t, err, mpd.ErrPeriodNotFound.Error())
+}
+
+func TestGetDuration(t *testing.T) {
+
+	testCases := []struct {
+		desc         string
+		mpdType      string
+		mediaPresDur int
+		data         []mpdData
+		wantedDurs   []mpd.Duration
+		wantedErrs   []error
+	}{
+		{
+			desc:         "static with duration",
+			mpdType:      mpd.StaticMPDType,
+			mediaPresDur: 0,
+			data:         []mpdData{{nil, mpd.Seconds2DurPtr(60)}},
+			wantedDurs:   []mpd.Duration{mpd.Duration(60 * time.Second)},
+			wantedErrs:   nil,
+		},
+		{
+			desc:         "static without mediaPresendationDuration",
+			mpdType:      mpd.StaticMPDType,
+			mediaPresDur: 0,
+			data:         []mpdData{{mpd.Seconds2DurPtr(0), nil}},
+			wantedDurs:   nil,
+			wantedErrs:   []error{mpd.ErrNoMediaPresentationDuration},
+		},
+		{
+			desc:         "static not-last without next start",
+			mpdType:      mpd.StaticMPDType,
+			mediaPresDur: 120,
+			data: []mpdData{
+				{mpd.Seconds2DurPtr(0), nil},
+				{nil, nil},
+			},
+			wantedDurs: nil,
+			wantedErrs: []error{
+				mpd.ErrUnknownPeriodDur,
+				mpd.ErrUnknownPeriodDur,
+			},
+		},
+		{
+			desc:         "static with next start",
+			mpdType:      mpd.StaticMPDType,
+			mediaPresDur: 120,
+			data: []mpdData{
+				{mpd.Seconds2DurPtr(0), nil},
+				{mpd.Seconds2DurPtr(90), nil},
+			},
+			wantedDurs: []mpd.Duration{
+				mpd.Duration(90 * time.Second),
+				mpd.Duration(30 * time.Second),
+			},
+			wantedErrs: nil,
+		},
+		{
+			desc:         "dynamic, no start",
+			mpdType:      mpd.DynamicMPDType,
+			mediaPresDur: 0,
+			data:         []mpdData{{nil, nil}},
+			wantedDurs:   nil,
+			wantedErrs:   []error{mpd.ErrUnknownPeriodDur},
+		},
+		{
+			desc:         "dynamic, single-period",
+			mpdType:      mpd.DynamicMPDType,
+			mediaPresDur: 0,
+			data:         []mpdData{{mpd.Seconds2DurPtr(0), nil}},
+			wantedDurs:   nil,
+			wantedErrs:   []error{mpd.ErrUnknownPeriodDur},
+		},
+		{
+			desc:         "dynamic, without next start",
+			mpdType:      mpd.DynamicMPDType,
+			mediaPresDur: 0,
+			data: []mpdData{
+				{mpd.Seconds2DurPtr(0), nil},
+				{nil, nil},
+			},
+			wantedDurs: nil,
+			wantedErrs: []error{
+				mpd.ErrUnknownPeriodDur,
+				mpd.ErrUnknownPeriodDur,
+			},
+		},
+		{
+			desc:         "dynamic with next start",
+			mpdType:      mpd.DynamicMPDType,
+			mediaPresDur: 0,
+			data: []mpdData{
+				{mpd.Seconds2DurPtr(0), nil},
+				{mpd.Seconds2DurPtr(90), nil},
+			},
+			wantedDurs: []mpd.Duration{
+				mpd.Duration(90 * time.Second),
+				0,
+			},
+			wantedErrs: []error{nil, mpd.ErrUnknownPeriodDur},
+		},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			m := mpd.NewMPD(tc.mpdType)
+			if tc.mediaPresDur > 0 {
+				m.MediaPresentationDuration = mpd.Seconds2DurPtr(tc.mediaPresDur)
+			}
+			for _, d := range tc.data {
+				p := mpd.NewPeriod()
+				p.Start = d.start
+				p.Duration = d.dur
+				m.AppendPeriod(p)
+			}
+			m.SetParents()
+			for i, p := range m.Periods {
+				dur, err := p.GetDuration()
+				switch {
+				case len(tc.wantedErrs) > 0 && tc.wantedErrs[i] != nil:
+					require.EqualError(t, err, tc.wantedErrs[i].Error())
+				case len(tc.wantedDurs) > 0:
+					require.Equal(t, tc.wantedDurs[i], dur, fmt.Sprintf("period %d", i))
+				default:
+					t.Fail()
+				}
+			}
+		})
+	}
 }
