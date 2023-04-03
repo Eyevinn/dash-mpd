@@ -19,16 +19,23 @@ func ReadFromFile(path string) (*MPD, error) {
 	if err != nil {
 		return nil, err
 	}
+	mpd.SetParents()
 	return &mpd, nil
 }
 
 // ReadFromString reads and unmarshals an MPD from a string
 func ReadFromString(str string) (*MPD, error) {
+	return MPDFromBytes([]byte(str))
+}
+
+// MPDFromBytes reads and unmarshals an MPD from a byte slice
+func MPDFromBytes(data []byte) (*MPD, error) {
 	mpd := MPD{}
-	err := xml.Unmarshal([]byte(str), &mpd)
+	err := xml.Unmarshal(data, &mpd)
 	if err != nil {
 		return nil, err
 	}
+	mpd.SetParents()
 	return &mpd, nil
 }
 

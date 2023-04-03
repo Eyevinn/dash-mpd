@@ -24,8 +24,7 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 		for _, fName := range mpdFiles {
 			td, err := fs.ReadFile(fsys, fName)
 			require.NoError(t, err)
-			mpd := m.MPD{}
-			err = xml.Unmarshal(td, &mpd)
+			mpd, err := m.MPDFromBytes(td)
 			if fName == "invalid.mpd" {
 				require.Error(t, err, "")
 				continue

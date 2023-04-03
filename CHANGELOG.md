@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Append methods the above that appends and sets parent
 - New type PeriodType
 - Declared errors: ErrPeriodNotFound and similar
+- New function MPDFromBytes() to unmarshal MPD
 
 ## [0.7.0] - 2023-03-24
 
