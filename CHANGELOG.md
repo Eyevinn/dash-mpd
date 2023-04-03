@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Nothing at the moment
+### Changed
+
+- PeriodType renamed Period
+- PeriodType is now PTRegular, PTEarlyAvaiable etc
+- GetRepInit changed to GetInit() method on Representation
+- GetRepMedia changed to GetMedia() method on Representation
+- NewMPD() now takes mpdType as argument
+
+### Added
+
+- New Duration method Seconds()
+- New DateTime method ConvertToSeconds()
+- New Period methods AbsoluteStart(), GetStart(), GetType(), GetIndex()
+- Parent/SetParent methods for Period, AdaptationSet, Representataion, and SubRepresentation
+- New Append methods the above that appends and sets parent
+- New type PeriodType
+- Declared errors: ErrPeriodNotFound and similar
+- New function MPDFromBytes() to unmarshal MPD
 
 ## [0.7.0] - 2023-03-24
 

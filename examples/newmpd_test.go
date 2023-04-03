@@ -9,14 +9,13 @@ import (
 )
 
 func ExampleNewMPD() {
-	m := mpd.NewMPD()
+	m := mpd.NewMPD(mpd.StaticMPDType)
 	m.Profiles = "urn:mpeg:dash:profile:isoff-live:2011,http://dashif.org/guidelines/dash-if-simple"
-	m.Type = mpd.Ptr("static")
 	p := mpd.NewPeriod()
-	m.Periods = append(m.Periods, p)
+	m.AppendPeriod(p)
 	p.Id = "p0"
 	as := mpd.NewAdaptationSet()
-	p.AdaptationSets = append(p.AdaptationSets, as)
+	p.AppendAdaptationSet(as)
 	as.ContentType = "audio"
 	as.Lang = "en"
 	st := mpd.NewSegmentTemplate()
@@ -26,7 +25,7 @@ func ExampleNewMPD() {
 	st.Duration = mpd.Ptr(uint32(2))
 	st.Media = "$RepresentationID$/$Number$.m4s"
 	rep := mpd.NewRepresentation()
-	as.Representations = append(as.Representations, rep)
+	as.AppendRepresentation(rep)
 	rep.Id = "A48"
 	rep.Codecs = "mp4a.40.2"
 	rep.Bandwidth = 96000

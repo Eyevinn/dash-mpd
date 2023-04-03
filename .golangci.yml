@@ -8,7 +8,7 @@ linters:
     - goimports # Ensure standard import formatting/ordering
     - misspell # Fix spelling errors
     - unconvert  # Detect unnecessary type conversions
-    - unparam # Detect unused function parameters 
+    - unparam # Detect unused function parameters
 
 run:
   skip-dirs:
@@ -20,3 +20,7 @@ linters-settings:
     line-length: 147
     # tab width in spaces. Default to 1.
     tab-width: 4
+  staticcheck:
+    checks:
+      - all
+      - '-SA5008' # disable rule SA5008 that does not like the parent pointers to named structs

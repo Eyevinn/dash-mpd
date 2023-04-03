@@ -219,3 +219,8 @@ func ParseDuration(str string) (time.Duration, error) {
 
 	return total, nil
 }
+
+// Seconds returns the duration as a floating point number of seconds.
+func (d *Duration) Seconds() float64 {
+	return float64(*d) / float64(time.Second)
+}

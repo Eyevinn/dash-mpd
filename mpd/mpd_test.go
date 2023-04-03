@@ -24,13 +24,13 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 		for _, fName := range mpdFiles {
 			td, err := fs.ReadFile(fsys, fName)
 			require.NoError(t, err)
-			mpd := m.MPD{}
-			err = xml.Unmarshal(td, &mpd)
+			mpd, err := m.MPDFromBytes(td)
 			if fName == "invalid.mpd" {
 				require.Error(t, err, "")
 				continue
 			}
 			require.NoError(t, err, fName)
+			mpd.SetParents()
 			out, err := xml.MarshalIndent(mpd, "", "  ")
 			require.NoError(t, err)
 			inTree, err := xmltree.Parse(td)
@@ -92,7 +92,7 @@ func BenchmarkClone(b *testing.B) {
 
 func TestNewFunction(t *testing.T) {
 
-	_, err := xml.Marshal(m.NewMPD())
+	_, err := xml.Marshal(m.NewMPD(m.DynamicMPDType))
 	require.NoError(t, err)
 
 	_, err = xml.Marshal(m.NewPeriod())

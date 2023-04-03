@@ -19,16 +19,23 @@ func ReadFromFile(path string) (*MPD, error) {
 	if err != nil {
 		return nil, err
 	}
+	mpd.SetParents()
 	return &mpd, nil
 }
 
 // ReadFromString reads and unmarshals an MPD from a string
 func ReadFromString(str string) (*MPD, error) {
+	return MPDFromBytes([]byte(str))
+}
+
+// MPDFromBytes reads and unmarshals an MPD from a byte slice
+func MPDFromBytes(data []byte) (*MPD, error) {
 	mpd := MPD{}
-	err := xml.Unmarshal([]byte(str), &mpd)
+	err := xml.Unmarshal(data, &mpd)
 	if err != nil {
 		return nil, err
 	}
+	mpd.SetParents()
 	return &mpd, nil
 }
 
@@ -64,4 +71,13 @@ func ConvertToDateTimeMS(ms int64) DateTime {
 	ns := (ms - 1000*seconds) * 1_000_000
 	t := time.Unix(seconds, ns).UTC()
 	return DateTime(t.Format(RFC3339MS))
+}
+
+// ConvertToSeconds converts a DateTime to a number of seconds.
+func (dt DateTime) ConvertToSeconds() (float64, error) {
+	t, err := time.Parse(RFC3339MS, string(dt))
+	if err != nil {
+		return 0, err
+	}
+	return float64(t.UnixNano()) / 1_000_000_000, nil
 }
