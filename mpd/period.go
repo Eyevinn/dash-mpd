@@ -1,6 +1,10 @@
 package mpd
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/barkimedes/go-deepcopy"
+)
 
 // AbsoluteStart returns the absolute start time of a Period in seconds.
 // It is meant for dynamic MPDs where each Period has a start time,
@@ -168,4 +172,11 @@ func (p *Period) GetDuration() (Duration, error) {
 		}
 		return *m.Periods[idx+1].Start - *p.Start, nil
 	}
+}
+
+// Clone returns a deep copy of the Period with parent links set.
+func (p *Period) Clone() *Period {
+	pc := deepcopy.MustAnything(p).(*Period)
+	pc.SetParents()
+	return pc
 }
