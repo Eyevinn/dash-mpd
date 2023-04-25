@@ -60,9 +60,11 @@ func (m *MPD) GetType() string {
 	return *m.Type
 }
 
-// Clone creates a deep copy of mpd.
+// Clone creates a deep copy of mpd and sets parents.
 func Clone(mpd *MPD) *MPD {
-	return deepcopy.MustAnything(mpd).(*MPD)
+	cm := deepcopy.MustAnything(mpd).(*MPD)
+	cm.SetParents()
+	return cm
 }
 
 // PatchLocationType is Patch Location Type.
@@ -262,6 +264,13 @@ func (a *AdaptationSetType) SetParent(p *Period) {
 
 func (a *AdaptationSetType) Parent() *Period {
 	return a.parent
+}
+
+// Clone returns a deep copy of the AdaptationSet with parent links set.
+func (a *AdaptationSetType) Clone() *AdaptationSetType {
+	ac := deepcopy.MustAnything(a).(*AdaptationSetType)
+	ac.SetParents()
+	return ac
 }
 
 // ContentComponentType is Content Component.
