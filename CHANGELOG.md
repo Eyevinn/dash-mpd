@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing yet
 
+## [0.9.1] - 2023-05-17
+
+- Same as 0.9.0, but new version number due to mistake in release process
+
 ## [0.9.0] - 2023-05-17
 
 ### Added
@@ -79,7 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests with well-known MPDs
 - Tweaked XML library to support namespaces
 
-[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/Eyevinn/dash-mpd/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.6.1...v0.7.0
