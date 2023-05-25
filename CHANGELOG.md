@@ -7,7 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Nothing yet
+### Changed
+
+- `NewMPD` function now also sets DASH namespace
+- `mpd.Write` now has two parameters to set indentation and an optional XML header
+- renamed constants StaticMpdType and DynamicMpdType to `STATIC_TYPE` and `DYNAMIC_TYPE`
+
+### Added
+
+Lots of convenience functions to create MPDs
+
+- `mpd.WriteToString` function to return a string
+- constants for many common values like audio-channel-configuration
+- `rep.SetSegmentBase` method
+- `NewBaseURL` function for simple BaseURL cases
+- `NewDescriptor` function for creating a DescriptorType instance
+- `NewRole` function for creating a new DescriptorType for a role
+- `listOfTypes.AddProfile` method to add a profile
+- `NewAdaptationSetWithParams` function for generating AdaptationSet
+- `NewRepresentationWithID` function for generating a representation with a few parameters
+- `NewAudioRepresentation` function for audio representations
+- `NewVideoRepresentation` function for video representation
+- `Seconds2DurPtrFloat64` to generate a pointer to duration specified as seconds using float64
 
 ## [0.9.1] - 2023-05-17
 
