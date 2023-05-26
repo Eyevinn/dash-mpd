@@ -39,13 +39,35 @@ func MPDFromBytes(data []byte) (*MPD, error) {
 	return &mpd, nil
 }
 
-// Write marshals and writes an MPD.
-func (m *MPD) Write(w io.Writer) (int, error) {
-	data, err := xml.MarshalIndent(m, "", "  ")
+// Write writes to w, with indentation according to indent and optionally adding an XML header.
+func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (n int, err error) {
+	data, err := xml.MarshalIndent(m, "", indent)
 	if err != nil {
 		return 0, err
 	}
-	return w.Write(data)
+	nTot := 0
+	if withHeader {
+		n, err = w.Write([]byte(xml.Header))
+		if err != nil {
+			return n, err
+		}
+		nTot += n
+	}
+	n, err = w.Write(data)
+	nTot += n
+	return nTot, err
+}
+
+// WriteToString returns a string, with indentation according to indent and optionally adding an XML header.
+func (m *MPD) WriteToString(indent string, withHeader bool) (string, error) {
+	data, err := xml.MarshalIndent(m, "", indent)
+	if err != nil {
+		return "", err
+	}
+	if withHeader {
+		return xml.Header + string(data), nil
+	}
+	return string(data), nil
 }
 
 const RFC3339MS string = "2006-01-02T15:04:05.999Z07:00"

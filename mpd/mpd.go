@@ -1,6 +1,7 @@
 package mpd
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -10,8 +11,20 @@ import (
 )
 
 const (
-	StaticMPDType  = "static"
-	DynamicMPDType = "dynamic"
+	STATIC_TYPE  = "static"
+	DYNAMIC_TYPE = "dynamic"
+)
+
+const (
+	DASH_NAMESPACE                         = "urn:mpeg:dash:schema:mpd:2011"
+	PROFILE_LIVE                           = "urn:mpeg:dash:profile:isoff-live:2011"
+	PROFILE_ONDEMAND                       = "urn:mpeg:dash:profile:isoff-on-demand:2011"
+	AUDIO_CHANNEL_CONFIGURATION_MPEG_DASH  = "urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
+	AUDIO_CHANNEL_CONFIGURATION_MPEG_DOLBY = "tag:dolby.com,2014:dash:audio_channel_configuration:2011"
+	MIME_TYPE_VIDEO_MP4                    = "video/mp4"
+	MIME_TYPE_AUDIO_MP4                    = "audio/mp4"
+	MIME_TYPE_SUBTITLE_VTT                 = "text/vtt"
+	MIME_TYPE_TTML                         = "application/ttml+xml"
 )
 
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
@@ -55,7 +68,7 @@ type MPD struct {
 // GetType returns static or dynamic.
 func (m *MPD) GetType() string {
 	if m.Type == nil {
-		return StaticMPDType
+		return STATIC_TYPE
 	}
 	return *m.Type
 }
@@ -313,6 +326,21 @@ func (r *RepresentationType) SetParent(p *AdaptationSetType) {
 
 func (r *RepresentationType) Parent() *AdaptationSetType {
 	return r.parent
+}
+
+// SetSegmentBase sets SegmentBaseType for RepresentationType.
+func (r *RepresentationType) SetSegmentBase(initSize, sidxSize uint32, indexRangeExact bool) {
+	initRange := fmt.Sprintf("0-%d", initSize-1)
+	indexRange := fmt.Sprintf("%d-%d", initSize, initSize+sidxSize-1)
+	r.SegmentBase = &SegmentBaseType{
+		IndexRange: indexRange,
+		Initialization: &URLType{
+			Range: initRange,
+		},
+	}
+	if indexRangeExact {
+		r.SegmentBase.IndexRangeExact = true
+	}
 }
 
 // ExtendedBandwidthType is Extended Bandwidth Model
@@ -659,6 +687,13 @@ type BaseURLType struct {
 	Value                    AnyURI     `xml:",chardata"`
 }
 
+// NewBaseURL returns a new BaseURLType with Value set.
+func NewBaseURL(value string) *BaseURLType {
+	return &BaseURLType{
+		Value: AnyURI(value),
+	}
+}
+
 // ProgramInformationType is Program Information.
 type ProgramInformationType struct {
 	Lang               string `xml:"lang,attr,omitempty"`
@@ -673,6 +708,19 @@ type DescriptorType struct {
 	SchemeIdUri AnyURI `xml:"schemeIdUri,attr,omitempty"`
 	Value       string `xml:"value,attr,omitempty"`
 	Id          string `xml:"id,attr,omitempty"`
+}
+
+// NewDescriptor returns a new DescriptorType.
+func NewDescriptor(schemeIdURI, value, id string) *DescriptorType {
+	return &DescriptorType{
+		SchemeIdUri: AnyURI(schemeIdURI),
+		Value:       value,
+		Id:          id,
+	}
+}
+
+func NewRole(value string) *DescriptorType {
+	return NewDescriptor("urn:mpeg:dash:role:2011", value, "")
 }
 
 // MetricsType is Metrics.
@@ -697,6 +745,14 @@ type LeapSecondInformationType struct {
 
 // ListOfProfilesType is comma-separated list of profiles.
 type ListOfProfilesType string
+
+// AddProfile adds a profile to the comma-separated list of profiles.
+func (l ListOfProfilesType) AddProfile(profile string) ListOfProfilesType {
+	if l == "" {
+		return ListOfProfilesType(profile)
+	}
+	return ListOfProfilesType(string(l) + "," + profile)
+}
 
 // StringVectorType is Whitespace-separated list of strings.
 type StringVectorType string
@@ -742,7 +798,10 @@ type DateTime string
 
 // NewMPD returns a new empty MPD with the right type.
 func NewMPD(mpdType string) *MPD {
-	return &MPD{Type: &mpdType}
+	return &MPD{
+		Type:  &mpdType,
+		XMLNs: DASH_NAMESPACE,
+	}
 }
 
 // NewPeriod returns a new empty Period.
@@ -755,9 +814,49 @@ func NewAdaptationSet() *AdaptationSetType {
 	return &AdaptationSetType{}
 }
 
+func NewAdaptationSetWithParams(contentType, mimeType string, segmentAlignment bool, startsWithSAP uint32) *AdaptationSetType {
+	return &AdaptationSetType{
+		RepresentationBaseType: RepresentationBaseType{
+			MimeType:     mimeType,
+			StartWithSAP: startsWithSAP,
+		},
+		SegmentAlignment: segmentAlignment,
+		ContentType:      RFC6838ContentTypeType(contentType),
+	}
+}
+
 // NewRepresentation returns a new empty Representation.
 func NewRepresentation() *RepresentationType {
 	return &RepresentationType{}
+}
+
+// NewRepresentationWithID returns a new empty Representation with the given ID and parameters.
+func NewRepresentationWithID(id, codec, mimeType string, bandwidth int) *RepresentationType {
+	r := &RepresentationType{
+		RepresentationBaseType: RepresentationBaseType{
+			Codecs:   codec,
+			MimeType: mimeType,
+		},
+		Id:        id,
+		Bandwidth: uint32(bandwidth),
+	}
+	return r
+}
+
+// NewAudioRepresentation returns a new audio representation with parameters.
+func NewAudioRepresentation(id, codec, mimeType string, bandwidth, audioSamplingRate int) *RepresentationType {
+	r := NewRepresentationWithID(id, codec, mimeType, bandwidth)
+	r.AudioSamplingRate = Ptr(UIntVectorType(fmt.Sprintf("%d", audioSamplingRate)))
+	return r
+}
+
+// NewVideoRepresentation returns a new  video representation with parameters.
+func NewVideoRepresentation(id, codec, mimeType, frameRate string, bandwidth, width, height int) *RepresentationType {
+	r := NewRepresentationWithID(id, codec, mimeType, bandwidth)
+	r.FrameRate = FrameRateType(frameRate)
+	r.Width = uint32(width)
+	r.Height = uint32(height)
+	return r
 }
 
 // NewSubRepresentation returns a new empty SubRepresentation.

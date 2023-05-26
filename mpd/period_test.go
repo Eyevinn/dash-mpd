@@ -10,7 +10,7 @@ import (
 )
 
 func TestAbsolutePeriodStart(t *testing.T) {
-	m := mpd.NewMPD(mpd.DynamicMPDType)
+	m := mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	m.AvailabilityStartTime = mpd.DateTime("1970-01-01T00:00:00Z")
 	for i := 0; i < 3; i++ {
 		p := mpd.NewPeriod()
@@ -52,14 +52,14 @@ func TestPeriodStart(t *testing.T) {
 	}{
 		{
 			desc:         "dynamic, single-period",
-			mpdType:      mpd.DynamicMPDType,
+			mpdType:      mpd.DYNAMIC_TYPE,
 			mupPresent:   true,
 			data:         []mpdData{{mpd.Seconds2DurPtr(12), nil}},
 			wantedStarts: []mpd.Duration{mpd.Duration(12 * time.Second)},
 		},
 		{
 			desc:       "dynamic, single-period",
-			mpdType:    mpd.DynamicMPDType,
+			mpdType:    mpd.DYNAMIC_TYPE,
 			mupPresent: true,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(12), mpd.Seconds2DurPtr(60)},
@@ -72,7 +72,7 @@ func TestPeriodStart(t *testing.T) {
 		},
 		{
 			desc:       "static, single-period without start",
-			mpdType:    mpd.StaticMPDType,
+			mpdType:    mpd.STATIC_TYPE,
 			mupPresent: false,
 			data: []mpdData{
 				{nil, nil},
@@ -109,20 +109,20 @@ type mpdData struct {
 }
 
 func TestMpdStartErrors(t *testing.T) {
-	m := mpd.NewMPD(mpd.DynamicMPDType)
+	m := mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	p := mpd.NewPeriod()
 	m.Periods = append(m.Periods, p)
 	_, err := p.GetStart()
 	require.EqualError(t, err, mpd.ErrParentNotSet.Error())
 
-	m = mpd.NewMPD(mpd.DynamicMPDType)
+	m = mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	p = mpd.NewPeriod()
 	m.AppendPeriod(p)
 	m.Periods = nil
 	_, err = p.GetStart()
 	require.EqualError(t, err, mpd.ErrPeriodNotFound.Error())
 
-	m = mpd.NewMPD(mpd.DynamicMPDType)
+	m = mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	p = mpd.NewPeriod()
 	m.AppendPeriod(p)
 	p = mpd.NewPeriod()
@@ -130,7 +130,7 @@ func TestMpdStartErrors(t *testing.T) {
 	_, err = p.GetStart()
 	require.EqualError(t, err, mpd.ErrUnknownPeriodStart.Error())
 
-	m = mpd.NewMPD(mpd.DynamicMPDType)
+	m = mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	p = mpd.NewPeriod()
 	p.Duration = mpd.Seconds2DurPtr(30)
 	m.AppendPeriod(p)
@@ -151,21 +151,21 @@ func TestPeriodType(t *testing.T) {
 	}{
 		{
 			desc:        "dynamic, single-period",
-			mpdType:     mpd.DynamicMPDType,
+			mpdType:     mpd.DYNAMIC_TYPE,
 			mupPresent:  false,
 			data:        []mpdData{{mpd.Seconds2DurPtr(0), nil}},
 			wantedTypes: []mpd.PeriodType{mpd.PTRegular},
 		},
 		{
 			desc:        "static, single-period",
-			mpdType:     mpd.StaticMPDType,
+			mpdType:     mpd.STATIC_TYPE,
 			mupPresent:  false,
 			data:        []mpdData{{mpd.Seconds2DurPtr(0), nil}},
 			wantedTypes: []mpd.PeriodType{mpd.PTRegular},
 		},
 		{
 			desc:       "dynamic, first with dur, next without start and dur",
-			mpdType:    mpd.DynamicMPDType,
+			mpdType:    mpd.DYNAMIC_TYPE,
 			mupPresent: true,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), mpd.Seconds2DurPtr(20)},
@@ -175,7 +175,7 @@ func TestPeriodType(t *testing.T) {
 		},
 		{
 			desc:       "dynamic, first with dur, next without start and dur",
-			mpdType:    mpd.DynamicMPDType,
+			mpdType:    mpd.DYNAMIC_TYPE,
 			mupPresent: true,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), mpd.Seconds2DurPtr(20)},
@@ -185,7 +185,7 @@ func TestPeriodType(t *testing.T) {
 		},
 		{
 			desc:       "dynamic, early available first segment",
-			mpdType:    mpd.DynamicMPDType,
+			mpdType:    mpd.DYNAMIC_TYPE,
 			mupPresent: true,
 			data: []mpdData{
 				{nil, nil},
@@ -194,7 +194,7 @@ func TestPeriodType(t *testing.T) {
 		},
 		{
 			desc:       "dynamic, early available second segment",
-			mpdType:    mpd.DynamicMPDType,
+			mpdType:    mpd.DYNAMIC_TYPE,
 			mupPresent: true,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), nil},
@@ -226,13 +226,13 @@ func TestPeriodType(t *testing.T) {
 }
 
 func TestMpdTypeErrors(t *testing.T) {
-	m := mpd.NewMPD(mpd.DynamicMPDType)
+	m := mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	p := mpd.NewPeriod()
 	m.Periods = append(m.Periods, p)
 	_, err := p.GetType()
 	require.EqualError(t, err, mpd.ErrParentNotSet.Error())
 
-	m = mpd.NewMPD(mpd.DynamicMPDType)
+	m = mpd.NewMPD(mpd.DYNAMIC_TYPE)
 	p = mpd.NewPeriod()
 	m.AppendPeriod(p)
 	m.Periods = nil
@@ -252,7 +252,7 @@ func TestGetDuration(t *testing.T) {
 	}{
 		{
 			desc:         "static with duration",
-			mpdType:      mpd.StaticMPDType,
+			mpdType:      mpd.STATIC_TYPE,
 			mediaPresDur: 0,
 			data:         []mpdData{{nil, mpd.Seconds2DurPtr(60)}},
 			wantedDurs:   []mpd.Duration{mpd.Duration(60 * time.Second)},
@@ -260,7 +260,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "static without mediaPresendationDuration",
-			mpdType:      mpd.StaticMPDType,
+			mpdType:      mpd.STATIC_TYPE,
 			mediaPresDur: 0,
 			data:         []mpdData{{mpd.Seconds2DurPtr(0), nil}},
 			wantedDurs:   nil,
@@ -268,7 +268,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "static not-last without next start",
-			mpdType:      mpd.StaticMPDType,
+			mpdType:      mpd.STATIC_TYPE,
 			mediaPresDur: 120,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), nil},
@@ -282,7 +282,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "static with next start",
-			mpdType:      mpd.StaticMPDType,
+			mpdType:      mpd.STATIC_TYPE,
 			mediaPresDur: 120,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), nil},
@@ -296,7 +296,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "dynamic, no start",
-			mpdType:      mpd.DynamicMPDType,
+			mpdType:      mpd.DYNAMIC_TYPE,
 			mediaPresDur: 0,
 			data:         []mpdData{{nil, nil}},
 			wantedDurs:   nil,
@@ -304,7 +304,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "dynamic, single-period",
-			mpdType:      mpd.DynamicMPDType,
+			mpdType:      mpd.DYNAMIC_TYPE,
 			mediaPresDur: 0,
 			data:         []mpdData{{mpd.Seconds2DurPtr(0), nil}},
 			wantedDurs:   nil,
@@ -312,7 +312,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "dynamic, without next start",
-			mpdType:      mpd.DynamicMPDType,
+			mpdType:      mpd.DYNAMIC_TYPE,
 			mediaPresDur: 0,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), nil},
@@ -326,7 +326,7 @@ func TestGetDuration(t *testing.T) {
 		},
 		{
 			desc:         "dynamic with next start",
-			mpdType:      mpd.DynamicMPDType,
+			mpdType:      mpd.DYNAMIC_TYPE,
 			mediaPresDur: 0,
 			data: []mpdData{
 				{mpd.Seconds2DurPtr(0), nil},

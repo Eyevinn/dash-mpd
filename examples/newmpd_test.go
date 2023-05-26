@@ -9,7 +9,7 @@ import (
 )
 
 func ExampleNewMPD() {
-	m := mpd.NewMPD(mpd.StaticMPDType)
+	m := mpd.NewMPD(mpd.STATIC_TYPE)
 	m.Profiles = "urn:mpeg:dash:profile:isoff-live:2011,http://dashif.org/guidelines/dash-if-simple"
 	p := mpd.NewPeriod()
 	m.AppendPeriod(p)
@@ -33,7 +33,7 @@ func ExampleNewMPD() {
 	out, _ := xml.MarshalIndent(m, " ", "")
 
 	fmt.Println(string(out))
-	// Output: <MPD profiles="urn:mpeg:dash:profile:isoff-live:2011,http://dashif.org/guidelines/dash-if-simple" type="static">
+	// Output: <MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011,http://dashif.org/guidelines/dash-if-simple" type="static">
 	//  <Period id="p0">
 	//  <AdaptationSet lang="en" contentType="audio">
 	//  <SegmentTemplate media="$RepresentationID$/$Number$.m4s" initialization="$RepresentationID$/init.mp4" duration="2" startNumber="1"></SegmentTemplate>

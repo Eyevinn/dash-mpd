@@ -123,7 +123,7 @@ func (p *Period) GetStart() (Duration, error) {
 		return 0, ErrUnknownPeriodStart
 	}
 	// first period of static, but no start => start = 0
-	if m.GetType() == StaticMPDType {
+	if m.GetType() == STATIC_TYPE {
 		return 0, nil
 	}
 	return 0, ErrUnknownPeriodStart
@@ -144,7 +144,7 @@ func (p *Period) GetDuration() (Duration, error) {
 		return 0, err
 	}
 	switch m.GetType() {
-	case StaticMPDType:
+	case STATIC_TYPE:
 		if m.MediaPresentationDuration == nil {
 			return 0, ErrNoMediaPresentationDuration
 		}
