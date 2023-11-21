@@ -286,6 +286,16 @@ func (a *AdaptationSetType) Clone() *AdaptationSetType {
 	return ac
 }
 
+// GetSegmentTemplate returns the segment template of the AdaptationSet or nil if not set.
+func (a *AdaptationSetType) GetSegmentTemplate() *SegmentTemplateType {
+	return a.SegmentTemplate
+}
+
+// GetMimeType returns the mime type.
+func (a *AdaptationSetType) GetMimeType() string {
+	return a.MimeType
+}
+
 // GetRepresentations returns the ContentProtections of the adaptation set.
 func (a *AdaptationSetType) GetContentProtections() []*ContentProtectionType {
 	return a.ContentProtections
@@ -416,6 +426,13 @@ type RepresentationBaseType struct {
 	Resyncs                    []*ResyncType                `xml:"Resync"`
 }
 
+func (r *RepresentationType) GetSegmentTemplate() *SegmentTemplateType {
+	if r.SegmentTemplate == nil {
+		return r.parent.GetSegmentTemplate()
+	}
+	return r.SegmentTemplate
+}
+
 // GetInit returns the representation's initialization URI with replaced identifiers.
 //
 // TODO: Apply BaseURLs
@@ -424,19 +441,17 @@ func (r *RepresentationType) GetInit() (string, error) {
 	if a == nil {
 		return "", ErrParentNotSet
 	}
-	var initialization string
-	if a.SegmentTemplate != nil {
-		initialization = a.SegmentTemplate.Initialization
+	st := r.GetSegmentTemplate()
+	if st == nil {
+		return "", ErrSegmentTemplateNotSet
 	}
-	if r.SegmentTemplate != nil {
-		initialization = r.SegmentTemplate.Initialization
-	}
+	initialization := st.Initialization
 	initialization = strings.ReplaceAll(initialization, "$RepresentationID$", r.Id)
 	initialization = strings.ReplaceAll(initialization, "$Bandwidth$", strconv.Itoa(int(r.Bandwidth)))
 	return initialization, nil
 }
 
-// GetRepMedia returns the representaion's media path with replaced ID and bandwidth identifiers.
+// GetRepMedia returns the representation's media path with replaced ID and bandwidth identifiers.
 //
 // TODO: Apply BaseURLs.
 func (r *RepresentationType) GetMedia() (string, error) {
@@ -444,17 +459,23 @@ func (r *RepresentationType) GetMedia() (string, error) {
 	if a == nil || r == nil {
 		return "", ErrParentNotSet
 	}
-	var media string
-	if a.SegmentTemplate != nil {
-		media = a.SegmentTemplate.Media
+	st := r.GetSegmentTemplate()
+	if st == nil {
+		return "", ErrSegmentTemplateNotSet
 	}
-	if r.SegmentTemplate != nil {
-		media = r.SegmentTemplate.Media
-	}
+	media := st.Media
 	media = strings.ReplaceAll(media, "$RepresentationID$", r.Id)
 	media = strings.ReplaceAll(media, "$Bandwidth$", strconv.Itoa(int(r.Bandwidth)))
 
 	return media, nil
+}
+
+// GetMimeType returns the representation's or its parent's mime type.
+func (r *RepresentationType) GetMimeType() string {
+	if r.MimeType == "" {
+		return r.parent.GetMimeType()
+	}
+	return r.MimeType
 }
 
 // GetContentProtections returns the representation's or its parent's content protections.
@@ -794,7 +815,7 @@ type StringNoWhitespaceType string
 // VideoScanType is enumeration "progressive", "interlaced", "unknown".
 type VideoScanType string
 
-// ProducerReferenceTimeTypeType is enumaration "encoder", "captured", "application".
+// ProducerReferenceTimeTypeType is enumeration "encoder", "captured", "application".
 type ProducerReferenceTimeTypeType string
 
 // PreselectionOrderType is enumeration "undefined", "time-ordered", "fully-ordered".
