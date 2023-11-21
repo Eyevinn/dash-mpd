@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Nothing yet
+### Added
+
+- GetContentProtections methods to AdaptationSet and Representation
 
 ## [0.10.0] - 2023-05-26
 

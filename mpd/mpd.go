@@ -286,6 +286,11 @@ func (a *AdaptationSetType) Clone() *AdaptationSetType {
 	return ac
 }
 
+// GetRepresentations returns the ContentProtections of the adaptation set.
+func (a *AdaptationSetType) GetContentProtections() []*ContentProtectionType {
+	return a.ContentProtections
+}
+
 // ContentComponentType is Content Component.
 type ContentComponentType struct {
 	XMLName         xml.Name               `xml:"ContentComponent"`
@@ -450,6 +455,14 @@ func (r *RepresentationType) GetMedia() (string, error) {
 	media = strings.ReplaceAll(media, "$Bandwidth$", strconv.Itoa(int(r.Bandwidth)))
 
 	return media, nil
+}
+
+// GetContentProtections returns the representation's or its parent's content protections.
+func (r *RepresentationType) GetContentProtections() []*ContentProtectionType {
+	if len(r.ContentProtections) == 0 {
+		return r.parent.GetContentProtections()
+	}
+	return r.ContentProtections
 }
 
 // ContentProtectionType is Content Protection.
