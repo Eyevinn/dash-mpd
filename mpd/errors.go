@@ -6,6 +6,7 @@ var (
 	ErrASTRequired                 = errors.New("availabilityStartTime is required for dynamic MPDs")
 	ErrPeriodNotFound              = errors.New("period not found in MPD")
 	ErrParentNotSet                = errors.New("parent not set")
+	ErrSegmentTemplateNotSet       = errors.New("segmentTemplate not set")
 	ErrNoMediaPresentationDuration = errors.New("no MediaPresentationDuration in static MPD")
 	ErrUnknownPeriodDur            = errors.New("period duration cannot be derived")
 	ErrUnknownPeriodStart          = errors.New("period start cannot be derived")
