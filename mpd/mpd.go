@@ -296,6 +296,11 @@ func (a *AdaptationSetType) GetMimeType() string {
 	return a.MimeType
 }
 
+// GetCodecs returns codecs string of the adaptation set.
+func (a *AdaptationSetType) GetCodecs() string {
+	return a.Codecs
+}
+
 // GetRepresentations returns the ContentProtections of the adaptation set.
 func (a *AdaptationSetType) GetContentProtections() []*ContentProtectionType {
 	return a.ContentProtections
@@ -476,6 +481,14 @@ func (r *RepresentationType) GetMimeType() string {
 		return r.parent.GetMimeType()
 	}
 	return r.MimeType
+}
+
+// GetCodecs returns the representation's or its parent's codecs string.
+func (r *RepresentationType) GetCodecs() string {
+	if r.Codecs == "" {
+		return r.parent.GetCodecs()
+	}
+	return r.Codecs
 }
 
 // GetContentProtections returns the representation's or its parent's content protections.
