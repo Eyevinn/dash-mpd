@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GetContentProtections, GetMimeType, GetCodecs, and GetSegmentTemplate methods for AdaptationSet and Representation
 - ContentProtection elements and name spaces for Marlin DRM and DASH-IF ClearKey
 
+### Fixed
+
+- ContentProtection and other parts of RepresentationBaseType moved before other elements in AdaptationSet and Representation
+
 ## [0.10.0] - 2023-05-26
 
 ### Changed

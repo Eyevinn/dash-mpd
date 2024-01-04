@@ -15,6 +15,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	printProcessMPDFile = "" // Used to see the output of the process even if there is no essential diff
+)
+
 func TestDecodeEncodeMPDs(t *testing.T) {
 	testDirs := []string{"testdata/go-dash-fixtures", "testdata/schema-mpds", "testdata/livesim"}
 	for _, testDir := range testDirs {
@@ -36,6 +40,10 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 			inTree, err := xmltree.Parse(td)
 			require.NoError(t, err)
 			outTree, err := xmltree.Parse(out)
+			if fName == printProcessMPDFile {
+				err := os.WriteFile(fName, out, 0644)
+				require.NoError(t, err)
+			}
 			require.NoError(t, err)
 			if !xmltree.Equal(inTree, outTree) {
 				inBuf := bytes.Buffer{}
@@ -47,11 +55,9 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 				d := cmp.Diff(inBuf.String(), outBuf.String())
 				// Note. There is no canonicalization and there may
 				// be comments in the input, so the diff is not minimal.
-				t.Errorf("non-minimal diff for mpd %s:\n%s\n", fName, d[:400])
-				ofh, err := os.Create(fName)
+				t.Errorf("non-minimal diff for mpd %s:\n%s. Writing file %s\n", fName, d[:400], fName)
+				err = os.WriteFile(fName, out, 0644)
 				require.NoError(t, err)
-				_, _ = ofh.Write(out)
-				ofh.Close()
 			}
 		}
 	}
