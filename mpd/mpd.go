@@ -27,6 +27,13 @@ const (
 	MIME_TYPE_TTML                         = "application/ttml+xml"
 )
 
+const (
+	DRM_CLEAR_KEY_DASHIF = "urn:uuid:e2719d58-a985-b3c9-781a-b030af78d30e"
+	DRM_PLAYREADY        = "urn:uuid:9a04f079-9840-4286-ab92-e65be0885f95"
+	DRM_WIDEVINE         = "urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed"
+	DRM_MARLIN           = "urn:uuid:5e629af5-38dA-4063-8977-97ffbd9902d4"
+)
+
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
 //
 // The tree of structs is generated from the corresponding XML Schema at https://github.com/MPEGGroup/DASHSchema
@@ -510,6 +517,12 @@ type ContentProtectionType struct {
 	Pssh *PsshType `xml:"urn:mpeg:cenc:2013 cenc:pssh,omitempty"`
 	// MSPro is Microsoft PlayReady provisioning data with namespace "urn:microsoft:playready and "prefix "mspr".
 	MSPro *MSProType `xml:"urn:microsoft:playready mspr:pro,omitempty"`
+	// ClearKey is DASH-IF clear key
+	ClearKey *ClearKeyType `xml:"http://dashif.org/guidelines/clearKey ck:Laurl,omitempty"`
+	// LaURL is DASH-IF License Acquisition URL.
+	LaURL *LaURL `xml:"https://dashif.org/ dashif:laurl,omitempty"`
+	// MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
+	MarlinContentIds *MarlinContentIds `xml:"urn:marlin:mas:1-0:services:schemas:mpd mas:MarlinContentIds,omitempty"`
 	DescriptorType
 }
 
@@ -520,6 +533,27 @@ type PsshType struct {
 
 // MSProType is Microsoft PlayReady provisioning data.
 type MSProType struct {
+	Value string `xml:",chardata"`
+}
+
+// ClearKeyType is DASH-IF clear key type
+type ClearKeyType struct {
+	LicType string `xml:"Lic_type,attr"`
+	Value   string `xml:",chardata"`
+}
+
+// LaURL is License Acquisition URL.
+type LaURL struct {
+	Value string `xml:",chardata"`
+}
+
+// MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
+type MarlinContentIds struct {
+	Cids []*MarlinContentId `xml:"urn:marlin:mas:1-0:services:schemas:mpd mas:MarlinContentId"`
+}
+
+// MarlinContentId is Marlin Content Id.
+type MarlinContentId struct {
 	Value string `xml:",chardata"`
 }
 

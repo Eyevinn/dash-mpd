@@ -41,7 +41,7 @@ needed. The main modifications made were:
   value `false` or be absent
 * Add type comments and document enum values for certain types
 * Change names to plural for all subelement slices, e.g. Periods instead of Period
-* Add `cenc:pssh` and `mspr:pro` DRM elements
+* Add ContentProtection elements and corresponding name spaces
 
 ## XML handling
 
@@ -74,13 +74,16 @@ and how the output looks:
    comes from the XML schema. The order is therefore often different from the input document.
 4. Mapping to float numbers may not preserve the exact value of the input.
 5. Addition of extra name spaces, such as specific DRM systems must be done explicitly.
-6. Durations are mapped to nanoseconds and back. This may change the duration slightly. All trailing zeros
+6. In the output, the name-spaces are added to the level where they are used and not at the top MPD level.
+   The output names are also fixed, and may differ from the input names.
+7. Durations are mapped to nanoseconds and back. This may change the duration slightly. All trailing zeros
    are also removed, as are the minutes and seconds counts if they are zero and a bigger unit is present.
 
 ## Tests
 
-The MPD marshaling/unmarshaling is tested by by using many MPDs in the `testdata/schema-mpds` and
-`testdata/go-dash-fixtures` directories. See the README.md files in these directorie for their
+The MPD marshaling/unmarshaling is tested by by using many MPDs in the `testdata/schema-mpds`,
+`testdata/go-dash-fixtures`, and `testdata/livesim` directories.
+See the README.md files in these directories for their
 origins and the small tweaks needed to make durations and some other values consistent after a
 unmarshaling/marshaling process.
 
