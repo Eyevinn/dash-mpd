@@ -27,6 +27,13 @@ const (
 	MIME_TYPE_TTML                         = "application/ttml+xml"
 )
 
+const (
+	DRM_CLEAR_KEY_DASHIF = "urn:uuid:e2719d58-a985-b3c9-781a-b030af78d30e"
+	DRM_PLAYREADY        = "urn:uuid:9a04f079-9840-4286-ab92-e65be0885f95"
+	DRM_WIDEVINE         = "urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed"
+	DRM_MARLIN           = "urn:uuid:5e629af5-38dA-4063-8977-97ffbd9902d4"
+)
+
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
 //
 // The tree of structs is generated from the corresponding XML Schema at https://github.com/MPEGGroup/DASHSchema
@@ -234,41 +241,41 @@ type UIntVWithIDType struct {
 // AdaptationSetType is AdaptationSet or EmptyAdaptationSet.
 // Note that XMLName is not set, since the same structure is used also for EmptyAdaptationSet.
 type AdaptationSetType struct {
-	XlinkHref               string                  `xml:"xlink:href,attr,omitempty"`
-	XlinkActuate            string                  `xml:"xlink:actuate,attr,omitempty"` // default is "onRequest"
-	XlinkType               string                  `xml:"xlink:type,attr,omitempty"`    // fixed "simple"
-	XlinkShow               string                  `xml:"xlink:show,attr,omitempty"`    // fixed "embed"
-	Id                      *uint32                 `xml:"id,attr"`
-	Group                   uint32                  `xml:"group,attr,omitempty"`
-	Lang                    string                  `xml:"lang,attr,omitempty"`
-	ContentType             RFC6838ContentTypeType  `xml:"contentType,attr,omitempty"`
-	Par                     RatioType               `xml:"par,attr,omitempty"`
-	MinBandwidth            uint32                  `xml:"minBandwidth,attr,omitempty"`
-	MaxBandwidth            uint32                  `xml:"maxBandwidth,attr,omitempty"`
-	MinWidth                uint32                  `xml:"minWidth,attr,omitempty"`
-	MaxWidth                uint32                  `xml:"maxWidth,attr,omitempty"`
-	MinHeight               uint32                  `xml:"minHeight,attr,omitempty"`
-	MaxHeight               uint32                  `xml:"maxHeight,attr,omitempty"`
-	MinFrameRate            string                  `xml:"minFrameRate,attr,omitempty"`
-	MaxFrameRate            string                  `xml:"maxFrameRate,attr,omitempty"`
-	SegmentAlignment        bool                    `xml:"segmentAlignment,attr,omitempty"`        // default = false
-	SubsegmentAlignment     bool                    `xml:"subsegmentAlignment,attr,omitempty"`     // default = false
-	SubsegmentStartsWithSAP uint32                  `xml:"subsegmentStartsWithSAP,attr,omitempty"` // default = 0
-	BitstreamSwitching      *bool                   `xml:"bitstreamSwitching,attr"`
-	InitializationSetRef    *UIntVectorType         `xml:"initializationSetRef,attr,omitempty"`
-	InitializationPrincipal AnyURI                  `xml:"initializationPrincipal,attr,omitempty"`
-	Accessibilities         []*DescriptorType       `xml:"Accessibility"`
-	Roles                   []*DescriptorType       `xml:"Role"`
-	Ratings                 []*DescriptorType       `xml:"Rating"`
-	Viewpoints              []*DescriptorType       `xml:"Viewpoint"`
-	ContentComponents       []*ContentComponentType `xml:"ContentComponent"`
-	BaseURLs                []*BaseURLType          `xml:"BaseURL"`
-	SegmentBase             *SegmentBaseType        `xml:"SegmentBase"`
-	SegmentList             *SegmentListType        `xml:"SegmentList"`
-	SegmentTemplate         *SegmentTemplateType    `xml:"SegmentTemplate"`
-	Representations         []*RepresentationType   `xml:"Representation"`
-	parent                  *Period                 `xml:"-"`
+	XlinkHref               string                 `xml:"xlink:href,attr,omitempty"`
+	XlinkActuate            string                 `xml:"xlink:actuate,attr,omitempty"` // default is "onRequest"
+	XlinkType               string                 `xml:"xlink:type,attr,omitempty"`    // fixed "simple"
+	XlinkShow               string                 `xml:"xlink:show,attr,omitempty"`    // fixed "embed"
+	Id                      *uint32                `xml:"id,attr"`
+	Group                   uint32                 `xml:"group,attr,omitempty"`
+	Lang                    string                 `xml:"lang,attr,omitempty"`
+	ContentType             RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
+	Par                     RatioType              `xml:"par,attr,omitempty"`
+	MinBandwidth            uint32                 `xml:"minBandwidth,attr,omitempty"`
+	MaxBandwidth            uint32                 `xml:"maxBandwidth,attr,omitempty"`
+	MinWidth                uint32                 `xml:"minWidth,attr,omitempty"`
+	MaxWidth                uint32                 `xml:"maxWidth,attr,omitempty"`
+	MinHeight               uint32                 `xml:"minHeight,attr,omitempty"`
+	MaxHeight               uint32                 `xml:"maxHeight,attr,omitempty"`
+	MinFrameRate            string                 `xml:"minFrameRate,attr,omitempty"`
+	MaxFrameRate            string                 `xml:"maxFrameRate,attr,omitempty"`
+	SegmentAlignment        bool                   `xml:"segmentAlignment,attr,omitempty"`        // default = false
+	SubsegmentAlignment     bool                   `xml:"subsegmentAlignment,attr,omitempty"`     // default = false
+	SubsegmentStartsWithSAP uint32                 `xml:"subsegmentStartsWithSAP,attr,omitempty"` // default = 0
+	BitstreamSwitching      *bool                  `xml:"bitstreamSwitching,attr"`
+	InitializationSetRef    *UIntVectorType        `xml:"initializationSetRef,attr,omitempty"`
+	InitializationPrincipal AnyURI                 `xml:"initializationPrincipal,attr,omitempty"`
 	RepresentationBaseType
+	Accessibilities   []*DescriptorType       `xml:"Accessibility"`
+	Roles             []*DescriptorType       `xml:"Role"`
+	Ratings           []*DescriptorType       `xml:"Rating"`
+	Viewpoints        []*DescriptorType       `xml:"Viewpoint"`
+	ContentComponents []*ContentComponentType `xml:"ContentComponent"`
+	BaseURLs          []*BaseURLType          `xml:"BaseURL"`
+	SegmentBase       *SegmentBaseType        `xml:"SegmentBase"`
+	SegmentList       *SegmentListType        `xml:"SegmentList"`
+	SegmentTemplate   *SegmentTemplateType    `xml:"SegmentTemplate"`
+	Representations   []*RepresentationType   `xml:"Representation"`
+	parent            *Period                 `xml:"-"`
 }
 
 func (a *AdaptationSetType) SetParent(p *Period) {
@@ -322,22 +329,23 @@ type ContentComponentType struct {
 
 // RepresentationType is Representation.
 type RepresentationType struct {
-	XMLName                xml.Name                 `xml:"Representation"`
-	Id                     string                   `xml:"id,attr"`
-	Bandwidth              uint32                   `xml:"bandwidth,attr"`
-	QualityRanking         *uint32                  `xml:"qualityRanking,attr,omitempty"`
-	DependencyId           *StringVectorType        `xml:"dependencyId,attr,omitempty"`
-	AssociationId          *StringVectorType        `xml:"associationId,attr,omitempty"`
-	AssociationType        *ListOf4CCType           `xml:"associationType,attr,omitempty"`
-	MediaStreamStructureId *StringVectorType        `xml:"mediaStreamStructureId,attr,omitempty"`
-	BaseURLs               []*BaseURLType           `xml:"BaseURL"`
-	ExtendedBandwidths     []*ExtendedBandwidthType `xml:"ExtendedBandwidth"`
-	SubRepresentations     []*SubRepresentationType `xml:"SubRepresentation"`
-	SegmentBase            *SegmentBaseType         `xml:"SegmentBase"`
-	SegmentList            *SegmentListType         `xml:"SegmentList"`
-	SegmentTemplate        *SegmentTemplateType     `xml:"SegmentTemplate"`
-	parent                 *AdaptationSetType       `xml:"-"` // adaptation set
+	XMLName                xml.Name          `xml:"Representation"`
+	Id                     string            `xml:"id,attr"`
+	Bandwidth              uint32            `xml:"bandwidth,attr"`
+	QualityRanking         *uint32           `xml:"qualityRanking,attr,omitempty"`
+	DependencyId           *StringVectorType `xml:"dependencyId,attr,omitempty"`
+	AssociationId          *StringVectorType `xml:"associationId,attr,omitempty"`
+	AssociationType        *ListOf4CCType    `xml:"associationType,attr,omitempty"`
+	MediaStreamStructureId *StringVectorType `xml:"mediaStreamStructureId,attr,omitempty"`
 	RepresentationBaseType
+	BaseURLs           []*BaseURLType           `xml:"BaseURL"`
+	ExtendedBandwidths []*ExtendedBandwidthType `xml:"ExtendedBandwidth"`
+	SubRepresentations []*SubRepresentationType `xml:"SubRepresentation"`
+	SegmentBase        *SegmentBaseType         `xml:"SegmentBase"`
+	SegmentList        *SegmentListType         `xml:"SegmentList"`
+	SegmentTemplate    *SegmentTemplateType     `xml:"SegmentTemplate"`
+	parent             *AdaptationSetType       `xml:"-"` // adaptation set
+
 }
 
 func (r *RepresentationType) SetParent(p *AdaptationSetType) {
@@ -379,13 +387,13 @@ type ModelPairType struct {
 
 // SubRepresentationType is SubRepresentation
 type SubRepresentationType struct {
-	XMLName          xml.Name            `xml:"SubRepresentation"`
-	Level            *uint32             `xml:"level,attr,omitempty"`
-	DependencyLevel  *UIntVectorType     `xml:"dependencyLevel,attr,omitempty"`
-	Bandwidth        uint32              `xml:"bandwidth,attr,omitempty"`
-	ContentComponent *StringVectorType   `xml:"contentComponent,attr,omitempty"`
-	parent           *RepresentationType `xml:"-"`
+	XMLName          xml.Name          `xml:"SubRepresentation"`
+	Level            *uint32           `xml:"level,attr,omitempty"`
+	DependencyLevel  *UIntVectorType   `xml:"dependencyLevel,attr,omitempty"`
+	Bandwidth        uint32            `xml:"bandwidth,attr,omitempty"`
+	ContentComponent *StringVectorType `xml:"contentComponent,attr,omitempty"`
 	RepresentationBaseType
+	parent *RepresentationType `xml:"-"`
 }
 
 func (s *SubRepresentationType) SetParent(p *RepresentationType) {
@@ -510,6 +518,12 @@ type ContentProtectionType struct {
 	Pssh *PsshType `xml:"urn:mpeg:cenc:2013 cenc:pssh,omitempty"`
 	// MSPro is Microsoft PlayReady provisioning data with namespace "urn:microsoft:playready and "prefix "mspr".
 	MSPro *MSProType `xml:"urn:microsoft:playready mspr:pro,omitempty"`
+	// ClearKey is DASH-IF clear key
+	ClearKey *ClearKeyType `xml:"http://dashif.org/guidelines/clearKey ck:Laurl,omitempty"`
+	// LaURL is DASH-IF License Acquisition URL.
+	LaURL *LaURL `xml:"https://dashif.org/ dashif:laurl,omitempty"`
+	// MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
+	MarlinContentIds *MarlinContentIds `xml:"urn:marlin:mas:1-0:services:schemas:mpd mas:MarlinContentIds,omitempty"`
 	DescriptorType
 }
 
@@ -520,6 +534,27 @@ type PsshType struct {
 
 // MSProType is Microsoft PlayReady provisioning data.
 type MSProType struct {
+	Value string `xml:",chardata"`
+}
+
+// ClearKeyType is DASH-IF clear key type
+type ClearKeyType struct {
+	LicType string `xml:"Lic_type,attr"`
+	Value   string `xml:",chardata"`
+}
+
+// LaURL is License Acquisition URL.
+type LaURL struct {
+	Value string `xml:",chardata"`
+}
+
+// MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
+type MarlinContentIds struct {
+	Cids []*MarlinContentId `xml:"urn:marlin:mas:1-0:services:schemas:mpd mas:MarlinContentId"`
+}
+
+// MarlinContentId is Marlin Content Id.
+type MarlinContentId struct {
 	Value string `xml:",chardata"`
 }
 
