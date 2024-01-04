@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Nothing yet
+
+## [0.11.0] - 2024-01-04
+
 ### Added
 
 - GetContentProtections, GetMimeType, GetCodecs, and GetSegmentTemplate methods for AdaptationSet and Representation
@@ -115,7 +119,8 @@ Lots of convenience functions to create MPDs
 - Tests with well-known MPDs
 - Tweaked XML library to support namespaces
 
-[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/Eyevinn/dash-mpd/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.8.0...v0.9.0
