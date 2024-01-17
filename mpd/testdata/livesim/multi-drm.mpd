@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<MPD xmlns:cenc="urn:mpeg:cenc:2013" xmlns:ck="http://dashif.org/guidelines/clearKey" xmlns:dashif="https://dashif.org/" xmlns:mas="urn:marlin:mas:1-0:services:schemas:mpd" xmlns:mspr="urn:microsoft:playready" xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" minBufferTime="PT1.92S" mediaPresentationDuration="PT5S" type="static">
+<MPD xmlns:cenc="urn:mpeg:cenc:2013" xmlns:dashif="https://dashif.org/CPS" xmlns:mas="urn:marlin:mas:1-0:services:schemas:mpd" xmlns:mspr="urn:microsoft:playready" xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" minBufferTime="PT1.92S" mediaPresentationDuration="PT5S" type="static">
   <Period>
     <AdaptationSet mimeType="video/mp4" segmentAlignment="true" startWithSAP="1" maxWidth="640" maxHeight="360">
       <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cenc" cenc:default_KID="121a0fca-0f1b-475b-8910-297fa8e0a07e"/>
-      <!-- Clear Key -->
+      <!-- DASH-IF Enhanced Clear Key Content Protection (ECCP) -->
       <ContentProtection schemeIdUri="urn:uuid:e2719d58-a985-b3c9-781a-b030af78d30e" value="ClearKey1.0">
-        <ck:Laurl Lic_type="EME-1.0">http://clearkey.source.org</ck:Laurl>
-        <dashif:laurl>http://clearkey.source.org</dashif:laurl>
+        <dashif:Laurl licenseType="EME-1.0">https://clearkey.source.org</dashif:Laurl>
+        <dashif:Authzurl authzType="complex">https://authentication.source.org</dashif:Authzurl>
       </ContentProtection>
       <!-- Marlin -->
       <ContentProtection schemeIdUri="urn:uuid:5E629AF5-38DA-4063-8977-97FFBD9902D4">
