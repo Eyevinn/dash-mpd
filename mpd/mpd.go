@@ -518,10 +518,10 @@ type ContentProtectionType struct {
 	Pssh *PsshType `xml:"urn:mpeg:cenc:2013 cenc:pssh,omitempty"`
 	// MSPro is Microsoft PlayReady provisioning data with namespace "urn:microsoft:playready and "prefix "mspr".
 	MSPro *MSProType `xml:"urn:microsoft:playready mspr:pro,omitempty"`
-	// ClearKey is DASH-IF clear key
-	ClearKey *ClearKeyType `xml:"http://dashif.org/guidelines/clearKey ck:Laurl,omitempty"`
-	// LaURL is DASH-IF License Acquisition URL.
-	LaURL *LaURL `xml:"https://dashif.org/ dashif:laurl,omitempty"`
+	// LaURL is DASH-IF License Acquisition URL according to DASH-IF IOp v5.0.
+	LaURL *LaURLType `xml:"https://dashif.org/CPS dashif:Laurl,omitempty"`
+	// AuthzURL is DASH-IF clear key authorization URL according to DASH-IF IOp v5.0.
+	AuthzURL *AuthzURLType `xml:"https://dashif.org/CPS dashif:Authzurl,omitempty"`
 	// MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
 	MarlinContentIds *MarlinContentIds `xml:"urn:marlin:mas:1-0:services:schemas:mpd mas:MarlinContentIds,omitempty"`
 	DescriptorType
@@ -537,15 +537,16 @@ type MSProType struct {
 	Value string `xml:",chardata"`
 }
 
-// ClearKeyType is DASH-IF clear key type
-type ClearKeyType struct {
-	LicType string `xml:"Lic_type,attr"`
-	Value   string `xml:",chardata"`
+// LaURLType is License Acquisition URL according to DASH-IF IOP v5.0.
+type LaURLType struct {
+	LicenseType string `xml:"licenseType,attr,omitempty"`
+	Value       AnyURI `xml:",chardata"`
 }
 
-// LaURL is License Acquisition URL.
-type LaURL struct {
-	Value string `xml:",chardata"`
+// AuthzURLType is DASH-IF Authzurl according to DASH-IF IOp v5.0.
+type AuthzURLType struct {
+	AuthzType string `xml:"authzType,attr,omitempty"`
+	Value     AnyURI `xml:",chardata"`
 }
 
 // MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
