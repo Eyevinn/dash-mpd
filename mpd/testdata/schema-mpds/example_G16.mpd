@@ -10,7 +10,7 @@
  mediaPresentationDuration="PT4M9.708S"
  minBufferTime="PT4S"
  profiles="urn:mpeg:dash:profile:isoff-live:2011">
- <Period id="1">
+ <Period id="1" start="PT0S">
     <!-- Video -->
     <AdaptationSet id="1" mimeType="video/mp4" segmentAlignment="true" startWithSAP="1">
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
@@ -29,7 +29,7 @@
           <S t="0" d="90112" r="133"/>
         </SegmentTimeline>
       </SegmentTemplate>
-      <Representation id="2" bandwidth="132669" codecs="mhm2.0xC0" audioSamplingRate="48000"/>
+      <Representation id="2" bandwidth="132669" codecs="mhm2.0x0C" audioSamplingRate="48000"/>
     </AdaptationSet>
     <!-- Audio (English) -->
     <AdaptationSet id="3" mimeType="audio/mp4" lang="en" segmentAlignment="true" startWithSAP="1">
@@ -39,7 +39,7 @@
           <S t="0" d="90112" r="133"/>
         </SegmentTimeline>
       </SegmentTemplate>
-      <Representation id="3" bandwidth="32494" codecs="mhm2.0xC0" audioSamplingRate="48000"/>
+      <Representation id="3" bandwidth="32494" codecs="mhm2.0x0C" audioSamplingRate="48000"/>
     </AdaptationSet>
     <!-- Audio (Spanish) -->
     <AdaptationSet id="4" mimeType="audio/mp4" lang="es" segmentAlignment="true" startWithSAP="1">
@@ -49,7 +49,7 @@
           <S t="0" d="90112" r="133"/>
         </SegmentTimeline>
       </SegmentTemplate>
-      <Representation id="4" bandwidth="32825" codecs="mhm2.0xC0" audioSamplingRate="48000"/>
+      <Representation id="4" bandwidth="32825" codecs="mhm2.0x0C" audioSamplingRate="48000"/>
     </AdaptationSet>
     <!-- Preselections -->
     <Preselection id="1" tag="1" lang="en" preselectionComponents="2 3">

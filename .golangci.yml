@@ -3,15 +3,15 @@ linters:
     - lll
     - nakedret # Detect naked returns
     - goheader # Checks if file hader matches to pattern
-    - goerr113 #Golang linter to check the errors handling expressions,
+    - err113 #Golang linter to check the errors handling expressions,
     - goconst # Detect repeated values that can be made constants,
     - goimports # Ensure standard import formatting/ordering
     - misspell # Fix spelling errors
     - unconvert  # Detect unnecessary type conversions
     - unparam # Detect unused function parameters
 
-run:
-  skip-dirs:
+issues:
+  exclude-dirs:
     - xml
 
 linters-settings:
