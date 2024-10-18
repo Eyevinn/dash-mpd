@@ -1,6 +1,8 @@
 module github.com/Eyevinn/dash-mpd
 
-go 1.19
+go 1.21.0
+
+toolchain go1.22.7
 
 require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
