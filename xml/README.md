@@ -13,3 +13,5 @@ space prefixes.
 This package is a copy of PR#48641. More specifically, commit f68da8a.
 
 Hopefully, this code will be merged into the Go standard library at some point.
+
+Escaping tab and newline led to problems with some DASHSchema test content so this disabled.

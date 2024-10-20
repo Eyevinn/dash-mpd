@@ -1927,7 +1927,7 @@ var (
 // EscapeText writes to w the properly escaped XML equivalent
 // of the plain text data s.
 func EscapeText(w io.Writer, s []byte) error {
-	return escapeText(w, s, true)
+	return escapeText(w, s, false)
 }
 
 // escapeText writes to w the properly escaped XML equivalent
@@ -1950,8 +1950,6 @@ func escapeText(w io.Writer, s []byte, escapeNewline bool) error {
 			esc = escLT
 		case '>':
 			esc = escGT
-		case '\t':
-			esc = escTab
 		case '\n':
 			if !escapeNewline {
 				continue
