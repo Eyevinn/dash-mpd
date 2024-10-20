@@ -143,7 +143,8 @@ type EventStreamType struct {
 	Events                 []*EventType `xml:"Event"`
 }
 
-// EventType is Event.
+// EventType is Event. This has settings mixed="true" in the schema, so it can either
+// have charData or child elements or both.
 type EventType struct {
 	XMLName          xml.Name            `xml:"Event"`
 	PresentationTime uint64              `xml:"presentationTime,attr,omitempty"` // default is 0
@@ -151,6 +152,22 @@ type EventType struct {
 	Id               uint32              `xml:"id,attr"`
 	ContentEncoding  ContentEncodingType `xml:"contentEncoding,attr,omitempty"`
 	MessageData      string              `xml:"messageData,attr,omitempty"`
+	Value            string              `xml:",chardata"`
+	SelectionInfo    *SelectionInfoType  `xml:"SelectionInfo"`
+}
+
+// SelectionInfoType is SelectionInfo
+type SelectionInfoType struct {
+	SelectionInfo string           `xml:"selectionInfo,attr,omitempty"`
+	ContactURL    string           `xml:"contactURL,attr"`
+	Selection     []*SelectionType `xml:"Selection"`
+}
+
+// SelectionType is Selection
+type SelectionType struct {
+	DataEncoding string `xml:"dataEncoding,attr,omitempty"`
+	Parameter    string `xml:"parameter,attr"`
+	Data         string `xml:"data,attr,omitempty"`
 }
 
 // InitializationSetType is Initialization Set.
