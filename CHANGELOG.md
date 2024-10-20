@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Ed5Amd1 element `<SelectionInfo>` inside mixed XML type `<Event>`
+
 ### Fixed
 
 - Updated the G16 example
+- Avoid escaping XML tab and newline in text to align with DASHSchema test content
+- Handle text inside `<Event>`element
 
 ### Chore
 

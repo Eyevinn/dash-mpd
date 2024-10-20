@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="urn:mpeg:dash:schema:mpd:2011"
+	xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
+    type="dynamic"
+    minBufferTime="PT2S"
+    profiles="urn:mpeg:dash:profile:isoff-live:2011">
+    <BaseURL>http://cdn1.example.com/</BaseURL>
+    <BaseURL>http://cdn2.example.com/</BaseURL>
+    <Period>
+    	<EventStream schemeIdUri="urn:mpeg:dash:nonlinearplayback:2020"
+        	value="urn:xapp:2020:userinterface1">
+            <Event presentationTime="30" duration="30" id="0">
+				<SelectionInfo
+					selectionInfo="What do you like to happen next?"
+					contactURL="http://cdn.com/content_xyz/">
+					<Selection parameter="1" data="Bill kills Alice"/>
+					<Selection parameter="2" data="Bill kisses Alice"/>
+					<Selection parameter="3" data="Bill frames Alice"/>
+					<Selection parameter="blue" data="Bill kisses Alice"/>
+					<Selection parameter="red" data="Bill frames Alice"/>
+					<Selection parameter="default"/>
+				</SelectionInfo>
+            </Event>
+       </EventStream>
+       <!-- Audio -->
+       <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40" lang="en" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
+            <Representation id="1" bandwidth="64000">
+                <BaseURL>7657412348.mp4</BaseURL>
+            </Representation>
+        </AdaptationSet>
+        <!-- Video -->
+        <AdaptationSet mimeType="video/mp4" codecs="avc1.4d0228" subsegmentAlignment="true" subsegmentStartsWithSAP="2">
+            <Representation id="1" bandwidth="1024000" width="640" height="480">
+                <BaseURL>562465736.mp4</BaseURL>
+            </Representation>
+            <Representation id="2" bandwidth="1384000" width="640" height="480">
+                <BaseURL>41325645.mp4</BaseURL>
+            </Representation>
+            <Representation id="3" bandwidth="1536000" width="1280" height="720">
+                <BaseURL>89045625.mp4</BaseURL>
+            </Representation>
+            <Representation id="4" bandwidth="2048000" width="1280" height="720">
+                <BaseURL>23536745734.mp4</BaseURL>
+            </Representation>
+        </AdaptationSet>
+    </Period>
+</MPD>
