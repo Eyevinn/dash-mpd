@@ -10,7 +10,7 @@ publishTime="1970-01-01T00:00:00Z" timeShiftBufferDepth="PT5M" type="dynamic" xs
 <Period id="p0" start="PT0S">
       <AdaptationSet contentType="audio" lang="en" mimeType="audio/mp4" segmentAlignment="true" startWithSAP="1">
         <EssentialProperty schemeIdUri="urn:mpeg:dash:urlparam:2016" xmlns:up="urn:mpeg:dash:schema:urlparam:2016">
-            <up:ExtendedUrlInfo queryTemplate="$querypart$" useMPDUrlQuery="true" headerParamSource="dashif.org"/>
+            <up:ExtUrlQueryInfo queryTemplate="$querypart$" useMPDUrlQuery="true" headerParamSource="dashif.org"/>
         </EssentialProperty>
          <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
          <SegmentTemplate duration="2" initialization="$RepresentationID$/init.mp4" media="$RepresentationID$/$Number$.m4s" startNumber="0" />

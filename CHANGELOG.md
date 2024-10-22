@@ -7,7 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Nothing yet
+### Changed
+
+- Duration is now printed with millisecond accuracy unless value less than one millisecond
+- PatchLocationType according to Ed. 6
+- Location according to Ed. 6
+
+### Added
+
+- All elements according to DASH Ed. 6 contribution to Jan. 2025 MPEG meeting
+- AlternativeMPD element according to Ed. 6
+- ContentSteering according to Ed. 6
+- ClientDataReporting according to Ed. 6
+- SegmentSequenceProperties according to Ed. 6
+- RunLengthType according to Ed. 6
+- Pattern and PatternType according to Ed. 6
+- SupVideoInfoType according to Ed. 6 xsd
+- SapWithCadenceType according to Ed. 6
+- Example DASHSchema content G.23 to G28.1, G28.2, and G.29
+- Example DASGSchema content G.30-1 to G.30-5, G.31-1, G.31-2, G.32-1, G.32-2
 
 ## [0.12.0] - 2024-12-20
 
