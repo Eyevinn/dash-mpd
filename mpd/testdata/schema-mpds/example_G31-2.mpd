@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011"
+	profiles="urn:mpeg:dash:profile:list:2024"
+	xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" type="list" minBufferTime="PT1S"
+	publishTime="2011-12-25T12:30:00">
+
+
+	<BaseURL>http://cdn1.example.com/</BaseURL>
+
+	<Period id="42" duration="PT15S">
+		<ImportedMPD uri="ad0.mpd" earliestResolutionTimeOffset="0"/>
+
+		<EventStream schemeIdUri="urn:mpeg:dash:event:callback:2015" value="1">
+			<Event presentationTime="0">http://example.com/beacon/ad2?time=0</Event>
+			<Event presentationTime="15">http://example.com/beacon/ad2?time=15</Event>
+		</EventStream>
+
+		<ServiceDescription id="420">
+			<PlaybackRestrictions skipAfter="5"/>
+		</ServiceDescription>
+	</Period>
+
+	<Period id="43"  duration="PT15S">
+		<ImportedMPD uri="ad1.mpd" earliestResolutionTimeOffset="42"/>
+	</Period>
+
+	<Period id="44"  duration="PT15S">
+		<ImportedMPD uri="ad2.mpd" earliestResolutionTimeOffset="42"/>
+	</Period>
+</MPD>

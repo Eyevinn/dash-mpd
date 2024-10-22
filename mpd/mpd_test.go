@@ -68,6 +68,32 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 	}
 }
 
+func TestExtUrlQueryInfo(t *testing.T) {
+
+	cases := []struct {
+		name  string
+		input string
+	}{
+		{
+			name: "example_G31.1 ExtUrlQueryInfo",
+			input: `<EssentialProperty schemeIdUri="urn:mpeg:dash:urlparam:2016"
+	xmlns:up="urn:mpeg:dash:schema:urlparam:2016">
+	<up:ExtUrlQueryInfo includeInRequests="altmpd"
+		queryTemplate="prta=$urn:mpeg:dash:state:execution-delta#42$" />
+</EssentialProperty>`,
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			ep := m.DescriptorType{}
+			err := xml.Unmarshal([]byte(tc.input), &ep)
+			require.NoError(t, err)
+
+		})
+	}
+}
+
 func BenchmarkUnmarshal(b *testing.B) {
 	data, err := os.ReadFile("testdata/schema-mpds/example_G15.mpd")
 	require.NoError(b, err)

@@ -1,6 +1,7 @@
 package mpd
 
 import (
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
@@ -64,33 +65,42 @@ func (d *Duration) UnmarshalXMLAttr(attr xml.Attr) error {
 //
 // It handles negative durations, although they should not occur.
 // The highest output unit is hours (H).
+// There is never more than 3 decimals to the seconds.
 func (d *Duration) String() string {
-	// Largest time is 2540400h10m10.000000000s
+	// Largest time is 2540400h10m10.000s
 	var buf [32]byte
 	w := len(buf)
 
 	u := uint64(*d)
+	if u == 0 {
+		return "PT0S"
+	}
 	neg := *d < 0
 	if neg {
 		u = -u
 	}
 
-	if u < uint64(time.Second) {
-		var prec int
-		w--
-		buf[w] = 'S'
-		w--
-		if u == 0 {
-			return "PT0S"
-		}
-		w, u = fmtFrac(buf[:w], u, prec)
-		w = fmtInt(buf[:w], u)
-	} else {
-		w--
-		buf[w] = 'S'
+	s := u / uint64(time.Second)
+	ns := u - s*uint64(time.Second)
+	ms := uint64(math.Round(float64(ns) * 1.0e-6))
 
+	w--
+	buf[w] = 'S' // End with Seconds
+
+	switch {
+	case s == 0 && ms == 0:
+		// Time smaller than ms, return higher precision
 		w, u = fmtFrac(buf[:w], u, 9)
-
+		w = fmtInt(buf[:w], u)
+	case s == 0:
+		// Time smaller than 1s, return ms
+		w, _ = fmtFrac(buf[:w], ms, 3)
+		w--
+		buf[w] = '0'
+	default:
+		// Time larger than 1s, return s and potentially ms
+		u = 1000*s + ms
+		w, u = fmtFrac(buf[:w], u, 3)
 		// u is now integer seconds
 		w = fmtInt(buf[:w], u%60)
 		u /= 60
