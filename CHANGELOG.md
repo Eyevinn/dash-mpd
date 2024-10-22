@@ -7,9 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Duration is now printed with millisecond accuracy unless value less than one millisecond
+- PatchLocationType according to Ed. 6
+- Location according to Ed. 6
+
 ### Added
 
 - Ed5Amd1 element `<SelectionInfo>` inside mixed XML type `<Event>`
+- AlternativeMPD element according to Ed. 6
+- ContentSteering according to Ed. 6
+- ClientDataReporting according to Ed. 6
+- SegmentSequenceProperties according to Ed. 6
+- RunLengthType according to Ed. 6
+- Pattern and PatternType according to Ed. 6
+- SupVideoInfoType according to Ed. 6 xsd (what is it used for??)
+- SapWithCadenceType according to Ed. 6
+- Example content G.23 to G28.1, G28.2, and G.29
 
 ### Fixed
 

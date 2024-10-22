@@ -40,7 +40,7 @@
       </Representation>
     </AdaptationSet>
   </Period>
-  <Period id="1" start="PT31.421333333S">
+  <Period id="1" start="PT31.421S">
     <AdaptationSet frameRate="90000/3000" id="0" segmentAlignment="true" maxWidth="720" contentType="video">
       <Representation sar="1:1" mimeType="video/mp4" bandwidth="311792" codecs="avc1.42c01e" height="480" id="0" width="720">
         <SegmentTemplate initialization="video_0/init.mp4" media="video_0/media_$Number$.m4s" startNumber="6" timescale="90000">
