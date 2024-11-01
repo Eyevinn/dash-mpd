@@ -31,7 +31,7 @@ const (
 	DRM_CLEAR_KEY_DASHIF = "urn:uuid:e2719d58-a985-b3c9-781a-b030af78d30e"
 	DRM_PLAYREADY        = "urn:uuid:9a04f079-9840-4286-ab92-e65be0885f95"
 	DRM_WIDEVINE         = "urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed"
-	DRM_MARLIN           = "urn:uuid:5e629af5-38dA-4063-8977-97ffbd9902d4"
+	DRM_MARLIN           = "urn:uuid:5E629AF5-38DA-4063-8977-97FFBD9902D4" // upper case for legacy reasons
 )
 
 // MPD is MPEG-DASH Media Presentation Description (MPD) as defined in ISO/IEC 23009-1 5'th edition.
