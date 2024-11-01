@@ -20,7 +20,12 @@ const (
 )
 
 func TestDecodeEncodeMPDs(t *testing.T) {
-	testDirs := []string{"testdata/go-dash-fixtures", "testdata/schema-mpds", "testdata/livesim"}
+	testDirs := []string{
+		"testdata/go-dash-fixtures",
+		"testdata/schema-mpds",
+		"testdata/livesim",
+		"testdata/hbbtv",
+	}
 	for _, testDir := range testDirs {
 		fsys := os.DirFS(testDir)
 		mpdFiles, err := fs.Glob(fsys, "*.mpd")
