@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Ed5Amd1 element `<SelectionInfo>` inside mixed XML type `<Event>`
+- UrlQueryInfo and ExtUrlQueryInfo from MPEG-DASH part 1 Annex I
 
 ### Fixed
 
