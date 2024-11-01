@@ -805,9 +805,11 @@ type ProgramInformationType struct {
 
 // DescriptorType is Descriptor.
 type DescriptorType struct {
-	SchemeIdUri AnyURI `xml:"schemeIdUri,attr,omitempty"`
-	Value       string `xml:"value,attr,omitempty"`
-	Id          string `xml:"id,attr,omitempty"`
+	SchemeIdUri     AnyURI               `xml:"schemeIdUri,attr,omitempty"`
+	Value           string               `xml:"value,attr,omitempty"`
+	Id              string               `xml:"id,attr,omitempty"`
+	UrlQueryInfo    *UrlQueryInfoType    `xml:"urn:mpeg:dash:schema:urlparam:2014 up:UrlQueryInfo,omitempty"`
+	ExtUrlQueryInfo *ExtendedUrlInfoType `xml:"urn:mpeg:dash:schema:urlparam:2016 up:ExtendedUrlInfo,omitempty"`
 }
 
 // NewDescriptor returns a new DescriptorType.
