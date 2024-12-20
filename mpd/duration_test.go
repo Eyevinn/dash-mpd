@@ -63,3 +63,23 @@ func TestParseBadDurations(t *testing.T) {
 		require.EqualError(t, err, msg, fmt.Sprintf("Expected an error for: %s", ins))
 	}
 }
+
+func TestUnMarshalReMarshalDuration(t *testing.T) {
+	cases := []string{
+		"PT0.0002S",
+		"PT0.334S",
+		"PT2.002S",
+		"PT2S",
+		"PT1M",
+		"PT0S",
+	}
+
+	for _, dur := range cases {
+		timeDur, err := ParseDuration(dur)
+		require.NoError(t, err)
+
+		tDur := Duration(timeDur)
+		outDur := tDur.String()
+		require.Equal(t, dur, outDur)
+	}
+}
