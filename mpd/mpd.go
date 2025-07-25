@@ -131,8 +131,8 @@ type Period struct {
 
 // ImportedMpdType is Imported MPD
 type ImportedMpdType struct {
-	Uri                          string  `xml:"uri,attr"`
 	EarliestResolutionTimeOffset float64 `xml:"earliestResolutionTimeOffset,attr"`
+	Value                    	 AnyURI  `xml:",chardata"`
 }
 
 func (p *Period) SetParent(m *MPD) {
@@ -158,6 +158,7 @@ type EventStreamType struct {
 	ServiceDescription     []*ServiceDescriptionType `xml:"ServiceDescription"`
 	EssentialProperty      []*DescriptorType         `xml:"EssentialProperty"`
 	SupplementalProperty   []*DescriptorType         `xml:"SupplementalProperty"`
+	RequestParam           []*ExtendedUrlInfoType    `xml:"RequestParam"`
 }
 
 // EventType is Event. This has settings mixed="true" in the schema, so it can either
@@ -330,6 +331,7 @@ type AdaptationSetType struct {
 	SegmentList       *SegmentListType        `xml:"SegmentList"`
 	SegmentTemplate   *SegmentTemplateType    `xml:"SegmentTemplate"`
 	Representations   []*RepresentationType   `xml:"Representation"`
+	RequestParam      []*ExtendedUrlInfoType  `xml:"RequestParam"`
 	parent            *Period                 `xml:"-"`
 }
 
@@ -493,6 +495,7 @@ type RepresentationBaseType struct {
 	ContentPopularityRates     []*ContentPopularityRateType   `xml:"ContentPopularityRate"`
 	Resyncs                    []*ResyncType                  `xml:"Resync"`
 	SegmentSequenceProperties  *SegmentSequencePropertiesType `xml:"SegmentSequenceProperties"`
+	RequestParam               []*ExtendedUrlInfoType         `xml:"RequestParam"`
 }
 
 func (r *RepresentationType) GetSegmentTemplate() *SegmentTemplateType {

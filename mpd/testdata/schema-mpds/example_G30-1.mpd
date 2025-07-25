@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns="urn:mpeg:dash:schema:mpd:2011"
-xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd urn:mpeg:dash:schema:urlparam:2014 DASH-MPD-UP.xsd"
-
-type="static" mediaPresentationDuration="PT54M16S" minBufferTime="PT1.2S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
-	<Period>
-		<AdaptationSet mimeType="video/mp4" segmentAlignment="true" startWithSAP="1" maxWidth="1280" maxHeight="720" maxFrameRate="25" par="16:9">
-			<EssentialProperty schemeIdUri="urn:mpeg:dash:urlparam:2014" xmlns:up="urn:mpeg:dash:schema:urlparam:2014">
-				<up:UrlQueryInfo queryTemplate="$querypart$" useMPDUrlQuery="true"/>
-			</EssentialProperty>
-			<SegmentTemplate duration="2" startNumber="1" media="video_$Number$_$Bandwidth$bps.mp4"/>
-			<Representation id="v0" codecs="avc3.4d401f" width="1280" height="720" frameRate="25" sar="1:1" bandwidth="3000000"/>
-			<Representation id="v1" codecs="avc3.4d401f" width="640" height="360" frameRate="25" sar="1:1" bandwidth="1500000"/>
-		</AdaptationSet>
-	</Period>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT10M34S" minBufferTime="PT2S">
+  <Period>
+    <AdaptationSet id="1" contentType="video" par="16:9" subsegmentAlignment="true" width="960" height="540" frameRate="30">
+      <!-- Only base layer (quarter-resolution) AVC video -->
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:preselection:2016"/>
+      <Representation id="1r1" bandwidth="1510172" sar="1:1" mimeType="video/mp4" codecs="avc1.64001f">
+        <BaseURL>lcevc.mp4</BaseURL>
+        <SegmentBase timescale="15360" indexRange="865-1664">
+          <Initialization range="0-864"/>
+        </SegmentBase>
+      </Representation>
+    </AdaptationSet>
+    <!-- Both AVC base and LC-EVC enhancement Layer -->
+    <Preselection id="2" preselectionComponents="1" width="1920" height="1080" codecs="lvc1" selectionPriority="2">
+    </Preselection>
+  </Period>
 </MPD>
