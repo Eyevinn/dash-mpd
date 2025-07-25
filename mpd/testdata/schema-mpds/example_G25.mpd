@@ -1,28 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <MPD
-    xmlns="urn:mpeg:dash:schema:mpd:2011"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
-    availabilityStartTime="1970-01-01T00:00:00Z" maxSegmentDuration="PT6S"
-    minBufferTime="PT2S" minimumUpdatePeriod="PT5M"
-    profiles="urn:mpeg:dash:profile:isoff-live:2011" publishTime="2019-03-12T01:17:30Z"
-    timeShiftBufferDepth="PT8M20S" type="dynamic">
-    <Period id="p0" start="PT0S">
-        <BaseURL>http://liveserver.com/live/live1/</BaseURL>
-        <EventStream schemeIdUri="urn:mpeg:dash:event:insertion:2022"
-            value="insert" timescale="1000">
-            <Event  presentationTime="60000" id="0"
-                duration="120000">http://acmeadsertver.com/preroll.mpd</Event>
-        </EventStream>
-        <AdaptationSet contentType="video" maxHeight="1920" maxWidth="1080"
-            mimeType="video/mp4" par="16:9" segmentAlignment="true" startWithSAP="1">
-            <SegmentTemplate duration="2" initialization="$RepresentationID$/init.mp4"
-                media="$RepresentationID$/$Number$.m4s" startNumber="0" />
-            <Representation id="V300" bandwidth="300000" codecs="avc1.64001e"
-                frameRate="60/2" />
-            <Representation id="V600" bandwidth="600000" codecs="avc1.64001e"
-                frameRate="60/2" />
-        </AdaptationSet>
-    </Period>
+  xmlns="urn:mpeg:dash:schema:mpd:2011"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:cenc="urn:mpeg:cenc:2013"
+  xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd urn:mpeg:cenc:2013 CENC.xsd"
+  id="42"
+  profiles="urn:mpeg:dash:profile:isoff-live:2011"
+  type="dynamic"
+  availabilityStartTime="1977-05-25T18:00:00.000Z"
+  publishTime="2021-04-17T04:15:27.145Z"
+  minimumUpdatePeriod="PT2.002S"
+  minBufferTime="PT2S"
+  timeShiftBufferDepth="PT30S"
+  maxSegmentDuration="PT2.016S">
+  <Period id="807136760" start="PT384015H43M16.234S">
+    <!-- SD Adaptation Set (keyID: ed1f2e89-8a1f-47f8-a5f5-371dd397464c) -->
+    <AdaptationSet id="0" contentType="video" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <ContentProtection cenc:default_KID="ed1f2e89-8a1f-47f8-a5f5-371dd397464c" schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cbcs" />
+      <ContentProtection robustness="SW_SECURE_DECODE" schemeIdUri="urn:uuid:afbcb50e-bf74-3d13-be8f-13930c783962">
+        <cenc:pssh>
+          AAAAWnBzc2gBAAAA7e+LqXnWSs6jyCfc1R0h7QAAAAHtHy6Jih9H+KX1Nx3Tl0ZMAAAAJhIQ7R8uiYofR/il9Tcd05dGTBoMVTBNeU9TQlhSek09SPPGiZsG
+        </cenc:pssh>
+      </ContentProtection>
+      <!-- Can switch to HD or UHD -->
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:adaptation-set-switching:2016" value="1,2"/>
+      <Accessibility schemeIdUri="urn:scte:dash:cc:cea-608:2015" value="CC1=eng"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <SegmentTemplate media="$RepresentationID$/$Time$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="807170070" timescale="90000" presentationTimeOffset="36403">
+        <SegmentTimeline>
+          <S t="6002913283" d="180180" r="13"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="root_video4" bandwidth="769600" width="512" height="288" frameRate="30000/1001" codecs="hvc1.2.4.L93.B0"/>
+    </AdaptationSet>
+    <!-- HD Adaptation Set (keyID: 65ee94f8-54db-4460-ae6d-401bf195fc2b) -->
+    <AdaptationSet id="1" contentType="video" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <ContentProtection cenc:default_KID="65ee94f8-54db-4460-ae6d-401bf195fc2b" schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cbcs" />
+      <ContentProtection robustness="HW_SECURE_CRYPTO" schemeIdUri="urn:uuid:afbcb50e-bf74-3d13-be8f-13930c783962">
+        <cenc:pssh>AAAAWnBzc2gBAAAA7e+LqXnWSs6jyCfc1R0h7QAAAAFl7pT4VNtEYK5tQBvxlfwrAAAAJhIQZe6U+FTbRGCubUAb8ZX8KxoMVTBNeU9TQlhSek09SPPGiZsG
+        </cenc:pssh>
+      </ContentProtection>
+      <!-- Can switch to SD or UHD -->
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:adaptation-set-switching:2016" value="0,2"/>
+      <Accessibility schemeIdUri="urn:scte:dash:cc:cea-608:2015" value="CC1=eng"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <SegmentTemplate media="$RepresentationID$/$Time$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="807170070" timescale="90000" presentationTimeOffset="36403">
+        <SegmentTimeline>
+          <S t="6002913283" d="180180" r="13"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="root_video3" bandwidth="2282000" width="1280" height="720" frameRate="30000/1001" codecs="hvc1.2.4.L120.B0"/>
+      <Representation id="root_video2" bandwidth="7088800" width="1920" height="1080" frameRate="30000/1001" codecs="hvc1.2.4.L123.B0"/>
+      <Representation id="root_video1" bandwidth="7088800" width="1920" height="1080" frameRate="60000/1001" codecs="hvc1.2.4.L123.B0"/>
+    </AdaptationSet>
+    <!-- UHD Adaptation Set (keyID: 100efe5e-247f-4a82-b4ed-cb159f8b7b20) -->
+    <AdaptationSet id="2" contentType="video" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <ContentProtection cenc:default_KID="100efe5e-247f-4a82-b4ed-cb159f8b7b20" schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cbcs"/>
+      <ContentProtection robustness="HW_SECURE_ALL" schemeIdUri="urn:uuid:afbcb50e-bf74-3d13-be8f-13930c783962">
+        <cenc:pssh>AAAAWnBzc2gBAAAA7e+LqXnWSs6jyCfc1R0h7QAAAAEQDv5eJH9KgrTtyxWfi3sgAAAAJhIQEA7+XiR/SoK07csVn4t7IBoMVTBNeU9TQlhSek09SPPGiZsG
+        </cenc:pssh>
+      </ContentProtection>
+      <OutputProtection schemeIdUri="urn:mpeg:dash:output-protection:hdcp:2020" value="2.2"/>
+      <!-- Can switch to SD or HD -->
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:adaptation-set-switching:2016" value="0,1"/>
+      <!-- HDCP Hints -->
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <SegmentTemplate media="$RepresentationID$/$Time$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="807170070" timescale="90000" presentationTimeOffset="36403">
+        <SegmentTimeline>
+          <S t="6002913283" d="180180" r="13"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="root_video1" bandwidth="14057200" width="2560" height="1440" frameRate="60000/1001" codecs="hvc1.2.4.L153.B0"/>
+      <Representation id="root_video0" bandwidth="20575600" width="3840" height="2160" frameRate="60000/1001" codecs="hvc1.2.4.L153.B0"/>
+    </AdaptationSet>
+    <!-- E-AC-3 Audio Primary lang (keyID: 55ff04db-d75a-dfb9-ef8a-6473ae9ac9c4) -->
+    <AdaptationSet id="3" lang="en" contentType="audio" mimeType="audio/mp4">
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="6"/>
+      <ContentProtection cenc:default_KID="55ff04db-d75a-dfb9-ef8a-6473ae9ac9c4" schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cbcs"/>
+      <ContentProtection robustness="SW_SECURE_CRYPTO" schemeIdUri="urn:uuid:afbcb50e-bf74-3d13-be8f-13930c783962">
+        <cenc:pssh>
+          AAAAWnBzc2gBAAAA7e+LqXnWSs6jyCfc1R0h7QAAAAFV/wTb11rfue+KZHOumsnEAAAAJhIQVf8E29da37nvimRzrprJxBoMVTBNeU9TQlhSek09SPPGiZsG
+        </cenc:pssh>
+      </ContentProtection>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <SegmentTemplate media="$RepresentationID$/$Time$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="807170070" timescale="90000" presentationTimeOffset="36403">
+        <SegmentTimeline>
+          <S t="6002915623" d="178560"/>
+          <S t="6003094183" d="181440"/>
+          <S t="6003275623" d="178560"/>
+          <S t="6003454183" d="181440"/>
+          <S t="6003635623" d="178560"/>
+          <S t="6003814183" d="181440" r="1"/>
+          <S t="6004177063" d="178560"/>
+          <S t="6004355623" d="181440"/>
+          <S t="6004537063" d="178560"/>
+          <S t="6004715623" d="181440"/>
+          <S t="6004897063" d="178560"/>
+          <S t="6005075623" d="181440" r="1"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="root_audio66" bandwidth="288000" audioSamplingRate="48000" codecs="ec-3"/>
+    </AdaptationSet>
+    <!-- Same as previous audio -->
+    <AdaptationSet id="4" lang="en" contentType="audio" mimeType="audio/mp4">
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="2"/>
+      <ContentProtection cenc:default_KID="55ff04db-d75a-dfb9-ef8a-6473ae9ac9c4" schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cbcs"/>
+      <ContentProtection robustness="SW_SECURE_CRYPTO" schemeIdUri="urn:uuid:afbcb50e-bf74-3d13-be8f-13930c783962">
+        <cenc:pssh>AAAAWnBzc2gBAAAA7e+LqXnWSs6jyCfc1R0h7QAAAAFV/wTb11rfue+KZHOumsnEAAAAJhIQVf8E29da37nvimRzrprJxBoMVTBNeU9TQlhSek09SPPGiZsG
+        </cenc:pssh>
+      </ContentProtection>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <SegmentTemplate media="$RepresentationID$/$Time$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="807170070" timescale="90000" presentationTimeOffset="36403">
+        <SegmentTimeline>
+          <S t="6002916699" d="180480"/>
+          <S t="6003097179" d="176640"/>
+          <S t="6003273819" d="180480" r="11"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="root_audio67" bandwidth="182400" audioSamplingRate="24000" codecs="mp4a.40.5"/>
+    </AdaptationSet>
+    <!-- Same as previous audio -->
+    <AdaptationSet id="5" lang="en" contentType="audio" mimeType="audio/mp4">
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="2"/>
+      <ContentProtection cenc:default_KID="55ff04db-d75a-dfb9-ef8a-6473ae9ac9c4" schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="cbcs"/>
+      <ContentProtection robustness="SW_SECURE_CRYPTO" schemeIdUri="urn:uuid:afbcb50e-bf74-3d13-be8f-13930c783962">
+        <cenc:pssh>AAAAWnBzc2gBAAAA7e+LqXnWSs6jyCfc1R0h7QAAAAFV/wTb11rfue+KZHOumsnEAAAAJhIQVf8E29da37nvimRzrprJxBoMVTBNeU9TQlhSek09SPPGiZsG
+        </cenc:pssh>
+      </ContentProtection>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="dub"/>
+      <SegmentTemplate media="$RepresentationID$/$Time$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="807170070" timescale="90000" presentationTimeOffset="36403">
+        <SegmentTimeline>
+          <S t="6002915623" d="178560"/>
+          <S t="6003094183" d="181440"/>
+          <S t="6003275623" d="178560"/>
+          <S t="6003454183" d="181440"/>
+          <S t="6003635623" d="178560"/>
+          <S t="6003814183" d="181440" r="1"/>
+          <S t="6004177063" d="178560"/>
+          <S t="6004355623" d="181440"/>
+          <S t="6004537063" d="178560"/>
+          <S t="6004715623" d="181440"/>
+          <S t="6004897063" d="178560"/>
+          <S t="6005075623" d="181440" r="1"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="root_audio68" bandwidth="182400" audioSamplingRate="48000" codecs="ec-3"/>
+    </AdaptationSet>
+  </Period>
 </MPD>
-

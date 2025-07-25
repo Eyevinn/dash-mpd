@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<MPD 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xmlns="urn:mpeg:dash:schema:mpd:2011" 
-    xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
-    type="static" 
-    mediaPresentationDuration="PT54M16S" 
-    minBufferTime="PT1.2S" 
-    profiles="urn:mpeg:dash:profile:isoff-on-demand:2011"> 
-    
-    <BaseURL>http://cdn1.example.com/</BaseURL> 
-    <BaseURL>http://cdn2.example.com/</BaseURL> 
-    
-    <!-- Period with a multiplexed stream with subrepresentations 
-       described for use with fast forward -->
-    <Period> 
-        <AdaptationSet 
-            mimeType="video/mp4"  codecs="avc2.4D401E,avc1.4D401E,mp4a.40" 
-            width="640" height="480" frameRate="30" lang="en" 
-            subsegmentAlignment="true" subsegmentStartsWithSAP="2"> 
-            <ContentComponent id="0"  contentType="video"/> 
-            <ContentComponent id="1"  contentType="audio"/> 
-            <Representation id="tag0" bandwidth="512000">
-                <BaseURL>video-512k.mp4</BaseURL> 
-                <SubRepresentation level="0" contentComponent="0" bandwidth="128000" codecs="avc1.4D401E" maxPlayoutRate="4"/> 
-                <SubRepresentation level="1" dependencyLevel="0" contentComponent="0" bandwidth="320000" codecs="avc2.4D401E"/>
-                <SubRepresentation level="2" contentComponent="1" bandwidth="64000" codecs="mp4a.40"/> 
-                <SegmentBase indexRange="7632-7632" />
-            </Representation> 
-        </AdaptationSet> 
-    </Period> 
-</MPD> 
-
+<?xml version="1.0" encoding="utf-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" minBufferTime="PT1.500000S" type="static" mediaPresentationDuration="PT0H9M54.00S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011,http://dashif.org/guidelines/dash264">
+  <Period id="" duration="PT0H9M54.00S">
+    <AdaptationSet id="1" segmentAlignment="true" maxWidth="1280" maxHeight="720" maxFrameRate="24" par="16:9" subsegmentStartsWithSAP="1">
+      <Representation id="1" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="1485681">
+        <BaseURL>BBB_720_1M_video_init.mp4</BaseURL>
+        <SegmentBase indexRangeExact="true" indexRange="885-4480"/>
+      </Representation>
+      <Representation id="2" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="2546522">
+        <BaseURL>BBB_720_2M_video_init.mp4</BaseURL>
+        <SegmentBase indexRangeExact="true" indexRange="885-4480"/>
+      </Representation>
+      <Representation id="3" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="4309466">
+        <BaseURL>BBB_720_4M_video_init.mp4</BaseURL>
+        <SegmentBase indexRangeExact="true" indexRange="885-4480"/>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="2" segmentAlignment="true" subsegmentStartsWithSAP="1">
+      <Representation id="5" mimeType="audio/mp4" codecs="mp4a.40.29" audioSamplingRate="48000" startWithSAP="1" bandwidth="33206">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+        <BaseURL>BBB_32k_init.mp4</BaseURL>
+        <SegmentBase indexRangeExact="true" indexRange="820-4487"/>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet id="3" segmentAlignment="true" maxWidth="1280" maxHeight="720" maxFrameRate="24" par="16:9" subsegmentStartsWithSAP="1">
+      <EssentialProperty schemeIdUri="http://dashif.org/guidelines/trickmode" value="1"/>
+      <Representation id="4" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="1" sar="1:1" startWithSAP="1" maxPlayoutRate="24" bandwidth="485231">
+        <BaseURL>BBB_720_TrickMode_init.mp4</BaseURL>
+        <SegmentBase indexRangeExact="true" indexRange="884-4479"/>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>
