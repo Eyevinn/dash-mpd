@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" type="dynamic" minimumUpdatePeriod="PT30S" timeShiftBufferDepth="PT30M" availabilityStartTime="2022-02-25T12:30:00" minBufferTime="PT4S" profiles="urn:mpeg:dash:profile:advanced-linear:2025">
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:advanced-linear:2025" type="dynamic" availabilityStartTime="2022-02-25T12:30:00" minimumUpdatePeriod="PT30S" minBufferTime="PT4S" timeShiftBufferDepth="PT30M">
   <BaseURL serviceLocation="alpha">https://cdn1.example.com/</BaseURL>
   <BaseURL serviceLocation="beta">https://cdn2.example.com/</BaseURL>
   <ServiceDescription id="1250">
     <Scope schemeIdUri="urn:mpeg:dash:event:service-description:2024"/>
-    <Latency min="750" max="4200" target="1250" referenceId="7"/>
-    <PlaybackRate min="0.96" max="1.04"/>
+    <Latency referenceId="7" target="1250" max="4200" min="750"/>
+    <PlaybackRate max="1.04" min="0.96"/>
     <ClientDataReporting schemeIdUri="urn:mpeg:dash:cta-5004:2023" serviceLocations="beta" adaptationSets="1">
       <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp nor ot sf v"/>
     </ClientDataReporting>
   </ServiceDescription>
   <ServiceDescription id="2500">
     <Scope schemeIdUri="urn:mpeg:dash:event:service-description:2024"/>
-    <Latency min="750" max="4200" target="2500" referenceId="7"/>
-    <PlaybackRate min="0.96" max="1.04"/>
+    <Latency referenceId="7" target="2500" max="4200" min="750"/>
+    <PlaybackRate max="1.04" min="0.96"/>
     <ClientDataReporting schemeIdUri="urn:mpeg:dash:cta-5004:2023" serviceLocations="beta" adaptationSets="1">
       <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp nor"/>
     </ClientDataReporting>
@@ -24,15 +24,15 @@
       <Event presentationTime="60000" duration="60000" id="1">2500</Event>
       <Event presentationTime="120000" duration="60000" id="2">
         <ServiceDescription id="2000">
-          <Latency min="750" max="4200" target="2000" referenceId="7"/>
-          <PlaybackRate min="0.96" max="1.04"/>
+          <Latency referenceId="7" target="2000" max="4200" min="750"/>
+          <PlaybackRate max="1.04" min="0.96"/>
           <ClientDataReporting schemeIdUri="urn:mpeg:dash:cta-5004:2023" serviceLocations="beta" adaptationSets="1">
             <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp"/>
           </ClientDataReporting>
         </ServiceDescription>
       </Event>
     </EventStream>
-    <AdaptationSet id="1" mimeType="video/mp4" codecs="avc1.4D401F" frameRate="30000/1001" segmentAlignment="true" startWithSAP="1">
+    <AdaptationSet id="1" segmentAlignment="true" frameRate="30000/1001" mimeType="video/mp4" codecs="avc1.4D401F" startWithSAP="1">
       <BaseURL>video/</BaseURL>
       <!-- ... -->
     </AdaptationSet>
