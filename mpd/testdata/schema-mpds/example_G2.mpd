@@ -23,7 +23,7 @@
             segmentAlignment="true" 
             startWithSAP="1">
             <BaseURL>video/</BaseURL>
-            <SegmentTemplate timescale="90000" initialization="$Bandwidth%/init.mp4v" media="$Bandwidth%/$Time$.mp4v">
+            <SegmentTemplate timescale="90000" initialization="$Bandwidth$/init.mp4v" media="$Bandwidth$/$Time$.mp4v">
                 <SegmentTimeline> 
                     <S t="0" d="180180" r="432"/> 
                 </SegmentTimeline>

@@ -40,14 +40,14 @@
         </AdaptationSet>
         <!-- English Audio -->
         <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40" lang="en" segmentAlignment="0" startWithSAP="1">
+            <InbandEventStream schemeIdUri="urn:mpeg:dash:event:2012" value="1"></InbandEventStream>
+            <InbandEventStream schemeIdUri="urn:org:example:event" value="avail"></InbandEventStream>
             <SegmentTemplate timescale="48000" initialization="audio/en/init.mp4a" media="audio/en/$Time$.mp4a">
                 <SegmentTimeline> 
                     <S t="0" d="96000" r="432"/> 
                 </SegmentTimeline>
             </SegmentTemplate>
             <Representation id="a0" bandwidth="64000">
-                <InbandEventStream schemeIdUri="urn:mpeg:dash:event:2012" value="1"></InbandEventStream>
-                <InbandEventStream schemeIdUri="urn:org:example:event" value="avail"></InbandEventStream>
             </Representation>
         </AdaptationSet>
         <!-- French Audio -->

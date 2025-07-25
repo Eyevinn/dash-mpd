@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" id="7399610060681366163" profiles="urn:mpeg:dash:profile:advanced-linear:2025" type="dynamic" availabilityStartTime="1977-05-25T18:00:00.000Z" publishTime="2021-11-10T20:44:07.025Z" minimumUpdatePeriod="PT2.002S" minBufferTime="PT2S" timeShiftBufferDepth="PT30S" maxSegmentDuration="PT2.016S">
+  <ServiceDescription id="420">
+    <Latency min="750" max="4200" target="1250" referenceId="7"/>
+    <PlaybackRate min="0.96" max="1.04"/>
+  </ServiceDescription>
+  <Period id="817467999" start="PT389761H2M15.535S">
+    <AdaptationSet id="1" contentType="video" segmentAlignment="true" frameRate="50" mimeType="video/mp4" codecs="hvc1.2.4.L93.B0" startWithSAP="0">
+      <EssentialProperty schemeIdUri="urn:mpeg:dash:ssr:2023"/>
+      <ProducerReferenceTime id="7" wallClockTime="2019-08-06T13:44:12Z" presentationTime="158400"/>
+      <SegmentSequenceProperties sapType="1" cadence="1"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <!-- Segment Sequence Representations where partial segments with subnumber > 1 
+      are not expected to have any kind of random access / bitstream switching
+      The first partial segment starts with SAP = 1 -->
+      <SegmentTemplate media="$RepresentationID$/segment_$Number$_part_$SubNumber$.mp4" initialization="$RepresentationID$/init.mp4" startNumber="817472154" timescale="90000" presentationTimeOffset="135158">
+        <SegmentTimeline>
+          <!-- 1.92s segment with 6-frame partial segments, compatible with LL-HLS-->
+          <S t="546975158" d="172800" r="14" k="16"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="l3d_540p" bandwidth="1502000" width="960" height="540"/>
+      <Representation id="l3d_720p" bandwidth="2166000" width="1280" height="720"/>
+      <Representation id="l3d_1080p" bandwidth="6202000" width="1920" height="1080"/>
+      <Representation id="l3d_1440p" bandwidth="12741200" width="2560" height="1440"/>
+      <Representation id="l3d_2160p" bandwidth="18667200" width="3840" height="2160"/>
+    </AdaptationSet>
+  </Period>
+</MPD>

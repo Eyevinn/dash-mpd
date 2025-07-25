@@ -274,7 +274,7 @@ type EventRestrictionsType struct {
 
 // PlaybackRestrictionsType is Playback restrictions
 type PlaybackRestrictionsType struct {
-	SkipAfter float32 `xml:"skipAfter,attr,omitempty"`
+	SkipAfter Duration `xml:"skipAfter,attr,omitempty"`
 }
 
 // UIntPairsWithIDType is UInt Pairs With ID.
@@ -746,6 +746,7 @@ type MultipleSegmentBaseType struct {
 	Tolerance          *float64             `xml:"tolerance,attr,omitempty"`
 	StartNumber        *uint32              `xml:"startNumber,attr,omitempty"`
 	EndNumber          *uint32              `xml:"endNumber,attr,omitempty"`
+	EndSubNumber       *uint64              `xml:"endSubNumber,attr,omitempty"`
 	SegmentTimeline    *SegmentTimelineType `xml:"SegmentTimeline"`
 	BitstreamSwitching *URLType             `xml:"BitstreamSwitching"`
 	SegmentBaseType
@@ -952,13 +953,10 @@ type SupVideoInfoType struct {
 
 // SegmentSequencePropertiesType is Segment Sequence properties
 type SegmentSequencePropertiesType struct {
-	SAP []*SapWithCadenceType `xml:"SAP"`
-}
-
-// SapWithCadenceType is Segment Sequence SAP properties
-type SapWithCadenceType struct {
-	Type    uint32 `xml:"type,attr"`
-	Cadence uint32 `xml:"cadence,attr,omitempty"`
+	SapType   uint32                 `xml:"sapType,attr"`
+	Cadence   uint32                 `xml:"cadence,attr,omitempty"`
+	Event     bool                   `xml:"event,attr,omitempty"`
+	Alignment StringNoWhitespaceType `xml:"alignment,attr,omitempty"`
 }
 
 // ClientDataReportingType is Client Data Reporting
@@ -972,8 +970,11 @@ type ClientDataReportingType struct {
 type AlternativeMPDEventType struct {
 	Uri                          string            `xml:"uri,attr"`
 	EarliestResolutionTimeOffset float64           `xml:"earliestResolutionTimeOffset,attr,omitempty"`
-	MaxDuration                  uint64            `xml:"maxDuration,attr,omitempty"`
 	ServiceDescriptionId         uint32            `xml:"serviceDescriptionId,attr,omitempty"`
+	MaxDuration                  uint64            `xml:"maxDuration,attr,omitempty"`
+	ExecuteOnce                  bool              `xml:"executeOnce,attr,omitempty"`
+	NoJump                       int32             `xml:"noJump,attr,omitempty"`
+	SkipAfter                    Duration          `xml:"skipAfter,attr,omitempty"`
 	SupplementalProperty         []*DescriptorType `xml:"SupplementalProperty"`
 }
 
@@ -981,7 +982,7 @@ type AlternativeMPDEventType struct {
 type AlternativeMPDReplaceEventType struct {
 	ReturnOffset    uint64 `xml:"returnOffset,attr,omitempty"`
 	Clip            bool   `xml:"clip,attr,omitempty"`
-	StartAtPlayhead bool   `xml:"startAtPlayhead,attr,omitempty"`
+	StartWithOffset bool   `xml:"startWithOffset,attr,omitempty"`
 	*AlternativeMPDEventType
 }
 
