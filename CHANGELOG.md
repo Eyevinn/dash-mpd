@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Duration is now printed with millisecond accuracy unless value less than one millisecond
 - PatchLocationType according to Ed. 6
 - Location according to Ed. 6
+- ImportedMpdType according to Ed. 6
+- PlaybackRestrictionsType updated skipAfter to Duration according to Ed. 6
 - Examples from latest DASHSchema content G.2, G.6, G.7 and G.9
 
 
@@ -27,8 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pattern and PatternType according to Ed. 6
 - SupVideoInfoType according to Ed. 6 xsd
 - SegmentSequencePropertiesType according to Ed. 6
-- PlaybackRestrictionsType updated skipAfter to Duration according to Ed. 6
-- Example DASHSchema content G.23 to G.28.4 and K.6.4
+- RequestParam according to Ed. 6
+- Example DASHSchema content G.23 to G.30.5 and K.6.4
 
 ## [0.12.0] - 2024-12-20
 

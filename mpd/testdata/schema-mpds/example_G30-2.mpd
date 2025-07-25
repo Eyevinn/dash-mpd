@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd urn:mpeg:dash:schema:urlparam:2014 DASH-MPD-UP.xsd" type="static" mediaPresentationDuration="PT54M16S" minBufferTime="PT1.2S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
-	<Period>
-		<AdaptationSet mimeType="video/mp4" segmentAlignment="true" startWithSAP="1" maxWidth="1280" maxHeight="720" maxFrameRate="25" par="16:9">
-			<EssentialProperty schemeIdUri="urn:mpeg:dash:urlparam:2014" xmlns:up="urn:mpeg:dash:schema:urlparam:2014">
-				<up:UrlQueryInfo xlink:href="http://www.example.com/dash/xlinked.mpd" xlink:actuate="onRequest" xmlns:xlink="http://www.w3.org/1999/xlink"/>
-			</EssentialProperty>
-			<SegmentTemplate duration="2" startNumber="1" media="video_$Number$_$Bandwidth$bps.mp4"/>
- 			<Representation id="v0" codecs="avc3.4d401f" width="1280" height="720" frameRate="25" sar="1:1" bandwidth="3000000"/>
-			<Representation id="v1" codecs="avc3.4d401f" width="640" height="360" frameRate="25" sar="1:1" bandwidth="1500000"/>
-		</AdaptationSet>
-		<SupplementalProperty schemeIdUri="urn:mpeg:dash:urlparam:2014" xmlns:up="urn:mpeg:dash:schema:urlparam:2014">
-			<up:UrlQueryInfo xmlns:up="urn:mpeg:dash:schema:urlparam:2014" queryTemplate="$querypart$" queryString="param=justintimecomputedvalue"/>
-		</SupplementalProperty>
-	</Period>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" type="static" mediaPresentationDuration="PT54M16S" minBufferTime="PT1.2S">
+  <Period>
+    <AdaptationSet id="1" par="16:9" maxWidth="1280" maxHeight="720" maxFrameRate="25" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:preselection:2016"/>
+      <SegmentTemplate media="video_$Number$_$Bandwidth$bps.mp4" duration="2" startNumber="1">
+      </SegmentTemplate>
+      <Representation id="v0" bandwidth="3000000" width="1280" height="720" sar="1:1" frameRate="25" codecs="hvc1.2.4.L153.B0"/>
+      <Representation id="v1" bandwidth="1500000" width="640" height="360" sar="1:1" frameRate="25" codecs="hvc1.2.4.L90.B0"/>
+    </AdaptationSet>
+    <!-- stereoscopic view, combination of the above -->
+    <Preselection preselectionComponents="1" codecs="lhc1" selectionPriority="3" tag="3">
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0 r1"/>
+    </Preselection>
+  </Period>
 </MPD>
