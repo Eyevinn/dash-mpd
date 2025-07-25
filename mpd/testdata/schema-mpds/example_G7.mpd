@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:drm="http://example.net/052011/drm" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" type="static" mediaPresentationDuration="PT3256S" minBufferTime="PT10.00S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" type="static" mediaPresentationDuration="PT54M16S" minBufferTime="PT10S">
   <BaseURL>http://cdn.example.com/movie23453235/</BaseURL>
   <Period>
     <!-- Audio protected with a specified license -->
-    <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40" lang="en" subsegmentStartsWithSAP="1" subsegmentAlignment="true">
+    <AdaptationSet lang="en" subsegmentAlignment="true" subsegmentStartsWithSAP="1" mimeType="audio/mp4" codecs="mp4a.40">
       <ContentProtection schemeIdUri="http://example.net/052011/drm">
         <drm:License>http://MoviesSP.example.com/protect?license=kljklsdfiowek</drm:License>
         <drm:Content>http://MoviesSP.example.com/protect?content=oyfYvpo8yFyvyo8f</drm:Content>
@@ -13,20 +13,20 @@
       </Representation>
     </AdaptationSet>
     <!-- Audio protected with embedded information defined by 'ZZZZ' -->
-    <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40" lang="fr" subsegmentStartsWithSAP="1" subsegmentAlignment="true">
-      <ContentProtection schemeIdUri=" urn:mpeg:dash:mp4protection:2011" value="ZZZZ"/>
+    <AdaptationSet lang="fr" subsegmentAlignment="true" subsegmentStartsWithSAP="1" mimeType="audio/mp4" codecs="mp4a.40">
+      <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" value="ZZZZ"/>
       <Representation id="3" bandwidth="64000">
         <BaseURL>audio/fr/64.mp4</BaseURL>
       </Representation>
     </AdaptationSet>
     <!-- Timed text in the clear -->
-    <AdaptationSet mimeType="application/ttml+xml" lang="de">
+    <AdaptationSet lang="de" mimeType="application/ttml+xml">
       <Representation id="5" bandwidth="256">
         <BaseURL>subtitles/de.xml</BaseURL>
       </Representation>
     </AdaptationSet>
     <!-- Video protected with a specified license -->
-    <AdaptationSet mimeType="video/mp4" codecs="avc1" subsegmentAlignment="true" subsegmentStartsWithSAP="2">
+    <AdaptationSet subsegmentAlignment="true" subsegmentStartsWithSAP="2" mimeType="video/mp4" codecs="avc1">
       <ContentProtection schemeIdUri="http://example.net/052011/drm">
         <drm:License>http://MoviesSP.example.com/protect?license=jfjhwlsdkfiowkl</drm:License>
         <drm:Content>http://MoviesSP.example.com/protect?content=mslkfjsfiowelkfl</drm:Content>

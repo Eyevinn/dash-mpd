@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" minBufferTime="PT1.500000S" type="static" mediaPresentationDuration="PT0H9M54.00S" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011,http://dashif.org/guidelines/dash264">
-  <Period id="" duration="PT0H9M54.00S">
-    <AdaptationSet id="1" segmentAlignment="true" maxWidth="1280" maxHeight="720" maxFrameRate="24" par="16:9" subsegmentStartsWithSAP="1">
-      <Representation id="1" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="1485681">
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011,http://dashif.org/guidelines/dash264" type="static" mediaPresentationDuration="PT9M54S" minBufferTime="PT1.5S">
+  <Period duration="PT9M54S">
+    <AdaptationSet id="1" par="16:9" maxWidth="1280" maxHeight="720" maxFrameRate="24" segmentAlignment="true" subsegmentStartsWithSAP="1">
+      <Representation id="1" bandwidth="1485681" width="1280" height="720" sar="1:1" frameRate="24" mimeType="video/mp4" codecs="avc1.4d401f" startWithSAP="1">
         <BaseURL>BBB_720_1M_video_init.mp4</BaseURL>
-        <SegmentBase indexRangeExact="true" indexRange="885-4480"/>
+        <SegmentBase indexRange="885-4480" indexRangeExact="true"/>
       </Representation>
-      <Representation id="2" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="2546522">
+      <Representation id="2" bandwidth="2546522" width="1280" height="720" sar="1:1" frameRate="24" mimeType="video/mp4" codecs="avc1.4d401f" startWithSAP="1">
         <BaseURL>BBB_720_2M_video_init.mp4</BaseURL>
-        <SegmentBase indexRangeExact="true" indexRange="885-4480"/>
+        <SegmentBase indexRange="885-4480" indexRangeExact="true"/>
       </Representation>
-      <Representation id="3" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="4309466">
+      <Representation id="3" bandwidth="4309466" width="1280" height="720" sar="1:1" frameRate="24" mimeType="video/mp4" codecs="avc1.4d401f" startWithSAP="1">
         <BaseURL>BBB_720_4M_video_init.mp4</BaseURL>
-        <SegmentBase indexRangeExact="true" indexRange="885-4480"/>
+        <SegmentBase indexRange="885-4480" indexRangeExact="true"/>
       </Representation>
     </AdaptationSet>
     <AdaptationSet id="2" segmentAlignment="true" subsegmentStartsWithSAP="1">
-      <Representation id="5" mimeType="audio/mp4" codecs="mp4a.40.29" audioSamplingRate="48000" startWithSAP="1" bandwidth="33206">
+      <Representation id="5" bandwidth="33206" audioSamplingRate="48000" mimeType="audio/mp4" codecs="mp4a.40.29" startWithSAP="1">
         <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
         <BaseURL>BBB_32k_init.mp4</BaseURL>
-        <SegmentBase indexRangeExact="true" indexRange="820-4487"/>
+        <SegmentBase indexRange="820-4487" indexRangeExact="true"/>
       </Representation>
     </AdaptationSet>
-    <AdaptationSet id="3" segmentAlignment="true" maxWidth="1280" maxHeight="720" maxFrameRate="24" par="16:9" subsegmentStartsWithSAP="1">
+    <AdaptationSet id="3" par="16:9" maxWidth="1280" maxHeight="720" maxFrameRate="24" segmentAlignment="true" subsegmentStartsWithSAP="1">
       <EssentialProperty schemeIdUri="http://dashif.org/guidelines/trickmode" value="1"/>
-      <Representation id="4" mimeType="video/mp4" codecs="avc1.4d401f" width="1280" height="720" frameRate="1" sar="1:1" startWithSAP="1" maxPlayoutRate="24" bandwidth="485231">
+      <Representation id="4" bandwidth="485231" width="1280" height="720" sar="1:1" frameRate="1" mimeType="video/mp4" codecs="avc1.4d401f" startWithSAP="1" maxPlayoutRate="24">
         <BaseURL>BBB_720_TrickMode_init.mp4</BaseURL>
-        <SegmentBase indexRangeExact="true" indexRange="884-4479"/>
+        <SegmentBase indexRange="884-4479" indexRangeExact="true"/>
       </Representation>
     </AdaptationSet>
   </Period>

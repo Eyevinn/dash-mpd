@@ -164,7 +164,7 @@ type EventStreamType struct {
 // have charData or child elements or both.
 type EventType struct {
 	XMLName              xml.Name                        `xml:"Event"`
-	PresentationTime     uint64                          `xml:"presentationTime,attr,omitempty"` // default is 0
+	PresentationTime     uint64                          `xml:"presentationTime,attr"` // default is 0
 	Duration             uint64                          `xml:"duration,attr,omitempty"`
 	Id                   *uint64                         `xml:"id,attr"`
 	Status               string                          `xml:"status,attr,omitempty"`
@@ -961,9 +961,10 @@ type SegmentSequencePropertiesType struct {
 
 // ClientDataReportingType is Client Data Reporting
 type ClientDataReportingType struct {
-	ServiceLocations *StringVectorType `xml:"serviceLocations,attr,omitempty"`
-	AdaptationSets   *UIntVectorType   `xml:"adaptationSets,attr,omitempty"`
-	ReportingSystem  []*DescriptorType `xml:"ReportingSystem"`
+	SchemeIdUri      AnyURI               `xml:"schemeIdUri,attr"`
+	ServiceLocations *StringVectorType    `xml:"serviceLocations,attr,omitempty"`
+	AdaptationSets   *UIntVectorType      `xml:"adaptationSets,attr,omitempty"`
+	CMCDParameters   []*CMCDParameterType `xml:"CMCDParameters"`
 }
 
 // AlternativeMPDEventType is Alternative MPD event
