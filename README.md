@@ -93,16 +93,17 @@ Including all elements, including rarely used ones, has some performance penalty
 One such contribution comes from matching attributes which is done in a linear fashion.
 Some benchmark tests are included in the `mpd/mpd_test.go` file.
 
-## Commits and ChangeLog
+## Commits, ChangeLog
 
 This project aims to follow Semantic Versioning and
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
-There is a manual [ChangeLog](CHANGELOG.md).
+There is a manual [ChangeLog](CHANGELOG.md) that should be updated with
+each commit.
 
-It uses pre-commit hooks, so you need python3 installed and run
-`make prepare` got create a Python virtual env at `.venv` and then
-do `source .venv/bin/activate` in your shell in order to activate that
-virtual environment and get the `pre-commit` mechanism to work.
+With making a local git commit, this project uses [pre-commit hooks][precmt].
+You therefor need Python3 installed and run `make prepare` to create a Python
+virtual envinvorment at `.venv` and then run `source .venv/bin/activate` in your
+shell in order to activate that virtual environment to get the [pre-commit`][precmt] mechanism to work.
 
 ## License
 
@@ -123,3 +124,5 @@ Contact [sales@eyevinn.se](mailto:sales@eyevinn.se) if you are interested.
 [Eyevinn Technology](https://www.eyevinntechnology.se) is an independent consultant firm specialized in video and streaming. Independent in a way that we are not commercially tied to any platform or technology vendor. As our way to innovate and push the industry forward we develop proof-of-concepts and tools. The things we learn and the code we write we share with the industry in [blogs](https://dev.to/video) and by open sourcing the code we have written.
 
 Want to know more about Eyevinn and how it is to work here. Contact us at work@eyevinn.se!
+
+[precmt]: https://pre-commit.com
