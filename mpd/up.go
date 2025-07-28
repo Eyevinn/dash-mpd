@@ -3,6 +3,7 @@ package mpd
 const (
 	UrlParameterNamespace2014 = "urn:mpeg:dash:schema:urlparam:2014"
 	UrlParameterNamespace2016 = "urn:mpeg:dash:schema:urlparam:2016"
+	UrlParameterNamespace2025 = "urn:mpeg:dash:schema:urlparam:2025"
 )
 
 // UrlQueryInfoType is defined in Annex I of ISO/IEC 23009-1.
@@ -24,4 +25,5 @@ type ExtendedUrlInfoType struct {
 	IncludeInRequests string `xml:"includeInRequests,attr,omitempty"` // default = "segment"
 	HeaderParamSource string `xml:"headerParamSource,attr,omitempty"` // default = "segment"
 	SameOriginPolicy  bool   `xml:"sameOriginPolicy,attr,omitempty"`  // default = "false"
+	Header            string `xml:"header,attr,omitempty"`
 }
