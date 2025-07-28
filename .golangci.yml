@@ -1,26 +1,46 @@
+version: "2"
 linters:
   enable:
+    - err113
+    - goconst
+    - goheader
     - lll
-    - nakedret # Detect naked returns
-    - goheader # Checks if file hader matches to pattern
-    - err113 #Golang linter to check the errors handling expressions,
-    - goconst # Detect repeated values that can be made constants,
-    - goimports # Ensure standard import formatting/ordering
-    - misspell # Fix spelling errors
-    - unconvert  # Detect unnecessary type conversions
-    - unparam # Detect unused function parameters
-
-issues:
-  exclude-dirs:
-    - xml
-
-linters-settings:
-  lll:
-    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
-    line-length: 147
-    # tab width in spaces. Default to 1.
-    tab-width: 4
-  staticcheck:
-    checks:
-      - all
-      - '-SA5008' # disable rule SA5008 that does not like the parent pointers to named structs
+    - misspell
+    - nakedret
+    - staticcheck
+    - unconvert
+    - unparam
+  settings:
+    lll:
+      line-length: 147
+      tab-width: 4
+    staticcheck:
+      checks:
+        - all
+        - -SA5008
+        - -ST1003
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - xml
+      - testdata
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - xml
+      - testdata
+      - mpd/testdata/schema-mpds
+      - third_party$
+      - builtin$
+      - examples$

@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated golangci-lint and added Makefile
 - Duration is now printed with millisecond accuracy unless value less than one millisecond
 - PatchLocationType according to Ed. 6
 - Location according to Ed. 6
+
 
 ### Added
 

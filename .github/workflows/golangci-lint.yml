@@ -6,7 +6,6 @@ on:
     branches:
       - master
   pull_request:
-  workflow_dispatch:
 jobs:
   golangci:
     name: lint
@@ -15,9 +14,8 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v7
         with:
-          args: --skip-files=xml
           only-new-issues: true
 
       - name: go-report-card
