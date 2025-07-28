@@ -132,7 +132,7 @@ type Period struct {
 // ImportedMpdType is Imported MPD
 type ImportedMpdType struct {
 	EarliestResolutionTimeOffset float64 `xml:"earliestResolutionTimeOffset,attr"`
-	Value                    	 AnyURI  `xml:",chardata"`
+	Value                        AnyURI  `xml:",chardata"`
 }
 
 func (p *Period) SetParent(m *MPD) {
