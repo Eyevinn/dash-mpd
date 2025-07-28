@@ -99,6 +99,11 @@ This project aims to follow Semantic Versioning and
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 There is a manual [ChangeLog](CHANGELOG.md).
 
+It uses pre-commit hooks, so you need python3 installed and run
+`make prepare` got create a Python virtual env at `.venv` and then
+do `source .venv/bin/activate` in your shell in order to activate that
+virtual environment and get the `pre-commit` mechanism to work.
+
 ## License
 
 MIT, see [LICENSE](LICENSE).
