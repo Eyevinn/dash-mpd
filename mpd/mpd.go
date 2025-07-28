@@ -68,6 +68,7 @@ type MPD struct {
 	Metrics                    []*MetricsType             `xml:"Metrics"`
 	EssentialProperties        []*DescriptorType          `xml:"EssentialProperty"`
 	SupplementalProperties     []*DescriptorType          `xml:"SupplementalProperty"`
+	RequestParam               []*ExtendedUrlInfoType     `xml:"RequestParam"`
 	UTCTimings                 []*DescriptorType          `xml:"UTCTiming"`
 	LeapSecondInformation      *LeapSecondInformationType `xml:"LeapSecondInformation"`
 }
@@ -125,6 +126,7 @@ type Period struct {
 	SupplementalProperties []*DescriptorType         `xml:"SupplementalProperty"`
 	EmptyAdaptationSets    []*AdaptationSetType      `xml:"EmptyAdaptationSet"`
 	GroupLabels            []*LabelType              `xml:"GroupLabel"`
+	RequestParam           []*ExtendedUrlInfoType    `xml:"RequestParam"`
 	Preselections          []*PreselectionType       `xml:"Preselection"`
 	parent                 *MPD                      `xml:"-"`
 }
