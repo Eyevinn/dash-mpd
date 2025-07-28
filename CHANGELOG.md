@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Nothing yet
+
+## [0.13.0] - 2025-07-28
+
 ### Changed
 
 - Updated golangci-lint and added Makefile
@@ -165,7 +169,8 @@ Lots of convenience functions to create MPDs
 - Tests with well-known MPDs
 - Tweaked XML library to support namespaces
 
-[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.11.1...v0.12.0
 [0.11.1]: https://github.com/Eyevinn/dash-mpd/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.10.0...v0.11.0
