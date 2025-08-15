@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - UrlParameterNamespace2025 constant
 - Header field in ExtendedUrlInfoType
 - Profiles and new list type constant
+- DASH-IF Certurl element to ContentProtectionType
 
 ## [0.13.0] - 2025-07-28
 

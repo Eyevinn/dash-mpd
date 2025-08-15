@@ -184,3 +184,68 @@ func TestSegmentTemplateTimescale(t *testing.T) {
 		require.Equal(t, tc.timescale, gotTimescale)
 	}
 }
+
+func TestContentProtectionCerturl(t *testing.T) {
+	testCases := []struct {
+		name     string
+		input    string
+		expected m.ContentProtectionType
+	}{
+		{
+			name: "ContentProtection with single Certurl",
+			input: `<ContentProtection xmlns:dashif="https://dashif.org/CPS">
+				<dashif:Certurl certType="application/pkcs7-mime">https://example.com/cert.pem</dashif:Certurl>
+			</ContentProtection>`,
+			expected: m.ContentProtectionType{
+				Certurls: []m.CerturlType{
+					{
+						CertType: "application/pkcs7-mime",
+						Value:    "https://example.com/cert.pem",
+					},
+				},
+			},
+		},
+		{
+			name: "ContentProtection with multiple Certurls",
+			input: `<ContentProtection xmlns:dashif="https://dashif.org/CPS">
+				<dashif:Certurl certType="application/pkcs7-mime">https://example.com/cert1.pem</dashif:Certurl>
+				<dashif:Certurl certType="application/x-x509-ca-cert">https://example.com/cert2.pem</dashif:Certurl>
+			</ContentProtection>`,
+			expected: m.ContentProtectionType{
+				Certurls: []m.CerturlType{
+					{
+						CertType: "application/pkcs7-mime",
+						Value:    "https://example.com/cert1.pem",
+					},
+					{
+						CertType: "application/x-x509-ca-cert",
+						Value:    "https://example.com/cert2.pem",
+					},
+				},
+			},
+		},
+		{
+			name: "ContentProtection with Certurl without certType",
+			input: `<ContentProtection xmlns:dashif="https://dashif.org/CPS">
+				<dashif:Certurl>https://example.com/cert.pem</dashif:Certurl>
+			</ContentProtection>`,
+			expected: m.ContentProtectionType{
+				Certurls: []m.CerturlType{
+					{
+						CertType: "",
+						Value:    "https://example.com/cert.pem",
+					},
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			var cp m.ContentProtectionType
+			err := xml.Unmarshal([]byte(tc.input), &cp)
+			require.NoError(t, err)
+			require.Equal(t, tc.expected.Certurls, cp.Certurls)
+		})
+	}
+}

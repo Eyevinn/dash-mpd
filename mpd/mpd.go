@@ -599,6 +599,8 @@ type ContentProtectionType struct {
 	LaURL *LaURLType `xml:"https://dashif.org/CPS dashif:Laurl,omitempty"`
 	// AuthzURL is DASH-IF clear key authorization URL according to DASH-IF IOp v5.0.
 	AuthzURL *AuthzURLType `xml:"https://dashif.org/CPS dashif:Authzurl,omitempty"`
+	// Certurls is an array of DASH-IF Certurl defined in Sec 5.4 of DASH-IF IOP v5.1.
+	Certurls []CerturlType `xml:"https://dashif.org/CPS dashif:Certurl,omitempty"`
 	// MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
 	MarlinContentIds *MarlinContentIds `xml:"urn:marlin:mas:1-0:services:schemas:mpd mas:MarlinContentIds,omitempty"`
 	DescriptorType
@@ -620,10 +622,16 @@ type LaURLType struct {
 	Value       AnyURI `xml:",chardata"`
 }
 
-// AuthzURLType is DASH-IF Authzurl according to DASH-IF IOp v5.0.
+// AuthzURLType is DASH-IF Authzurl according to DASH-IF IOP v5.0.
 type AuthzURLType struct {
 	AuthzType string `xml:"authzType,attr,omitempty"`
 	Value     AnyURI `xml:",chardata"`
+}
+
+// CerturlType is DASH-IF Certurl defined in Sec 5.4 of DASH-IF IOP v5.1 Part 6.
+type CerturlType struct {
+	CertType string `xml:"certType,attr,omitempty"`
+	Value    AnyURI `xml:",chardata"`
 }
 
 // MarlinContentIds is Marlin Content Ids containing one or more MarlineContentId elements.
