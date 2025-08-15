@@ -18,21 +18,13 @@ coverage:
 	tail -1 coverage.txt
 
 .PHONY: venv
-venv: .venv/bin/activate
-
-.venv/bin/activate:
-	python3 -m venv .venv
-	.venv/bin/pip install --upgrade pip
-	.venv/bin/pip install pre-commit==4.2.0
-	source .venv/bin/activate
-	touch .venv/bin/activate
-
-.PHONY: pre-commit
-pre-commit: venv
-	source .venv/bin/activate && .venv/bin/pre-commit run --all-files
+venv:
+	python3 -m venv venv
+	venv/bin/pip install --upgrade pip
+	venv/bin/pip install pre-commit==4.2.0
 
 .PHONY: check
-check: prepare pre-commit
+check: prepare
 	golangci-lint run
 
 .PHONY: update
