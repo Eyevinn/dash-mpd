@@ -17,20 +17,20 @@ const (
 )
 
 const (
-	PROFILE_FULL                           = "urn:mpeg:dash:profile:full:2011"
-	PROFILE_ONDEMAND                       = "urn:mpeg:dash:profile:isoff-on-demand:2011"
-	PROFILE_LIVE                           = "urn:mpeg:dash:profile:isoff-live:2011"
-	PROFILE_MAIN                           = "urn:mpeg:dash:profile:isoff-main:2011"
-	PROFILE_MPEG_TS_MAIN                   = "urn:mpeg:dash:profile:mp2t-main:2011"
-	PROFILE_MPEG_TS_SIMPLE                 = "urn:mpeg:dash:profile:mp2t-simple:2011"
-	PROFILE_EXT_LIVE                       = "urn:mpeg:dash:profile:isoff-ext-live:2014"
-	PROFILE_EXT_ONDEMAND                   = "urn:mpeg:dash:profile:isoff-ext-on-demand:2014"
-	PROFILE_COMMON                         = "urn:mpeg:dash:profile:isoff-common:2014"
-	PROFILE_BROADCAST                      = "urn:mpeg:dash:profile:isoff-broadcast:2015"
-	PROFILE_CMAF                           = "urn:mpeg:dash:profile:cmaf:2019"
-	PROFILE_ADVANCED_LINEAR                = "urn:mpeg:dash:profile:advanced-linear:2025"
-	PROFILE_LIST                           = "urn:mpeg:dash:profile:list:2024"
-	PROFILE_SINGLE_PERIOD                  = "urn:mpeg:dash:profile:sps:2024"
+	PROFILE_FULL            = "urn:mpeg:dash:profile:full:2011"
+	PROFILE_ONDEMAND        = "urn:mpeg:dash:profile:isoff-on-demand:2011"
+	PROFILE_LIVE            = "urn:mpeg:dash:profile:isoff-live:2011"
+	PROFILE_MAIN            = "urn:mpeg:dash:profile:isoff-main:2011"
+	PROFILE_MPEG_TS_MAIN    = "urn:mpeg:dash:profile:mp2t-main:2011"
+	PROFILE_MPEG_TS_SIMPLE  = "urn:mpeg:dash:profile:mp2t-simple:2011"
+	PROFILE_EXT_LIVE        = "urn:mpeg:dash:profile:isoff-ext-live:2014"
+	PROFILE_EXT_ONDEMAND    = "urn:mpeg:dash:profile:isoff-ext-on-demand:2014"
+	PROFILE_COMMON          = "urn:mpeg:dash:profile:isoff-common:2014"
+	PROFILE_BROADCAST       = "urn:mpeg:dash:profile:isoff-broadcast:2015"
+	PROFILE_CMAF            = "urn:mpeg:dash:profile:cmaf:2019"
+	PROFILE_ADVANCED_LINEAR = "urn:mpeg:dash:profile:advanced-linear:2025"
+	PROFILE_LIST            = "urn:mpeg:dash:profile:list:2024"
+	PROFILE_SINGLE_PERIOD   = "urn:mpeg:dash:profile:sps:2024"
 )
 
 const (
