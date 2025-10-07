@@ -1020,10 +1020,17 @@ type AlternativeMPDReplaceEventType struct {
 type ListOfProfilesType string
 
 // AddProfile adds a profile to the comma-separated list of profiles.
+// Duplicates are not added.
 func (l ListOfProfilesType) AddProfile(profile string) ListOfProfilesType {
 	if l == "" {
 		return ListOfProfilesType(profile)
 	}
+	for _, p := range strings.Split(string(l), ",") {
+		if p == profile {
+			return l
+		}
+	}
+
 	return ListOfProfilesType(string(l) + "," + profile)
 }
 
