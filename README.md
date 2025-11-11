@@ -67,7 +67,7 @@ that XML library.
 Since the MPD is mapped to Go structures, there are some limitations to what can be processed
 and how the output looks:
 
-1. Only elements and attributes specified in the data structures are kept. Unkonwn elements and
+1. Only elements and attributes specified in the data structures are kept. Unknown elements and
    attributes are silently discarded.
 2. All XML comments are removed
 3. The output order of XML attributes is given by the order in the structure, which is in turn
@@ -101,7 +101,7 @@ There is a manual [ChangeLog](CHANGELOG.md) that should be updated with
 each commit.
 
 With making a local git commit, this project uses [pre-commit hooks][precmt].
-You therefor need Python3 installed and run `make prepare` to create a Python
+You therefore need Python3 installed and run `make prepare` to create a Python
 virtual envinvorment at `.venv` and then run `source .venv/bin/activate` in your
 shell in order to activate that virtual environment to get the [pre-commit`][precmt] mechanism to work.
 
