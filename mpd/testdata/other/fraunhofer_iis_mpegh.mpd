@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xsi:schemaLocation="urn:mpeg:DASH:schema:MPD:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" minBufferTime="PT3.84S" type="static" mediaPresentationDuration="PT1M57.12S">
+  <Period start="PT0S" id="0">
+    <AdaptationSet id="0" codecs="mhm1.0x0D" contentType="audio" mimeType="audio/mp4" segmentAlignment="true" bitstreamSwitching="true" audioSamplingRate="48000">
+      <SegmentTemplate initialization="onedayinberlin_$RepresentationID$_init.mp4" media="onedayinberlin_$RepresentationID$_$Number$.m4s" timescale="48000" duration="92160" startNumber="0"/>
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="16"/>
+      <Representation id="mhm1_64kbps_per_signal" bandwidth="962149"/>
+    </AdaptationSet>
+    <AdaptationSet codecs="hvc1.2.4.L123.90" contentType="video" width="1920" height="1080" mimeType="video/mp4" segmentAlignment="true" bitstreamSwitching="true">
+      <SegmentTemplate initialization="onedayinberlin_$RepresentationID$_init.mp4" media="onedayinberlin_$RepresentationID$_$Number$.m4s" timescale="50" duration="96" startNumber="0"/>
+      <Representation id="hvc1_10000kbps" bandwidth="9588312" sar="1:1"/>
+    </AdaptationSet>
+    <Preselection id="0" tag="0" lang="und" preselectionComponents="0">
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="16"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="commentary"/>
+    </Preselection>
+    <Preselection id="1" tag="1" lang="und" preselectionComponents="0">
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="16"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="commentary"/>
+    </Preselection>
+    <Preselection id="2" tag="2" lang="und" preselectionComponents="0">
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="16"/>
+    </Preselection>
+  </Period>
+</MPD>
