@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Nothing yet
+
+## [0.14.0] - 2025-11-11
+
 ### Changed
 
 - AddProfile now avoids duplicates
@@ -17,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - UrlParameterNamespace2025 constant
 - Header field in ExtendedUrlInfoType
 - Profiles and new list type constant
-- DASH-IF Certurl element to ContentProtectionType
+- DASH-IF Certurl element to ContentProtectionType (as a slice)
+- Test MPDs for EC-3 and MPEG-H
+- Makefile additions including pre-commit and codespell
 
 ## [0.13.0] - 2025-07-28
 
@@ -179,7 +185,8 @@ Lots of convenience functions to create MPDs
 - Tests with well-known MPDs
 - Tweaked XML library to support namespaces
 
-[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.11.1...v0.12.0
 [0.11.1]: https://github.com/Eyevinn/dash-mpd/compare/v0.11.0...v0.11.1
