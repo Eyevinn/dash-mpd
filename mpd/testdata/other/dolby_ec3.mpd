@@ -1,0 +1,41 @@
+<MPD
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:dolby="http://www.dolby.com/ns/online/DASH"
+ xmlns="urn:mpeg:dash:schema:mpd:2011"
+ xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011"
+ type="static"
+ mediaPresentationDuration="PT1M15.56S"
+ minBufferTime="PT4S"
+ profiles="urn:mpeg:dash:profile:isoff-live:2011">
+
+ <Period start="PT0S">
+    <!-- Video -->
+    <AdaptationSet contentType="video" mimeType="video/mp4" segmentAlignment="true" startWithSAP="1">
+      <SegmentTemplate timescale="25"
+        media="ChID_voices_1920x1080p_25fps_h265_6ch_640kbps_ddp_joc/video/Living-Room-Atmos_1080p_25fps_h265_$Time$.mp4"
+        initialization="ChID_voices_1920x1080p_25fps_h265_6ch_640kbps_ddp_joc/video/Living-Room-Atmos_1080p_25fps_h265.mp4"
+        startNumber="1">
+        <SegmentTimeline>
+          <S t="0" d="50" r="37"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="1" bandwidth="3914604" codecs="hev1.2.4.L123.b0" width="1920" height="1080" frameRate="25"/>
+    </AdaptationSet>
+    <!-- Audio DD+ Atmos -->
+    <AdaptationSet contentType="audio" mimeType="audio/mp4" lang="en" segmentAlignment="true" startWithSAP="1">
+      <SegmentTemplate timescale="48000"
+        media="ChID_voices_1920x1080p_25fps_h265_6ch_640kbps_ddp_joc/audio/ChID_voices_Atmos_6ch_640kbps_ddp_joc_$Time$.mp4"
+        initialization="ChID_voices_1920x1080p_25fps_h265_6ch_640kbps_ddp_joc/audio/ChID_voices_Atmos_6ch_640kbps_ddp_joc.mp4"
+        startNumber="1">
+        <SegmentTimeline>
+          <S t="0" d="95232" r="38"/>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="3" bandwidth="640000" codecs="ec-3" audioSamplingRate="48000">
+        <AudioChannelConfiguration schemeIdUri="tag:dolby.com,2014:dash:audio_channel_configuration:2011" value="F801"/>
+        <SupplementalProperty schemeIdUri="tag:dolby.com,2018:dash:EC3_ExtensionType:2018" value="JOC"/>
+        <SupplementalProperty schemeIdUri="tag:dolby.com,2018:dash:EC3_ExtensionComplexityIndex:2018" value="16"/>
+      </Representation>
+    </AdaptationSet>
+ </Period>
+</MPD>
