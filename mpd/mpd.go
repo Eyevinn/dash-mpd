@@ -869,8 +869,8 @@ type S struct {
 	T *uint64 `xml:"t,attr"`
 	// N is is first Segment number in Segment sequence relative startNumber
 	N *uint64 `xml:"n,attr"`
-	// D is the Segment duration. Optional from Ed. 6, since p and pE can be used instead.
-	D uint64 `xml:"d,attr"`
+	// D is the Segment duration. Optional from Ed. 6, since not present if p (pattern) is used.
+	D uint64 `xml:"d,attr,omitempty"`
 	// R is repeat count (how many times to repeat. -1 is unlimited)
 	R int `xml:"r,attr,omitempty"` // default = 0
 	// K is the number of Segments that are included in a Segment Sequence.
