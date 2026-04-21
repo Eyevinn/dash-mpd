@@ -121,8 +121,6 @@ func BenchmarkClone(b *testing.B) {
 	mpd := m.MPD{}
 	err = xml.Unmarshal(data, &mpd)
 	require.NoError(b, err)
-	mpdCopy := m.Clone(&mpd)
-	cmp.Equal(&mpd, mpdCopy)
 	for i := 0; i < b.N; i++ {
 		_ = m.Clone(&mpd)
 	}
