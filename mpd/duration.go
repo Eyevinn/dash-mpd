@@ -31,7 +31,6 @@ func newParseDurationError(msg string) ParseDurationError {
 // XML marshaling methods need Duration to be included as a pointer in XML.
 type Duration time.Duration
 
-
 func (d *Duration) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
 	if d == nil {
 		return xml.Attr{}, nil
@@ -182,7 +181,7 @@ func ParseDuration(str string) (time.Duration, error) {
 
 	var (
 		total    time.Duration
-		i        = 1    // cursor, positioned just after 'P'
+		i        = 1 // cursor, positioned just after 'P'
 		afterT   = false
 		seenAny  = false
 		lastUnit byte
