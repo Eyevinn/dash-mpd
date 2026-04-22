@@ -56,6 +56,36 @@ const (
 
 var tinfoMap sync.Map // map[reflect.Type]*typeInfo
 
+// typeImpl caches reflect.Type.Implements results for marshaler
+// interfaces. The checks are deterministic per type, so computing them once
+// and storing the booleans avoids repeated reflect calls in hot paths.
+type typeImpl struct {
+	marshaler, addrMarshaler,
+	marshalerAttr, addrMarshalerAttr,
+	textMarshaler, addrTextMarshaler bool
+}
+
+var typeImplMap sync.Map // map[reflect.Type]typeImpl
+
+// getTypeImpl returns (and caches) the typeImpl for t.
+// It is safe for concurrent use.
+func getTypeImpl(t reflect.Type) typeImpl {
+	if v, ok := typeImplMap.Load(t); ok {
+		return v.(typeImpl)
+	}
+	pt := reflect.PointerTo(t)
+	v := typeImpl{
+		marshaler:         t.Implements(marshalerType),
+		addrMarshaler:     pt.Implements(marshalerType),
+		marshalerAttr:     t.Implements(marshalerAttrType),
+		addrMarshalerAttr: pt.Implements(marshalerAttrType),
+		textMarshaler:     t.Implements(textMarshalerType),
+		addrTextMarshaler: pt.Implements(textMarshalerType),
+	}
+	typeImplMap.Store(t, v)
+	return v
+}
+
 var nameType = reflect.TypeFor[Name]()
 
 // getTypeInfo returns the typeInfo structure with details necessary

@@ -490,23 +490,24 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 	typ := val.Type()
 
 	// Check for marshaler.
-	if val.CanInterface() && typ.Implements(marshalerType) {
+	ti := getTypeImpl(typ)
+	if val.CanInterface() && ti.marshaler {
 		return p.marshalInterface(val.Interface().(Marshaler), defaultStart(typ, finfo, startTemplate))
 	}
 	if val.CanAddr() {
 		pv := val.Addr()
-		if pv.CanInterface() && pv.Type().Implements(marshalerType) {
+		if pv.CanInterface() && ti.addrMarshaler {
 			return p.marshalInterface(pv.Interface().(Marshaler), defaultStart(pv.Type(), finfo, startTemplate))
 		}
 	}
 
 	// Check for text marshaler.
-	if val.CanInterface() && typ.Implements(textMarshalerType) {
+	if val.CanInterface() && ti.textMarshaler {
 		return p.marshalTextInterface(val.Interface().(encoding.TextMarshaler), defaultStart(typ, finfo, startTemplate))
 	}
 	if val.CanAddr() {
 		pv := val.Addr()
-		if pv.CanInterface() && pv.Type().Implements(textMarshalerType) {
+		if pv.CanInterface() && ti.addrTextMarshaler {
 			return p.marshalTextInterface(pv.Interface().(encoding.TextMarshaler), defaultStart(pv.Type(), finfo, startTemplate))
 		}
 	}
@@ -629,7 +630,8 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 
 // marshalAttr marshals an attribute with the given name and value, adding to start.Attr.
 func (p *printer) marshalAttr(start *StartElement, name Name, val reflect.Value) error {
-	if val.CanInterface() && val.Type().Implements(marshalerAttrType) {
+	tai := getTypeImpl(val.Type())
+	if val.CanInterface() && tai.marshalerAttr {
 		attr, err := val.Interface().(MarshalerAttr).MarshalXMLAttr(name)
 		if err != nil {
 			return err
@@ -642,7 +644,7 @@ func (p *printer) marshalAttr(start *StartElement, name Name, val reflect.Value)
 
 	if val.CanAddr() {
 		pv := val.Addr()
-		if pv.CanInterface() && pv.Type().Implements(marshalerAttrType) {
+		if pv.CanInterface() && tai.addrMarshalerAttr {
 			attr, err := pv.Interface().(MarshalerAttr).MarshalXMLAttr(name)
 			if err != nil {
 				return err
@@ -654,7 +656,7 @@ func (p *printer) marshalAttr(start *StartElement, name Name, val reflect.Value)
 		}
 	}
 
-	if val.CanInterface() && val.Type().Implements(textMarshalerType) {
+	if val.CanInterface() && tai.textMarshaler {
 		text, err := val.Interface().(encoding.TextMarshaler).MarshalText()
 		if err != nil {
 			return err
@@ -665,7 +667,7 @@ func (p *printer) marshalAttr(start *StartElement, name Name, val reflect.Value)
 
 	if val.CanAddr() {
 		pv := val.Addr()
-		if pv.CanInterface() && pv.Type().Implements(textMarshalerType) {
+		if pv.CanInterface() && tai.addrTextMarshaler {
 			text, err := pv.Interface().(encoding.TextMarshaler).MarshalText()
 			if err != nil {
 				return err
