@@ -807,7 +807,7 @@ func (d *Decoder) rawToken() (Token, error) {
 		return nil, d.err
 	}
 
-	attr = []Attr{}
+	attr = make([]Attr, 0, 8)
 	for {
 		d.space()
 		if b, ok = d.mustgetc(); !ok {
