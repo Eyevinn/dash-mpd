@@ -115,12 +115,16 @@ func (d *Duration) String() string {
 		}
 	}
 
+	w--
+	buf[w] = 'T'
+	w--
+	buf[w] = 'P'
 	if neg {
 		w--
 		buf[w] = '-'
 	}
 
-	return "PT" + string(buf[w:])
+	return string(buf[w:])
 }
 
 // fmtFrac formats the fraction of v/10**prec (e.g., ".12345") into the
