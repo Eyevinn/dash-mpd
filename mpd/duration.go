@@ -2,9 +2,7 @@ package mpd
 
 import (
 	"math"
-	"regexp"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/Eyevinn/dash-mpd/xml"
@@ -33,17 +31,6 @@ func newParseDurationError(msg string) ParseDurationError {
 // XML marshaling methods need Duration to be included as a pointer in XML.
 type Duration time.Duration
 
-const (
-	rStart   = "^P"          // Must start with a 'P'
-	rDays    = "(\\d+D)?"    // We only allow Days for durations, not Months or Years
-	rTime    = "(?:T"        // If there's any 'time' units then they must be preceded by a 'T'
-	rHours   = "(\\d+H)?"    // Hours
-	rMinutes = "(\\d+M)?"    // Minutes
-	rSeconds = "([\\d.]+S)?" // Seconds (Potentially decimal)
-	rEnd     = ")?$"         // end of regex must close "T" capture group
-)
-
-var xmlDurationRegex = regexp.MustCompile(rStart + rDays + rTime + rHours + rMinutes + rSeconds + rEnd)
 
 func (d *Duration) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
 	if d == nil {
@@ -182,51 +169,120 @@ func ParseDuration(str string) (time.Duration, error) {
 	if len(str) < 3 {
 		return 0, newParseDurationError("at least one number and designator are required")
 	}
-
-	if strings.Contains(str, "-") {
+	if str[0] == '-' {
 		return 0, newParseDurationError("duration cannot be negative")
 	}
-
-	// Check that only the parts we expect exist and that everything's in the correct order
-	if !xmlDurationRegex.Match([]byte(str)) {
+	if str[0] != 'P' {
 		return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
 	}
 
-	var parts = xmlDurationRegex.FindStringSubmatch(str)
-	var total time.Duration
+	var (
+		total    time.Duration
+		i        = 1    // cursor, positioned just after 'P'
+		afterT   = false
+		seenAny  = false
+		lastUnit byte
+	)
 
-	if parts[1] != "" {
-		days, err := strconv.Atoi(strings.TrimRight(parts[1], "D"))
-		if err != nil {
-			return 0, newParseDurationError("error parsing Days")
+	// rank enforces D < H < M < S ordering.
+	rank := func(c byte) int {
+		switch c {
+		case 'D':
+			return 1
+		case 'H':
+			return 2
+		case 'M':
+			return 3
+		case 'S':
+			return 4
 		}
-		total += time.Duration(days) * time.Hour * 24
+		return 0
 	}
 
-	if parts[2] != "" {
-		hours, err := strconv.Atoi(strings.TrimRight(parts[2], "H"))
-		if err != nil {
-			return 0, newParseDurationError("error parsing Hours")
+	for i < len(str) {
+		c := str[i]
+		if c == 'T' {
+			if afterT {
+				return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+			}
+			afterT = true
+			i++
+			continue
 		}
-		total += time.Duration(hours) * time.Hour
-	}
-
-	if parts[3] != "" {
-		mins, err := strconv.Atoi(strings.TrimRight(parts[3], "M"))
-		if err != nil {
-			return 0, newParseDurationError("error parsing Minutes")
+		if c == '-' {
+			return 0, newParseDurationError("duration cannot be negative")
 		}
-		total += time.Duration(mins) * time.Minute
-	}
-
-	if parts[4] != "" {
-		secs, err := strconv.ParseFloat(strings.TrimRight(parts[4], "S"), 64)
-		if err != nil {
-			return 0, newParseDurationError("error parsing Seconds")
+		// Must now read digits (and maybe '.', only if looking for S).
+		start := i
+		sawDot := false
+		for i < len(str) {
+			b := str[i]
+			if b >= '0' && b <= '9' {
+				i++
+				continue
+			}
+			if b == '.' && !sawDot {
+				sawDot = true
+				i++
+				continue
+			}
+			break
 		}
-		total += time.Duration(secs * float64(time.Second))
-	}
+		if i == start {
+			return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		}
+		if i == len(str) {
+			return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		}
+		unit := str[i]
+		i++
+		if rank(unit) == 0 {
+			return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		}
+		if rank(unit) <= rank(lastUnit) {
+			return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		}
+		if unit != 'D' && !afterT {
+			return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		}
+		if sawDot && unit != 'S' {
+			return 0, newParseDurationError("duration must be in the format: P[nD][T[nH][nM][nS]]")
+		}
+		lastUnit = unit
+		seenAny = true
 
+		numStr := str[start : i-1] // digits (and maybe '.') without the unit letter
+
+		switch unit {
+		case 'D':
+			n, err := strconv.ParseUint(numStr, 10, 64)
+			if err != nil {
+				return 0, newParseDurationError("error parsing Days")
+			}
+			total += time.Duration(n) * 24 * time.Hour
+		case 'H':
+			n, err := strconv.ParseUint(numStr, 10, 64)
+			if err != nil {
+				return 0, newParseDurationError("error parsing Hours")
+			}
+			total += time.Duration(n) * time.Hour
+		case 'M':
+			n, err := strconv.ParseUint(numStr, 10, 64)
+			if err != nil {
+				return 0, newParseDurationError("error parsing Minutes")
+			}
+			total += time.Duration(n) * time.Minute
+		case 'S':
+			f, err := strconv.ParseFloat(numStr, 64)
+			if err != nil {
+				return 0, newParseDurationError("error parsing Seconds")
+			}
+			total += time.Duration(f * float64(time.Second))
+		}
+	}
+	if !seenAny {
+		return 0, newParseDurationError("at least one number and designator are required")
+	}
 	return total, nil
 }
 
