@@ -2,8 +2,10 @@ package mpd_test
 
 import (
 	"bytes"
+	"io"
 	"io/fs"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/Eyevinn/dash-mpd/xml"
@@ -181,6 +183,49 @@ func TestSegmentTemplateTimescale(t *testing.T) {
 		st.SetTimescale(tc.timescale)
 		gotTimescale := st.GetTimescale()
 		require.Equal(t, tc.timescale, gotTimescale)
+	}
+}
+
+func BenchmarkUnmarshalCorpus(b *testing.B) {
+	files, err := filepath.Glob("testdata/schema-mpds/*.mpd")
+	require.NoError(b, err)
+	for _, f := range files {
+		data, err := os.ReadFile(f)
+		require.NoError(b, err)
+		b.Run(filepath.Base(f), func(b *testing.B) {
+			b.ReportAllocs()
+			for i := 0; i < b.N; i++ {
+				mpd := m.MPD{}
+				_ = xml.Unmarshal(data, &mpd)
+			}
+		})
+	}
+}
+
+func BenchmarkMarshalCorpus(b *testing.B) {
+	files, err := filepath.Glob("testdata/schema-mpds/*.mpd")
+	require.NoError(b, err)
+	for _, f := range files {
+		data, err := os.ReadFile(f)
+		require.NoError(b, err)
+		mpd := m.MPD{}
+		err = xml.Unmarshal(data, &mpd)
+		require.NoError(b, err)
+		b.Run(filepath.Base(f), func(b *testing.B) {
+			b.ReportAllocs()
+			for i := 0; i < b.N; i++ {
+				_, _ = xml.MarshalIndent(mpd, "", "  ")
+			}
+		})
+	}
+}
+
+func BenchmarkWriteToDiscard(b *testing.B) {
+	mpd, err := m.ReadFromFile("testdata/schema-mpds/example_G15.mpd")
+	require.NoError(b, err)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		_, _ = mpd.Write(io.Discard, "  ", true)
 	}
 }
 
