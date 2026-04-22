@@ -1447,7 +1447,7 @@ func (s *parentStack) trim(parents []string) error {
 
 // push adds parent elements to the stack and writes open tags.
 func (s *parentStack) push(parents []string) error {
-	for i := 0; i < len(parents); i++ {
+	for i := range parents {
 		if err := s.p.writeStart(&StartElement{Name: Name{Local: parents[i]}}); err != nil {
 			return err
 		}
