@@ -11,11 +11,19 @@ import (
 	"sync"
 )
 
+// attrKey is the map key used for O(1) attribute lookup.
+type attrKey struct {
+	space string
+	local string
+}
+
 // typeInfo holds details for the xml representation of a type.
 type typeInfo struct {
 	xmlname *fieldInfo
 	fields  []fieldInfo
-	nAttrs  int // number of fAttr fields; populated at end of getTypeInfo
+	nAttrs  int                    // number of fAttr fields; populated at end of getTypeInfo
+	attrs   map[attrKey]*fieldInfo // keyed by (xmlns, name); populated at end of getTypeInfo
+	anyAttr *fieldInfo             // first fAny|fAttr field, nil if none
 }
 
 // fieldInfo holds details for the xml representation of a single field.
@@ -105,10 +113,22 @@ func getTypeInfo(typ reflect.Type) (*typeInfo, error) {
 		}
 	}
 
-	// Count fAttr fields so marshalValue can pre-size start.Attr.
+	// Count fAttr fields so marshalValue can pre-size start.Attr,
+	// and build a map for O(1) attribute lookup during unmarshal.
+	tinfo.attrs = make(map[attrKey]*fieldInfo, len(tinfo.fields))
 	for i := range tinfo.fields {
-		if tinfo.fields[i].flags&fMode == fAttr {
+		fi := &tinfo.fields[i]
+		switch fi.flags & fMode {
+		case fAttr:
 			tinfo.nAttrs++
+			// Register under (fi.xmlns, fi.name). Lookup in read.go will
+			// try (a.Name.Space, fi.name) first, then ("", fi.name) for
+			// fields registered with an empty namespace.
+			tinfo.attrs[attrKey{fi.xmlns, fi.name}] = fi
+		case fAny | fAttr:
+			if tinfo.anyAttr == nil {
+				tinfo.anyAttr = fi
+			}
 		}
 	}
 
