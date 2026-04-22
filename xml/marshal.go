@@ -14,6 +14,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 const (
@@ -152,6 +153,44 @@ func NewEncoder(w io.Writer) *Encoder {
 	e := &Encoder{printer{w: bufio.NewWriter(w)}}
 	e.p.encoder = e
 	return e
+}
+
+// encoderPool is a pool of *Encoder values.  Each pooled encoder holds a
+// bufio.Writer whose underlying writer is io.Discard; AcquireEncoder redirects
+// that writer to the caller's io.Writer before returning the encoder.
+var encoderPool = sync.Pool{
+	New: func() any {
+		e := &Encoder{printer{Writer: bufio.NewWriter(io.Discard)}}
+		e.p.encoder = e
+		return e
+	},
+}
+
+// AcquireEncoder returns a pooled *Encoder configured to write to w.
+// The caller must call ReleaseEncoder when done to return it to the pool.
+// Do not continue to use the encoder after calling ReleaseEncoder.
+func AcquireEncoder(w io.Writer) *Encoder {
+	enc := encoderPool.Get().(*Encoder)
+	enc.p.Writer.Reset(w)
+	return enc
+}
+
+// ReleaseEncoder resets enc's internal state and returns it to the pool.
+// The caller must not use enc after this call.
+func ReleaseEncoder(enc *Encoder) {
+	// Reset the bufio.Writer to discard so the pooled encoder holds no
+	// reference to the caller's writer.
+	enc.p.Writer.Reset(io.Discard)
+	// Clear all mutable printer state.
+	enc.p.seq = 0
+	enc.p.indent = ""
+	enc.p.prefix = ""
+	enc.p.depth = 0
+	enc.p.indentedIn = false
+	enc.p.putNewline = false
+	// Truncate the elements slice without releasing its backing array.
+	enc.p.elements = enc.p.elements[:0]
+	encoderPool.Put(enc)
 }
 
 // Indent sets the encoder to generate XML in which each element
