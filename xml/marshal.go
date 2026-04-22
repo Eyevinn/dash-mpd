@@ -565,6 +565,11 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 		start.Name.Local = name
 	}
 
+	// Pre-size start.Attr to avoid repeated backing-array copies.
+	if cap(start.Attr) < tinfo.nAttrs {
+		start.Attr = make([]Attr, 0, tinfo.nAttrs)
+	}
+
 	// Attributes
 	for i := range tinfo.fields {
 		finfo := &tinfo.fields[i]

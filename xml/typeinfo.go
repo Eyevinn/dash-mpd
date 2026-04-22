@@ -15,6 +15,7 @@ import (
 type typeInfo struct {
 	xmlname *fieldInfo
 	fields  []fieldInfo
+	nAttrs  int // number of fAttr fields; populated at end of getTypeInfo
 }
 
 // fieldInfo holds details for the xml representation of a single field.
@@ -101,6 +102,13 @@ func getTypeInfo(typ reflect.Type) (*typeInfo, error) {
 				// Add the field if it doesn't conflict with other fields.
 				return nil, err
 			}
+		}
+	}
+
+	// Count fAttr fields so marshalValue can pre-size start.Attr.
+	for i := range tinfo.fields {
+		if tinfo.fields[i].flags&fMode == fAttr {
+			tinfo.nAttrs++
 		}
 	}
 
