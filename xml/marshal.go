@@ -676,13 +676,13 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 		}
 
 		// Dereference pointer (a simple-attr pointer to a simple type)
-		for fv.Kind() == reflect.Ptr {
+		for fv.Kind() == reflect.Pointer {
 			if fv.IsNil() {
 				break
 			}
 			fv = fv.Elem()
 		}
-		if !fv.IsValid() || (fv.Kind() == reflect.Ptr && fv.IsNil()) {
+		if !fv.IsValid() || (fv.Kind() == reflect.Pointer && fv.IsNil()) {
 			continue
 		}
 
@@ -725,14 +725,14 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 func isSimpleAttrVal(val reflect.Value) bool {
 	// Dereference a single pointer level for the type check.
 	v := val
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		if v.IsNil() {
 			return false // nil pointer: marshalAttr returns nil, nothing to write
 		}
 		v = v.Elem()
 	}
 	// Interfaces and multi-level pointers stay in the custom path.
-	if v.Kind() == reflect.Interface || v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Interface || v.Kind() == reflect.Pointer {
 		return false
 	}
 	// Non-uint8 slices encode as multiple attributes; keep in custom path.
@@ -827,8 +827,7 @@ func (p *printer) marshalAttr(start *StartElement, name Name, val reflect.Value)
 
 	// Walk slices.
 	if val.Kind() == reflect.Slice && val.Type().Elem().Kind() != reflect.Uint8 {
-		n := val.Len()
-		for i := 0; i < n; i++ {
+		for i := range val.Len() {
 			if err := p.marshalAttr(start, name, val.Index(i)); err != nil {
 				return err
 			}
