@@ -567,11 +567,15 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 	}
 
 	// Pre-size start.Attr to avoid repeated backing-array copies.
+	// Only custom-marshaler attrs go into start.Attr now; simple attrs are
+	// written directly in Pass B, so we only need capacity for custom ones.
+	// Use tinfo.nAttrs as an upper bound (safe over-estimate).
 	if cap(start.Attr) < tinfo.nAttrs {
 		start.Attr = make([]Attr, 0, tinfo.nAttrs)
 	}
 
-	// Attributes
+	// Pass A: collect only attrs that need custom marshalling into start.Attr.
+	// Simple (numeric / bool / string / []byte) attrs are deferred to Pass B.
 	for i := range tinfo.fields {
 		finfo := &tinfo.fields[i]
 		if finfo.flags&fAttr == 0 {
@@ -588,6 +592,10 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 			continue
 		}
 
+		if isSimpleAttrVal(fv) {
+			continue // handled in Pass B
+		}
+
 		name := Name{Space: finfo.xmlns, Local: joinPrefixed(finfo.prefix, finfo.name)}
 		if err := p.marshalAttr(&start, name, fv); err != nil {
 			return err
@@ -601,9 +609,52 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 		start.Attr = append(start.Attr, Attr{Name{Space: "", Local: xmlnsPrefix}, ""})
 	}
 
-	if err := p.writeStart(&start); err != nil {
+	// Write opening tag + namespace declarations + custom attrs, but NOT '>'.
+	if err := p.writeStartOpen(&start); err != nil {
 		return err
 	}
+
+	// Pass B: write simple attrs directly into the output buffer without
+	// allocating Attr structs or intermediate strings.
+	for i := range tinfo.fields {
+		finfo := &tinfo.fields[i]
+		if finfo.flags&fAttr == 0 {
+			continue
+		}
+
+		fv := finfo.value(val, dontInitNilPointers)
+
+		if finfo.flags&fOmitEmpty != 0 && isEmptyValue(fv) {
+			continue
+		}
+
+		if fv.Kind() == reflect.Interface && fv.IsNil() {
+			continue
+		}
+
+		if !isSimpleAttrVal(fv) {
+			continue // already handled in Pass A
+		}
+
+		// Dereference pointer (a simple-attr pointer to a simple type)
+		for fv.Kind() == reflect.Ptr {
+			if fv.IsNil() {
+				break
+			}
+			fv = fv.Elem()
+		}
+		if !fv.IsValid() || (fv.Kind() == reflect.Ptr && fv.IsNil()) {
+			continue
+		}
+
+		name := Name{Space: finfo.xmlns, Local: joinPrefixed(finfo.prefix, finfo.name)}
+		if err := p.writeSimpleAttr(name, fv); err != nil {
+			return err
+		}
+	}
+
+	// Close the opening tag.
+	p.WriteByte('>')
 
 	if val.Kind() == reflect.Struct {
 		err = p.marshalStruct(tinfo, val)
@@ -626,6 +677,55 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 	}
 
 	return p.cachedWriteError()
+}
+
+// isSimpleAttrVal reports whether val can be written directly via writeSimpleAttr
+// without going through marshalAttr.  A value is "simple" if it is a plain
+// numeric/bool/string/[]byte kind (after dereferencing at most one pointer level)
+// and its type does not implement MarshalerAttr or encoding.TextMarshaler.
+func isSimpleAttrVal(val reflect.Value) bool {
+	// Dereference a single pointer level for the type check.
+	v := val
+	if v.Kind() == reflect.Ptr {
+		if v.IsNil() {
+			return false // nil pointer: marshalAttr returns nil, nothing to write
+		}
+		v = v.Elem()
+	}
+	// Interfaces and multi-level pointers stay in the custom path.
+	if v.Kind() == reflect.Interface || v.Kind() == reflect.Ptr {
+		return false
+	}
+	// Non-uint8 slices encode as multiple attributes; keep in custom path.
+	if v.Kind() == reflect.Slice && v.Type().Elem().Kind() != reflect.Uint8 {
+		return false
+	}
+	// xml.Attr values are appended as-is; keep in custom path.
+	if v.Type() == attrType {
+		return false
+	}
+	// Check for custom marshalers via the typeImpl cache.
+	// getTypeImpl checks both t and *t, so one call suffices.
+	tai := getTypeImpl(v.Type())
+	if tai.marshalerAttr || tai.addrMarshalerAttr || tai.textMarshaler || tai.addrTextMarshaler {
+		return false
+	}
+	// Remaining kinds that writeSimpleAttrValue handles:
+	switch v.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr,
+		reflect.Float32, reflect.Float64,
+		reflect.Bool,
+		reflect.String:
+		return true
+	case reflect.Slice: // already established elem kind == Uint8 above
+		return true
+	case reflect.Array:
+		if v.Type().Elem().Kind() == reflect.Uint8 {
+			return true
+		}
+	}
+	return false
 }
 
 // marshalAttr marshals an attribute with the given name and value, adding to start.Attr.
@@ -770,6 +870,18 @@ func (p *printer) marshalTextInterface(val encoding.TextMarshaler, start StartEl
 
 // writeStart writes the given start element.
 func (p *printer) writeStart(start *StartElement) error {
+	if err := p.writeStartOpen(start); err != nil {
+		return err
+	}
+	p.WriteByte('>')
+	return nil
+}
+
+// writeStartOpen writes everything a start element needs except the closing '>'.
+// Call p.WriteByte('>') afterwards to complete the tag.
+// This split allows the caller to inject additional attributes directly into the
+// output buffer before closing the tag (change #7: writeSimpleAttr).
+func (p *printer) writeStartOpen(start *StartElement) error {
 	if start.Name.Local == "" {
 		return fmt.Errorf("xml: start tag with no name")
 	}
@@ -867,8 +979,80 @@ func (p *printer) writeStart(start *StartElement) error {
 		p.EscapeString(attr.Value)
 		p.WriteByte('"')
 	}
-	p.WriteByte('>')
 	return nil
+}
+
+// writeSimpleAttr writes a single ` name="value"` attribute directly to the
+// output buffer without allocating an Attr struct or intermediate strings.
+// It is only valid to call this between writeStartOpen and the closing '>'.
+// Only call for simple non-custom types (int, uint, float, bool, string, []byte).
+func (p *printer) writeSimpleAttr(name Name, val reflect.Value) error {
+	p.WriteByte(' ')
+	// Mirror the logic from writeStartOpen's attribute loop:
+	// extract any prefix already encoded in name.Local (e.g. "xsi:schemaLocation"),
+	// then handle the namespace space the same way writeStart does.
+	prefix, local := splitPrefixed(name.Local)
+	if name.Space == xmlnsURL {
+		p.createPrefix(val.String(), local)
+		p.WriteString(xmlnsPrefix)
+		p.WriteByte(':')
+	} else if name.Space != "" {
+		var prefixCreated bool
+		prefix, prefixCreated = p.createPrefix(name.Space, prefix)
+		if prefixCreated {
+			p.writePrefixAttr(prefix, name.Space)
+			p.WriteByte(' ')
+		}
+		p.WriteString(prefix)
+		p.WriteByte(':')
+	}
+	p.WriteString(local)
+	p.WriteString(`="`)
+	if err := p.writeSimpleAttrValue(val); err != nil {
+		return err
+	}
+	p.WriteByte('"')
+	return nil
+}
+
+// writeSimpleAttrValue writes the XML-escaped attribute value for a simple type
+// directly to the output buffer using stack-allocated scratch space for numerics.
+func (p *printer) writeSimpleAttrValue(val reflect.Value) error {
+	var scratch [64]byte
+	switch val.Kind() {
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		b := strconv.AppendInt(scratch[:0], val.Int(), 10)
+		_, err := p.Write(b)
+		return err
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		b := strconv.AppendUint(scratch[:0], val.Uint(), 10)
+		_, err := p.Write(b)
+		return err
+	case reflect.Float32, reflect.Float64:
+		b := strconv.AppendFloat(scratch[:0], val.Float(), 'g', -1, val.Type().Bits())
+		_, err := p.Write(b)
+		return err
+	case reflect.Bool:
+		b := strconv.AppendBool(scratch[:0], val.Bool())
+		_, err := p.Write(b)
+		return err
+	case reflect.String:
+		return EscapeText(p, []byte(val.String()))
+	case reflect.Slice:
+		if val.Type().Elem().Kind() == reflect.Uint8 {
+			return EscapeText(p, val.Bytes())
+		}
+	case reflect.Array:
+		if val.Type().Elem().Kind() == reflect.Uint8 {
+			n := val.Len()
+			b := make([]byte, n)
+			for i := range n {
+				b[i] = byte(val.Index(i).Uint())
+			}
+			return EscapeText(p, b)
+		}
+	}
+	return &UnsupportedTypeError{val.Type()}
 }
 
 func (p *printer) writeEnd(name Name) error {
