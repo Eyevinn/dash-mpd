@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Nothing yet
+### Changed
+
+- Upgraded vendored `xml/` package to the current head of golang/go PR #48641
+  (`ydnar/go@a79fce77`, rebased on Go master 2024-10-28). Brings in stdlib
+  `encoding/xml` fixes since Go 1.17, including CVE-2022-30633 (unmarshal depth
+  limit) and several panic fixes. The local customization that disables tab/
+  newline escaping in `CharData` byte content is preserved.
 
 ## [0.14.1] - 2026-02-06
 
