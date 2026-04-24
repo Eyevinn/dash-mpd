@@ -55,9 +55,12 @@ There are a number of pull requests to improve the situation, and in particular
 includes an extension to the XML struct tags that make it possible to specify name
 space prefixes.
 
-Since this functionality has not yet (Go 1.19) made its way into the standard library, after more
-than a year, the full patched version of the `encoding/xml` package is included here
-in the `xml` directory. Therefore, the `github.com/Eyevinn/dash-mpd/xml` package should
+Since this functionality has not yet made its way into the standard library, after more
+than four years, the full patched version of the `encoding/xml` package is included here
+in the `xml` directory. The vendored copy tracks the current head of PR #48641 rebased on
+Go master, and therefore includes stdlib fixes made since Go 1.17 (notably CVE-2022-30633
+and several panic fixes). See `xml/README.md` for the exact commit.
+Therefore, the `github.com/Eyevinn/dash-mpd/xml` package should
 be used together with the XML structure in the package, rather than the standard library version.
 The package functions `mpd.ReadFromFile()`, `mpd.ReadFromString()`, and `mpd.Write()` do use
 that XML library.
