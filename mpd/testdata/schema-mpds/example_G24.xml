@@ -1,0 +1,11 @@
+
+    <EventStream schemeIdUri="urn:mpeg:dash:nonlinearplayback:2020" value="urn:xapp:2020:userinterface1">
+      <Event presentationTime="530" duration="30">
+        <SelectionInfo selectionInfo="What would you like to happen next?" contactURL="http://cdn.com/content_xyz/">
+          <Selection parameter="1" data="Bill kills Alice"/>
+          <Selection parameter="2" data="Bill kisses Alice"/>
+          <Selection parameter="3" data="Bill frames Alice"/>
+        </SelectionInfo>
+      </Event>
+    </EventStream>
+

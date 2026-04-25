@@ -1,47 +1,28 @@
 <?xml version="1.0"?>
-<MPD 
-  xmlns="urn:mpeg:dash:schema:mpd:2011"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
-  type="static"
-  mediaPresentationDuration="PT10S"
-  minBufferTime="PT1S"
-  profiles="urn:mpeg:dash:profile:isoff-on-demand:2011">
-
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" type="static" mediaPresentationDuration="PT10S" minBufferTime="PT1S">
   <Period>
-    <!-- Tiled Panorama (2 full HD video next to each other) -->
     <AdaptationSet segmentAlignment="true" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-      <SupplementalProperty schemeIdUri="urn:mpeg:dash:srd:2014" 
-      value="1, 0, 0, 1920, 1080, 3840, 1080, 0"/>
-      <Representation id="left_panorama" mimeType="video/mp4" codecs="avc1.42c01e" bandwidth="5000000" width="1920" height="1080">
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:srd:2014" value="1, 0, 0, 1920, 1080, 3840, 1080, 0"></SupplementalProperty>
+      <Representation id="left_panorama" bandwidth="5000000" width="1920" height="1080" mimeType="video/mp4" codecs="avc1.42c01e">
         <BaseURL>left_panorama.mp4</BaseURL>
       </Representation>
     </AdaptationSet>
-
     <AdaptationSet segmentAlignment="true" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-      <SupplementalProperty schemeIdUri="urn:mpeg:dash:srd:2014" 
-      value="1, 1920, 0, 1920, 1080, 3840, 1080, 0"/>
-      <Representation id="right_panorama" mimeType="video/mp4" codecs="avc1.42c01e" bandwidth="5000000" width="1920" height="1080">
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:srd:2014" value="1, 1920, 0, 1920, 1080, 3840, 1080, 0"></SupplementalProperty>
+      <Representation id="right_panorama" bandwidth="5000000" width="1920" height="1080" mimeType="video/mp4" codecs="avc1.42c01e">
         <BaseURL>right_panorama.mp4</BaseURL>
       </Representation>
     </AdaptationSet>
-
-    <!-- Moving Region-of-Interest -->
     <AdaptationSet segmentAlignment="true" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-      <EssentialProperty schemeIdUri="urn:mpeg:dash:srd:2016" 
-       value="1, roi-coordinates"/>
-      <Representation id="zoomed" mimeType="video/mp4" codecs="avc1.42c01e" bandwidth="5000000" width="1920" height="1080">
+      <EssentialProperty schemeIdUri="urn:mpeg:dash:srd:2016" value="1, roi-coordinates"></EssentialProperty>
+      <Representation id="zoomed" bandwidth="5000000" width="1920" height="1080" mimeType="video/mp4" codecs="avc1.42c01e">
         <BaseURL>zoomed_part.mp4</BaseURL>
       </Representation>
     </AdaptationSet>
-
     <AdaptationSet segmentAlignment="true" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
-      <Representation id="roi-coordinates" associationId="zoomed" associationType="cdsc" codecs="2dcc" bandwidth="100">
+      <Representation id="roi-coordinates" bandwidth="100" associationId="zoomed" associationType="cdsc" codecs="2dcc">
         <BaseURL>roi_coordinates.mp4</BaseURL>
       </Representation>
     </AdaptationSet>
-
   </Period>
 </MPD>
-
-

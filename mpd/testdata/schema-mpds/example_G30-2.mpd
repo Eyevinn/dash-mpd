@@ -2,15 +2,13 @@
 <MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" type="static" mediaPresentationDuration="PT54M16S" minBufferTime="PT1.2S">
   <Period>
     <AdaptationSet id="1" par="16:9" maxWidth="1280" maxHeight="720" maxFrameRate="25" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
-      <SupplementalProperty schemeIdUri="urn:mpeg:dash:preselection:2016"/>
-      <SegmentTemplate media="video_$Number$_$Bandwidth$bps.mp4" duration="2" startNumber="1">
-      </SegmentTemplate>
-      <Representation id="v0" bandwidth="3000000" width="1280" height="720" sar="1:1" frameRate="25" codecs="hvc1.2.4.L153.B0"/>
-      <Representation id="v1" bandwidth="1500000" width="640" height="360" sar="1:1" frameRate="25" codecs="hvc1.2.4.L90.B0"/>
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:preselection:2016"></SupplementalProperty>
+      <SegmentTemplate media="video_$Number$_$Bandwidth$bps.mp4" duration="2" startNumber="1"></SegmentTemplate>
+      <Representation id="v0" bandwidth="3000000" width="1280" height="720" sar="1:1" frameRate="25" codecs="hvc1.2.4.L153.B0"></Representation>
+      <Representation id="v1" bandwidth="1500000" width="640" height="360" sar="1:1" frameRate="25" codecs="hvc1.2.4.L90.B0"></Representation>
     </AdaptationSet>
-    <!-- stereoscopic view, combination of the above -->
     <Preselection preselectionComponents="1" codecs="lhc1" selectionPriority="3" tag="3">
-      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0 r1"/>
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0 r1"></Role>
     </Preselection>
   </Period>
 </MPD>

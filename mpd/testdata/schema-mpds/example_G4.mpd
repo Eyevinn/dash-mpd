@@ -1,92 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="urn:mpeg:dash:schema:mpd:2011"
-    xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
-    type="static" 
-    mediaPresentationDuration="PT54M16S" 
-    minBufferTime="PT10S"
-    profiles="urn:mpeg:dash:profile:isoff-main:2011">
-    
-    <BaseURL>http://www.example.com/</BaseURL>
-    
-    <!-- In this Period there are 3 views: coming from three lined up cameras: C1-C2-C3. 
-       C1+C2 and C2+C3 each form a stereo pair but C1+C3 does not. 
-       C2 is taken as the base view for MVC while C1 and C3 are enhancement views -->
-    <Period duration="PT33M20S">
-        <SegmentList>
-            <Initialization sourceURL="seg-m-init.mp4"/>    
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-main:2011" type="static" mediaPresentationDuration="PT54M16S" minBufferTime="PT10S">
+  <BaseURL>http://www.example.com/</BaseURL>
+  <Period start="PT0S" duration="PT33M20S">
+    <SegmentList>
+      <Initialization sourceURL="seg-m-init.mp4"></Initialization>
+    </SegmentList>
+    <AdaptationSet mimeType="video/mp4" codecs="avc1.640828">
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l1 r0"></Role>
+      <Representation id="C2" bandwidth="128000">
+        <SegmentList duration="10">
+          <SegmentURL media="seg-m1-C2view-1.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C2view-2.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C2view-3.mp4"></SegmentURL>
         </SegmentList>
-        <AdaptationSet mimeType="video/mp4" codecs="avc1.640828">
-            <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l1 r0"/>
-            <Representation id="C2" bandwidth="128000">
-                <SegmentList duration="10">
-                    <SegmentURL media="seg-m1-C2view-1.mp4"/>
-                    <SegmentURL media="seg-m1-C2view-2.mp4"/>
-                    <SegmentURL media="seg-m1-C2view-3.mp4"/>
-                </SegmentList>
-            </Representation>
-        </AdaptationSet>
-        <!-- The following Adaptation set contains a Representation functionally identical 
-         to the Representation in the previous Adaptation set. Therefore, these both
-         have the same Representation@id. This is done for compatibility to 2D receivers 
-         that do not understand the schemeIdURI of the Role Descriptor and may ignore the
-         Adaptation set -->
-        <AdaptationSet mimeType="video/mp4" codecs="avc1.640828">
-            <Representation id="C2" bandwidth="128000">
-                <SegmentList duration="10">
-                    <SegmentURL media="seg-m1-C2view-1.mp4"/>
-                    <SegmentURL media="seg-m1-C2view-2.mp4"/>
-                    <SegmentURL media="seg-m1-C2view-3.mp4"/>
-                </SegmentList>
-            </Representation>
-        </AdaptationSet>
-        <AdaptationSet mimeType="video/mp4" codecs="mvc1.760028">
-            <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0"/>
-            <Representation id="C1" dependencyId="C2" bandwidth="192000">
-                <SegmentList duration="10">
-                    <SegmentURL media="seg-m1-C1view-1.mp4"/>
-                    <SegmentURL media="seg-m1-C1view-2.mp4"/>
-                    <SegmentURL media="seg-m1-C1view-3.mp4"/>
-                </SegmentList>
-            </Representation>
-        </AdaptationSet>
-        <AdaptationSet mimeType="video/mp4" codecs="mvc1.760028">
-            <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="r1"/>
-            <Representation id="C3" dependencyId="C2" bandwidth="192000">
-                <SegmentList duration="10">
-                    <SegmentURL media="seg-m1-C3view-1.mp4"/>
-                    <SegmentURL media="seg-m1-C3view-2.mp4"/>
-                    <SegmentURL media="seg-m1-C3view-3.mp4"/>
-                </SegmentList>
-            </Representation>
-        </AdaptationSet>
-    </Period>
-    
-    <!--  In this Period there are only 2 views:  C1+C2 form a stereo pair; 
-        C2 is the base view for MVC and C1 is the enhancement view -->
-    <Period duration="PT20M56S">
-        <SegmentList>
-            <Initialization sourceURL="seg-m-init-2.mp4"/>    
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" codecs="avc1.640828">
+      <Representation id="C2" bandwidth="128000">
+        <SegmentList duration="10">
+          <SegmentURL media="seg-m1-C2view-1.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C2view-2.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C2view-3.mp4"></SegmentURL>
         </SegmentList>
-        <AdaptationSet mimeType="video/mp4" codecs="avc1.640828">
-            <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="r0"/>
-            <Representation id="C2" bandwidth="128000">
-                <SegmentList duration="10">
-                    <SegmentURL media="seg-m1-C2view-201.mp4"/>
-                    <SegmentURL media="seg-m1-C2view-202.mp4"/>
-                </SegmentList>
-            </Representation>
-        </AdaptationSet>
-        <AdaptationSet mimeType="video/mp4" codecs="mvc1.760028">
-            <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0"/>
-            <Representation id="C1" dependencyId="C2" bandwidth="192000">
-                <SegmentList duration="10">
-                    <SegmentURL media="seg-m1-C1view-201.mp4"/>
-                    <SegmentURL media="seg-m1-C1view-202.mp4"/>
-                </SegmentList>
-            </Representation>
-        </AdaptationSet>
-    </Period>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" codecs="mvc1.760028">
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0"></Role>
+      <Representation id="C1" bandwidth="192000" dependencyId="C2">
+        <SegmentList duration="10">
+          <SegmentURL media="seg-m1-C1view-1.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C1view-2.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C1view-3.mp4"></SegmentURL>
+        </SegmentList>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" codecs="mvc1.760028">
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="r1"></Role>
+      <Representation id="C3" bandwidth="192000" dependencyId="C2">
+        <SegmentList duration="10">
+          <SegmentURL media="seg-m1-C3view-1.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C3view-2.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C3view-3.mp4"></SegmentURL>
+        </SegmentList>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+  <Period duration="PT20M56S">
+    <SegmentList>
+      <Initialization sourceURL="seg-m-init-2.mp4"></Initialization>
+    </SegmentList>
+    <AdaptationSet mimeType="video/mp4" codecs="avc1.640828">
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="r0"></Role>
+      <Representation id="C2" bandwidth="128000">
+        <SegmentList duration="10">
+          <SegmentURL media="seg-m1-C2view-201.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C2view-202.mp4"></SegmentURL>
+        </SegmentList>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" codecs="mvc1.760028">
+      <Role schemeIdUri="urn:mpeg:dash:stereoid:2011" value="l0"></Role>
+      <Representation id="C1" bandwidth="192000" dependencyId="C2">
+        <SegmentList duration="10">
+          <SegmentURL media="seg-m1-C1view-201.mp4"></SegmentURL>
+          <SegmentURL media="seg-m1-C1view-202.mp4"></SegmentURL>
+        </SegmentList>
+      </Representation>
+    </AdaptationSet>
+  </Period>
 </MPD>
-

@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:dvb:dash:profile:dvb-dash:2014" type="dynamic" minimumUpdatePeriod="PT8M20S" availabilityStartTime="2020-02-19T10:42:02.684Z" publishTime="2020-02-19T11:01:42.688Z" minBufferTime="PT2S">
-  <ProgramInformation>
-  </ProgramInformation>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:dvb:dash:profile:dvb-dash:2014" type="dynamic" availabilityStartTime="2020-02-19T10:42:02.684Z" publishTime="2020-02-19T11:01:42.688Z" minimumUpdatePeriod="PT8M20S" minBufferTime="PT2S">
+  <ProgramInformation></ProgramInformation>
   <ServiceDescription id="0">
-    <Latency referenceId="0" target="3500"/>
+    <Latency referenceId="0" target="3500"></Latency>
   </ServiceDescription>
-  <Period id="0">
-    <AdaptationSet id="0" contentType="video" segmentAlignment="true" frameRate="10/1" maxWidth="960" maxHeight="400" par="12:5">
-      <SegmentTemplate timescale="1000000" duration="8000000" availabilityTimeOffset="7.5" availabilityTimeComplete="false" initialization="init-stream$RepresentationID$.m4s" media="chunk-stream$RepresentationID$-$Number%05d$.m4s" startNumber="1"/>
-      <Representation id="0" mimeType="video/mp4" codecs="avc1.640016" bandwidth="500000" width="960" height="400" sar="1:1" qualityRanking="5"/>
-      <Representation id="1" mimeType="video/mp4" codecs="avc1.640016" bandwidth="200000" width="720" height="300" sar="1:1" qualityRanking="2"/>
-      <Representation id="2" mimeType="video/mp4" codecs="avc1.640016" bandwidth="300000" width="720" height="300" sar="1:1" qualityRanking="1">
-        <Resync type="2" dT="1000000" dImin="0.1" dImax="0.15" marker="true"/>
-      </Representation>
+  <Period id="0" start="PT0S">
+    <AdaptationSet id="0" contentType="video" par="12:5" maxWidth="960" maxHeight="400" segmentAlignment="true" frameRate="10/1">
       <ProducerReferenceTime id="0" inband="true" type="encoder" wallClockTime="2020-02-19T10:42:02.667Z" presentationTime="0">
-        <UTCTiming schemeIdUri="urn:mpeg:dash:utc:http-xsdate:2014" value="http://time.akamai.com"/>
+        <UTCTiming schemeIdUri="urn:mpeg:dash:utc:http-xsdate:2014" value="http://time.akamai.com"></UTCTiming>
       </ProducerReferenceTime>
-      <Resync type="0" dT="500000" dImin="0.03125" dImax="0.09375" marker="false"/>
+      <Resync type="0" dT="500000" dImax="0.09375" dImin="0.03125" marker="false"></Resync>
+      <SegmentTemplate media="chunk-stream$RepresentationID$-$Number%05d$.m4s" initialization="init-stream$RepresentationID$.m4s" duration="8000000" startNumber="1" timescale="1000000" availabilityTimeOffset="7.5" availabilityTimeComplete="false"></SegmentTemplate>
+      <Representation id="0" bandwidth="500000" qualityRanking="5" width="960" height="400" sar="1:1" mimeType="video/mp4" codecs="avc1.640016"></Representation>
+      <Representation id="1" bandwidth="200000" qualityRanking="2" width="720" height="300" sar="1:1" mimeType="video/mp4" codecs="avc1.640016"></Representation>
+      <Representation id="2" bandwidth="300000" qualityRanking="1" width="720" height="300" sar="1:1" mimeType="video/mp4" codecs="avc1.640016">
+        <Resync type="2" dT="1000000" dImax="0.15" dImin="0.1" marker="true"></Resync>
+      </Representation>
     </AdaptationSet>
     <AdaptationSet id="1" contentType="audio" segmentAlignment="true">
-      <SegmentTemplate timescale="1000000" duration="1000000" initialization="init-stream$RepresentationID$.m4s" media="chunk-stream$RepresentationID$-$Number%05d$.m4s" startNumber="1"/>
-      <Representation id="3" mimeType="audio/mp4" codecs="mp4a.40.2" bandwidth="96000" audioSamplingRate="44100"/>
-      <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"/>
+      <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"></AudioChannelConfiguration>
+      <SegmentTemplate media="chunk-stream$RepresentationID$-$Number%05d$.m4s" initialization="init-stream$RepresentationID$.m4s" duration="1000000" startNumber="1" timescale="1000000"></SegmentTemplate>
+      <Representation id="3" bandwidth="96000" audioSamplingRate="44100" mimeType="audio/mp4" codecs="mp4a.40.2"></Representation>
     </AdaptationSet>
   </Period>
-  <UTCTiming schemeIdUri="urn:mpeg:dash:utc:http-xsdate:2014" value="http://time.akamai.com"/>
+  <UTCTiming schemeIdUri="urn:mpeg:dash:utc:http-xsdate:2014" value="http://time.akamai.com"></UTCTiming>
 </MPD>

@@ -1,17 +1,25 @@
 # MPD test files
 
-The files in this directory have been copied from [MPEGGroup/DASHSchema](https://github.com/MPEGGroup/DASHSchema).
+The files in this directory are copied from
+[MPEGGroup/DASHSchema](https://github.com/MPEGGroup/DASHSchema), branch
+`6th-Ed`, commit `a855144` (2026-04-22), and re-saved through this
+package's marshaller so that decode→encode is byte-stable.
 
-Some of them have been slightly modified in order to make them compatible with the output from the mpd package.
+The re-save normalises:
 
-The changes are:
+* Attribute order on each element (matches the order of the Go struct fields).
+* Duration values to their canonical short form
+  (e.g. `PT3256S` → `PT54M16S`, `PT1.500000S` → `PT1.5S`).
+* `Resync` always emits `marker="false"` when not set explicitly.
 
-* G7 - removed drm elements since not defined in DASH MPD
-* G8 - removed comments inside representations and adaptationsets
-* G20 - change availabilityTimeOffset from 7.500 to 7.5. Output default value marker="false" in Resync node
+A few examples were further tweaked compared to upstream:
 
-When introducing better duration parsing and generation, a lot of durations were then changed in half of the assets.
+* G7 — drm elements removed (not defined in DASH MPD).
+* G8 — comments inside Representation/AdaptationSet removed.
+* G20 — `availabilityTimeOffset` is `7.5` (not `7.500`).
 
 LICENSE for this content is specified as:
 
-*Use of this repository and all contributions are subject to the ISO/IEC Directives including the ISO and JTC-1 Supplements: https://www.iso.org/directives-and-policies.html*
+*Use of this repository and all contributions are subject to the ISO/IEC
+Directives including the ISO and JTC-1 Supplements:
+https://www.iso.org/directives-and-policies.html*
