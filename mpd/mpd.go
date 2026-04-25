@@ -75,6 +75,7 @@ type MPD struct {
 	BaseURL                    []*BaseURLType             `xml:"BaseURL"`
 	Location                   []*LocationType            `xml:"Location"`
 	PatchLocation              []*PatchLocationType       `xml:"PatchLocation"`
+	RequestParam               []*ExtendedUrlInfoType     `xml:"RequestParam"`
 	ServiceDescription         []*ServiceDescriptionType  `xml:"ServiceDescription"`
 	InitializationSet          []*InitializationSetType   `xml:"InitializationSet"`
 	InitializationGroup        []*UIntVWithIDType         `xml:"InitializationGroup"`
@@ -84,9 +85,9 @@ type MPD struct {
 	Metrics                    []*MetricsType             `xml:"Metrics"`
 	EssentialProperties        []*DescriptorType          `xml:"EssentialProperty"`
 	SupplementalProperties     []*DescriptorType          `xml:"SupplementalProperty"`
-	RequestParam               []*ExtendedUrlInfoType     `xml:"RequestParam"`
 	UTCTimings                 []*DescriptorType          `xml:"UTCTiming"`
 	LeapSecondInformation      *LeapSecondInformationType `xml:"LeapSecondInformation"`
+	ContentSteering            *ContentSteeringType       `xml:"ContentSteering"`
 }
 
 // GetType returns static or dynamic.
@@ -128,8 +129,10 @@ type Period struct {
 	Start                  *Duration                 `xml:"start,attr"` // Mandatory for dynamic manifests. default = 0
 	Duration               *Duration                 `xml:"duration,attr"`
 	BitstreamSwitching     *bool                     `xml:"bitstreamSwitching,attr"`
+	MinBufferTime          *Duration                 `xml:"minBufferTime,attr"` // Override of MPD.minBufferTime (Ed. 6)
 	ImportedMPDs           []*ImportedMpdType        `xml:"ImportedMPD"`
 	BaseURLs               []*BaseURLType            `xml:"BaseURL"`
+	RequestParam           []*ExtendedUrlInfoType    `xml:"RequestParam"`
 	SegmentBase            *SegmentBaseType          `xml:"SegmentBase"`
 	SegmentList            *SegmentListType          `xml:"SegmentList"`
 	SegmentTemplate        *SegmentTemplateType      `xml:"SegmentTemplate"`
@@ -142,7 +145,6 @@ type Period struct {
 	SupplementalProperties []*DescriptorType         `xml:"SupplementalProperty"`
 	EmptyAdaptationSets    []*AdaptationSetType      `xml:"EmptyAdaptationSet"`
 	GroupLabels            []*LabelType              `xml:"GroupLabel"`
-	RequestParam           []*ExtendedUrlInfoType    `xml:"RequestParam"`
 	Preselections          []*PreselectionType       `xml:"Preselection"`
 	parent                 *MPD                      `xml:"-"`
 }
@@ -164,19 +166,19 @@ func (p *Period) Parent() *MPD {
 // EventStreamType is EventStream or InbandEventStream.
 // It therefore has no XMLName.
 type EventStreamType struct {
-	XlinkHref              string                    `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
-	XlinkActuate           string                    `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
-	XlinkType              string                    `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
-	XlinkShow              string                    `xml:"http://www.w3.org/1999/xlink xlink:show,attr,omitempty"`    // fixed = "embed"
-	SchemeIdUri            AnyURI                    `xml:"schemeIdUri,attr"`
-	Value                  string                    `xml:"value,attr,omitempty"`
-	Timescale              *uint32                   `xml:"timescale,attr"`                        // default = 1
-	PresentationTimeOffset uint64                    `xml:"presentationTimeOffset,attr,omitempty"` // default is 0
-	Events                 []*EventType              `xml:"Event"`
-	ServiceDescription     []*ServiceDescriptionType `xml:"ServiceDescription"`
-	EssentialProperty      []*DescriptorType         `xml:"EssentialProperty"`
-	SupplementalProperty   []*DescriptorType         `xml:"SupplementalProperty"`
-	RequestParam           []*ExtendedUrlInfoType    `xml:"RequestParam"`
+	XlinkHref              string                 `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
+	XlinkActuate           string                 `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
+	XlinkType              string                 `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
+	XlinkShow              string                 `xml:"http://www.w3.org/1999/xlink xlink:show,attr,omitempty"`    // fixed = "embed"
+	SchemeIdUri            AnyURI                 `xml:"schemeIdUri,attr"`
+	Value                  string                 `xml:"value,attr,omitempty"`
+	Timescale              *uint32                `xml:"timescale,attr"`                        // default = 1
+	PresentationTimeOffset uint64                 `xml:"presentationTimeOffset,attr,omitempty"` // default is 0
+	Events                 []*EventType           `xml:"Event"`
+	BaseURLs               []*BaseURLType         `xml:"BaseURL"`
+	RequestParam           []*ExtendedUrlInfoType `xml:"RequestParam"`
+	EssentialProperty      []*DescriptorType      `xml:"EssentialProperty"`
+	SupplementalProperty   []*DescriptorType      `xml:"SupplementalProperty"`
 }
 
 // EventType is Event. This has settings mixed="true" in the schema, so it can either
@@ -244,7 +246,6 @@ type ServiceDescriptionType struct {
 	OperatingBandwidths  []*OperatingBandwidthType   `xml:"OperatingBandwidth"`
 	ContentSteerings     []*ContentSteeringType      `xml:"ContentSteering"`
 	ClientDataReporting  []*ClientDataReportingType  `xml:"ClientDataReporting"`
-	EventRestrictions    []*EventRestrictionsType    `xml:"EventRestrictions"`
 	PlaybackRestrictions []*PlaybackRestrictionsType `xml:"PlaybackRestrictions"`
 }
 
@@ -283,12 +284,6 @@ type OperatingBandwidthType struct {
 	Min       uint32   `xml:"min,attr,omitempty"`
 	Max       uint32   `xml:"max,attr,omitempty"`
 	Target    uint32   `xml:"target,attr,omitempty"`
-}
-
-// EventRestrictionsType is Restrictions on event execution
-type EventRestrictionsType struct {
-	ExecuteOnce bool `xml:"executeOnce,attr,omitempty"`
-	NoJump      bool `xml:"noJump,attr,omitempty"`
 }
 
 // PlaybackRestrictionsType is Playback restrictions
@@ -345,11 +340,11 @@ type AdaptationSetType struct {
 	Viewpoints        []*DescriptorType       `xml:"Viewpoint"`
 	ContentComponents []*ContentComponentType `xml:"ContentComponent"`
 	BaseURLs          []*BaseURLType          `xml:"BaseURL"`
+	RequestParam      []*ExtendedUrlInfoType  `xml:"RequestParam"`
 	SegmentBase       *SegmentBaseType        `xml:"SegmentBase"`
 	SegmentList       *SegmentListType        `xml:"SegmentList"`
 	SegmentTemplate   *SegmentTemplateType    `xml:"SegmentTemplate"`
 	Representations   []*RepresentationType   `xml:"Representation"`
-	RequestParam      []*ExtendedUrlInfoType  `xml:"RequestParam"`
 	parent            *Period                 `xml:"-"`
 }
 
@@ -416,6 +411,7 @@ type RepresentationType struct {
 	BaseURLs           []*BaseURLType           `xml:"BaseURL"`
 	ExtendedBandwidths []*ExtendedBandwidthType `xml:"ExtendedBandwidth"`
 	SubRepresentations []*SubRepresentationType `xml:"SubRepresentation"`
+	RequestParam       []*ExtendedUrlInfoType   `xml:"RequestParam"`
 	SegmentBase        *SegmentBaseType         `xml:"SegmentBase"`
 	SegmentList        *SegmentListType         `xml:"SegmentList"`
 	SegmentTemplate    *SegmentTemplateType     `xml:"SegmentTemplate"`
@@ -481,39 +477,38 @@ func (s *SubRepresentationType) Parent() *RepresentationType {
 
 // RepresentationBaseType is Representation base (common attributes and elements).
 type RepresentationBaseType struct {
-	Profiles                   ListOfProfilesType             `xml:"profiles,attr,omitempty"`
-	Width                      uint32                         `xml:"width,attr,omitempty"`
-	Height                     uint32                         `xml:"height,attr,omitempty"`
-	Sar                        RatioType                      `xml:"sar,attr,omitempty"`
-	FrameRate                  FrameRateType                  `xml:"frameRate,attr,omitempty"`
-	AudioSamplingRate          *UIntVectorType                `xml:"audioSamplingRate,attr,omitempty"`
-	MimeType                   string                         `xml:"mimeType,attr,omitempty"`
-	SegmentProfiles            *ListOf4CCType                 `xml:"segmentProfiles,attr,omitempty"`
-	Codecs                     string                         `xml:"codecs,attr,omitempty"`
-	ContainerProfiles          *ListOf4CCType                 `xml:"containerProfiles,attr,omitempty"`
-	MaximumSAPPeriod           float64                        `xml:"maximumSAPPeriod,attr,omitempty"`
-	StartWithSAP               uint32                         `xml:"startWithSAP,attr,omitempty"`
-	MaxPlayoutRate             float64                        `xml:"maxPlayoutRate,attr,omitempty"`
-	CodingDependency           *bool                          `xml:"codingDependency,attr,omitempty"`
-	ScanType                   VideoScanType                  `xml:"scanType,attr,omitempty"`
-	SelectionPriority          *uint32                        `xml:"selectionPriority,attr"` // default = 1
-	Tag                        string                         `xml:"tag,attr,omitempty"`
-	FramePackings              []*DescriptorType              `xml:"FramePacking"`
-	AudioChannelConfigurations []*DescriptorType              `xml:"AudioChannelConfiguration"`
-	ContentProtections         []*ContentProtectionType       `xml:"ContentProtection"`
-	OutputProtection           *DescriptorType                `xml:"OutputProtection"`
-	EssentialProperties        []*DescriptorType              `xml:"EssentialProperty"`
-	SupplementalProperties     []*DescriptorType              `xml:"SupplementalProperty"`
-	InbandEventStreams         []*EventStreamType             `xml:"InbandEventStream"`
-	Switchings                 []*SwitchingType               `xml:"Switching"`
-	RandomAccesses             []*RandomAccessType            `xml:"RandomAccess"`
-	GroupLabels                []*LabelType                   `xml:"GroupLabel"`
-	Labels                     []*LabelType                   `xml:"Label"`
-	ProducerReferenceTimes     []*ProducerReferenceTimeType   `xml:"ProducerReferenceTime"`
-	ContentPopularityRates     []*ContentPopularityRateType   `xml:"ContentPopularityRate"`
-	Resyncs                    []*ResyncType                  `xml:"Resync"`
-	SegmentSequenceProperties  *SegmentSequencePropertiesType `xml:"SegmentSequenceProperties"`
-	RequestParam               []*ExtendedUrlInfoType         `xml:"RequestParam"`
+	Profiles                   ListOfProfilesType               `xml:"profiles,attr,omitempty"`
+	Width                      uint32                           `xml:"width,attr,omitempty"`
+	Height                     uint32                           `xml:"height,attr,omitempty"`
+	Sar                        RatioType                        `xml:"sar,attr,omitempty"`
+	FrameRate                  FrameRateType                    `xml:"frameRate,attr,omitempty"`
+	AudioSamplingRate          *UIntVectorType                  `xml:"audioSamplingRate,attr,omitempty"`
+	MimeType                   string                           `xml:"mimeType,attr,omitempty"`
+	SegmentProfiles            *ListOf4CCType                   `xml:"segmentProfiles,attr,omitempty"`
+	Codecs                     string                           `xml:"codecs,attr,omitempty"`
+	ContainerProfiles          *ListOf4CCType                   `xml:"containerProfiles,attr,omitempty"`
+	MaximumSAPPeriod           float64                          `xml:"maximumSAPPeriod,attr,omitempty"`
+	StartWithSAP               uint32                           `xml:"startWithSAP,attr,omitempty"`
+	MaxPlayoutRate             float64                          `xml:"maxPlayoutRate,attr,omitempty"`
+	CodingDependency           *bool                            `xml:"codingDependency,attr,omitempty"`
+	ScanType                   VideoScanType                    `xml:"scanType,attr,omitempty"`
+	SelectionPriority          *uint32                          `xml:"selectionPriority,attr"` // default = 1
+	Tag                        string                           `xml:"tag,attr,omitempty"`
+	FramePackings              []*DescriptorType                `xml:"FramePacking"`
+	AudioChannelConfigurations []*DescriptorType                `xml:"AudioChannelConfiguration"`
+	ContentProtections         []*ContentProtectionType         `xml:"ContentProtection"`
+	OutputProtection           *DescriptorType                  `xml:"OutputProtection"`
+	EssentialProperties        []*DescriptorType                `xml:"EssentialProperty"`
+	SupplementalProperties     []*DescriptorType                `xml:"SupplementalProperty"`
+	InbandEventStreams         []*EventStreamType               `xml:"InbandEventStream"`
+	Switchings                 []*SwitchingType                 `xml:"Switching"`
+	RandomAccesses             []*RandomAccessType              `xml:"RandomAccess"`
+	GroupLabels                []*LabelType                     `xml:"GroupLabel"`
+	Labels                     []*LabelType                     `xml:"Label"`
+	ProducerReferenceTimes     []*ProducerReferenceTimeType     `xml:"ProducerReferenceTime"`
+	ContentPopularityRates     []*ContentPopularityRateType     `xml:"ContentPopularityRate"`
+	Resyncs                    []*ResyncType                    `xml:"Resync"`
+	SegmentSequenceProperties  []*SegmentSequencePropertiesType `xml:"SegmentSequenceProperties"`
 }
 
 func (r *RepresentationType) GetSegmentTemplate() *SegmentTemplateType {
@@ -776,6 +771,7 @@ type MultipleSegmentBaseType struct {
 	StartNumber        *uint32              `xml:"startNumber,attr,omitempty"`
 	EndNumber          *uint32              `xml:"endNumber,attr,omitempty"`
 	EndSubNumber       *uint64              `xml:"endSubNumber,attr,omitempty"`
+	K                  *uint64              `xml:"k,attr,omitempty"` // Number of Segments per Sequence (Ed. 6)
 	SegmentTimeline    *SegmentTimelineType `xml:"SegmentTimeline"`
 	BitstreamSwitching *URLType             `xml:"BitstreamSwitching"`
 	SegmentBaseType
@@ -819,41 +815,37 @@ type SegmentURLType struct {
 
 // SegmentTemplateType is Segment Template
 type SegmentTemplateType struct {
-	Media              string         `xml:"media,attr,omitempty"`
-	Index              string         `xml:"index,attr,omitempty"`
-	Initialization     string         `xml:"initialization,attr,omitempty"`
-	BitstreamSwitching string         `xml:"bitstreamSwitching,attr,omitempty"`
-	Pattern            []*PatternType `xml:"Pattern"`
-	CommonSegmentSequenceAttributes
-	CommonDurationPatternAttributes
-	CommonSegmentSequenceDurationPatternAttributes
+	Media              string `xml:"media,attr,omitempty"`
+	Index              string `xml:"index,attr,omitempty"`
+	Initialization     string `xml:"initialization,attr,omitempty"`
+	BitstreamSwitching string `xml:"bitstreamSwitching,attr,omitempty"`
 	MultipleSegmentBaseType
 }
 
 // CommonSegmentSequenceAttributes is Common Segment Sequence Attributes (Ed. 6).
+// Inlined on S elements and RunLength entries to carry the Segment Sequence count `k`.
 type CommonSegmentSequenceAttributes struct {
-	K  *uint64 `xml:"k,attr,omitempty"`
-	KL *uint32 `xml:"kL,attr,omitempty"`
+	K *uint64 `xml:"k,attr,omitempty"`
 }
 
 // CommonDurationPatternAttributes is Common Duration Pattern Attributes (Ed. 6).
+// Inlined on S elements to point to a duration Pattern.
 type CommonDurationPatternAttributes struct {
 	P  *uint32 `xml:"p,attr,omitempty"`
 	PE *uint32 `xml:"pE,attr,omitempty"`
 }
 
-// CommonSegmentSequenceDurationPatternAttributes is Comm
+// CommonSegmentSequenceDurationPatternAttributes is Common Segment Sequence Duration Pattern Attributes (Ed. 6).
 type CommonSegmentSequenceDurationPatternAttributes struct {
-	Ssp  *uint32 `xml:"ssp,attr,omitempty"`
-	SspL *uint32 `xml:"sspL,attr,omitempty"`
+	Ssp *uint32 `xml:"ssp,attr,omitempty"`
 }
 
 // RunLengthType is Run-length coded sequence of segments or segment sequences.
 type RunLengthType struct {
 	D uint64 `xml:"d,attr"`
-	R uint64 `xml:"r,attr,omitempty"`
+	R uint32 `xml:"r,attr,omitempty"`
 	CommonSegmentSequenceAttributes
-	CommonDurationPatternAttributes
+	CommonSegmentSequenceDurationPatternAttributes
 }
 
 // PatternType is Duration pattern.
@@ -1000,7 +992,6 @@ type ClientDataReportingType struct {
 type AlternativeMPDEventType struct {
 	Uri                          string            `xml:"uri,attr"`
 	EarliestResolutionTimeOffset float64           `xml:"earliestResolutionTimeOffset,attr,omitempty"`
-	ServiceDescriptionId         uint32            `xml:"serviceDescriptionId,attr,omitempty"`
 	MaxDuration                  uint64            `xml:"maxDuration,attr,omitempty"`
 	ExecuteOnce                  bool              `xml:"executeOnce,attr,omitempty"`
 	NoJump                       int32             `xml:"noJump,attr,omitempty"`
