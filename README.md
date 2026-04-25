@@ -7,7 +7,7 @@
 # DASH-MPD - A complete MPEG-DASH MPD parser/writer
 
 This MPEG-DASH MPD implementation is meant to include all elements from
-the MPEG DASH specification (ISO/IEC 23009-1 5'th edition) by starting from the
+the MPEG DASH specification (ISO/IEC 23009-1 6'th edition) by starting from the
 MPD XML schema and auto-generating all data structures.
 It should also handle namespaces and schemaLocation properly.
 
@@ -16,8 +16,9 @@ ISO/IEC 23001-7 and proprietary structures and name spaces for some DRM systems.
 
 ## XML Schemas
 
-The XML Schema for MPEG DASH MPD being used is the 5'th edition fetched from the
-[DASHSchema repo](https://github.com/MPEGGroup/DASHSchema) commit `169fbd3`.
+The XML Schema for MPEG DASH MPD being used is the 6'th edition fetched from the
+[DASHSchema repo](https://github.com/MPEGGroup/DASHSchema) `6th-Ed` branch at
+commit `a855144`.
 
 It was fed to a forked modified version of [xgen](https://github.com/xuri/xgen).
 The fork modified `xgen` so that it could deal with DOCTYPE,

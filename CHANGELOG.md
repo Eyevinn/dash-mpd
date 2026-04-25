@@ -7,13 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- ContentSteering element on MPD level (Ed. 6)
+- minBufferTime override attribute on Period (Ed. 6)
+- BaseURL element on EventStream (Ed. 6)
+- k attribute on MultipleSegmentBaseType (Ed. 6)
+
 ### Changed
 
+- DASH schema and example MPDs aligned with `MPEGGroup/DASHSchema` 6th-Ed
+  commit `a855144` (2026-04-22)
+- SegmentSequenceProperties is now a sequence (maxOccurs=unbounded) on
+  RepresentationBaseType
+- RequestParam moved on MPD/Period/AdaptationSet/Representation/EventStream
+  to match the schema sequence
+- RunLengthType.r is now uint32 (was uint64) per Ed. 6 schema
 - Upgraded vendored `xml/` package to the current head of golang/go PR #48641
   (`ydnar/go@a79fce77`, rebased on Go master 2024-10-28). Brings in stdlib
   `encoding/xml` fixes since Go 1.17, including CVE-2022-30633 (unmarshal depth
   limit) and several panic fixes. The local customization that disables tab/
   newline escaping in `CharData` byte content is preserved.
+
+### Removed
+
+- EventRestrictionsType (its executeOnce/noJump/skipAfter attributes are
+  now on AlternativeMPDEventType)
+- ServiceDescriptionId attribute on AlternativeMPDEventType
+- ServiceDescription element on EventStream
+- kL and sspL attributes (dropped in Ed. 6)
+- Pattern field on SegmentTemplateType (Pattern lives on SegmentTimeline)
 
 ## [0.14.1] - 2026-02-06
 
