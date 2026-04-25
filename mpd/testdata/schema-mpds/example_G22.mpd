@@ -1,50 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="urn:mpeg:dash:schema:mpd:2011"
-    xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
-    type="dynamic"
-    minimumUpdatePeriod="PT2S"
-    timeShiftBufferDepth="PT30M"
-    availabilityStartTime="2020-10-17T17:17:05Z"
-    minBufferTime="PT4S"
-    profiles="urn:mpeg:dash:profile:isoff-live:2011"
-    publishTime="2020-10-17T17:17:05Z">
-    
-    <BaseURL>http://cdn1.example.com/</BaseURL>
-    <BaseURL>http://cdn2.example.com/</BaseURL>
-    <Period id="42">
-        <!-- Video -->
-        <AdaptationSet 
-            mimeType="video/mp4" codecs="avc1.4D401F" frameRate="30000/1001" 
-            segmentAlignment="true" startWithSAP="1">
-            
-            <SegmentTemplate startNumber="260319075"
-                initialization="Travel_HD/$RepresentationID$/header.mp4" 
-                media="Travel_HD/$RepresentationID$/$Number$.mp4"
-                timescale="90000" 
-                presentationTimeOffset="6532028810"> 
-                <SegmentTimeline> 
-                    <S t="6532028810" d="222222" r="0" /> 
-                    <S t="6532251032" d="180180" r="420" /> 
-                    <S t="6534593372" d="135135" r="0" /> 
-                </SegmentTimeline> 
-            </SegmentTemplate> 
-             
-            <Representation id="C" bandwidth="828800" codecs="avc1.4d401e" width="640" height="360" /> 
-            <Representation id="B" bandwidth="2107200" codecs="avc1.4d401f" width="1280" height="720" /> 
-            
-            <!-- Representation A is missing a segment -->
-            <Representation id="A" bandwidth="3718000" codecs="avc1.640020" width="1280" height="720">
-                <SegmentTemplate>
-                    <FailoverContent>
-                        <FCS t="6532251032" d="180180" />
-                    </FailoverContent>
-                </SegmentTemplate>
-            </Representation> 
-        </AdaptationSet>
-        
-        <!-- Audio left as an exercise for the reader -->
-    </Period>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" availabilityStartTime="2020-10-17T17:17:05Z" publishTime="2020-10-17T17:17:05Z" minimumUpdatePeriod="PT2S" minBufferTime="PT4S" timeShiftBufferDepth="PT30M">
+  <BaseURL>http://cdn1.example.com/</BaseURL>
+  <BaseURL>http://cdn2.example.com/</BaseURL>
+  <Period id="42">
+    <AdaptationSet segmentAlignment="true" frameRate="30000/1001" mimeType="video/mp4" codecs="avc1.4D401F" startWithSAP="1">
+      <SegmentTemplate media="Travel_HD/$RepresentationID$/$Number$.mp4" initialization="Travel_HD/$RepresentationID$/header.mp4" startNumber="260319075" timescale="90000" presentationTimeOffset="6532028810">
+        <SegmentTimeline>
+          <S t="6532028810" d="222222"></S>
+          <S t="6532251032" d="180180" r="420"></S>
+          <S t="6534593372" d="135135"></S>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="C" bandwidth="828800" width="640" height="360" codecs="avc1.4d401e"></Representation>
+      <Representation id="B" bandwidth="2107200" width="1280" height="720" codecs="avc1.4d401f"></Representation>
+      <Representation id="A" bandwidth="3718000" width="1280" height="720" codecs="avc1.640020">
+        <SegmentTemplate>
+          <FailoverContent>
+            <FCS t="6532251032" d="180180"></FCS>
+          </FailoverContent>
+        </SegmentTemplate>
+      </Representation>
+    </AdaptationSet>
+  </Period>
 </MPD>
-

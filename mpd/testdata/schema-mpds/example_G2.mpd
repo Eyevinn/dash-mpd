@@ -1,54 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<MPD
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="urn:mpeg:dash:schema:mpd:2011"
-    xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd"
-    type="dynamic"
-    minimumUpdatePeriod="PT2S"
-    timeShiftBufferDepth="PT30M"
-    availabilityStartTime="2014-10-17T17:17:05Z"
-    minBufferTime="PT4S"
-    profiles="urn:mpeg:dash:profile:isoff-live:2011"
-    publishTime="2014-10-17T17:17:05Z">
-    
-    <BaseURL>http://cdn1.example.com/</BaseURL>
-    <BaseURL>http://cdn2.example.com/</BaseURL>
-    
-    <Period id="1">
-        <!-- Video -->
-        <AdaptationSet 
-            mimeType="video/mp4" 
-            codecs="avc1.4D401F" 
-            frameRate="30000/1001" 
-            segmentAlignment="true" 
-            startWithSAP="1">
-            <BaseURL>video/</BaseURL>
-            <SegmentTemplate timescale="90000" initialization="$Bandwidth$/init.mp4v" media="$Bandwidth$/$Time$.mp4v">
-                <SegmentTimeline> 
-                    <S t="0" d="180180" r="432"/> 
-                </SegmentTimeline>
-            </SegmentTemplate>
-            <Representation id="v0" width="320" height="240" bandwidth="250000"/>
-            <Representation id="v1" width="640" height="480" bandwidth="500000"/>
-            <Representation id="v2" width="960" height="720" bandwidth="1000000"/>
-        </AdaptationSet>
-        <!-- English Audio -->
-        <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40" lang="en" segmentAlignment="0" startWithSAP="1">
-            <SegmentTemplate timescale="48000" initialization="audio/en/init.mp4a" media="audio/en/$Time$.mp4a">
-                <SegmentTimeline> 
-                    <S t="0" d="96000" r="432"/> 
-                </SegmentTimeline>
-            </SegmentTemplate>
-            <Representation id="a0" bandwidth="64000" />
-        </AdaptationSet>
-        <!-- French Audio -->
-        <AdaptationSet mimeType="audio/mp4" codecs="mp4a.40" lang="fr" segmentAlignment="0" startWithSAP="1">
-            <SegmentTemplate timescale="48000" initialization="audio/fr/init.mp4a" media="audio/fr/$Time$.mp4a">
-                <SegmentTimeline>
-                    <S t="0" d="96000" r="432"/>
-                </SegmentTimeline>
-            </SegmentTemplate>
-            <Representation id="b0" bandwidth="64000" />
-        </AdaptationSet>
-    </Period>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" availabilityStartTime="2014-10-17T17:17:05Z" publishTime="2014-10-17T17:17:05Z" minimumUpdatePeriod="PT2S" minBufferTime="PT4S" timeShiftBufferDepth="PT30M">
+  <BaseURL>http://cdn1.example.com/</BaseURL>
+  <BaseURL>http://cdn2.example.com/</BaseURL>
+  <Period id="1">
+    <AdaptationSet segmentAlignment="true" frameRate="30000/1001" mimeType="video/mp4" codecs="avc1.4D401F" startWithSAP="1">
+      <BaseURL>video/</BaseURL>
+      <SegmentTemplate media="$Bandwidth$/$Time$.mp4v" initialization="$Bandwidth$/init.mp4v" timescale="90000">
+        <SegmentTimeline>
+          <S t="0" d="180180" r="432"></S>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="v0" bandwidth="250000" width="320" height="240"></Representation>
+      <Representation id="v1" bandwidth="500000" width="640" height="480"></Representation>
+      <Representation id="v2" bandwidth="1000000" width="960" height="720"></Representation>
+    </AdaptationSet>
+    <AdaptationSet lang="en" mimeType="audio/mp4" codecs="mp4a.40" startWithSAP="1">
+      <SegmentTemplate media="audio/en/$Time$.mp4a" initialization="audio/en/init.mp4a" timescale="48000">
+        <SegmentTimeline>
+          <S t="0" d="96000" r="432"></S>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="a0" bandwidth="64000"></Representation>
+    </AdaptationSet>
+    <AdaptationSet lang="fr" mimeType="audio/mp4" codecs="mp4a.40" startWithSAP="1">
+      <SegmentTemplate media="audio/fr/$Time$.mp4a" initialization="audio/fr/init.mp4a" timescale="48000">
+        <SegmentTimeline>
+          <S t="0" d="96000" r="432"></S>
+        </SegmentTimeline>
+      </SegmentTemplate>
+      <Representation id="b0" bandwidth="64000"></Representation>
+    </AdaptationSet>
+  </Period>
 </MPD>

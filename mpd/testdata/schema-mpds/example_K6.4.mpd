@@ -3,19 +3,19 @@
   <BaseURL serviceLocation="alpha">https://cdn1.example.com/</BaseURL>
   <BaseURL serviceLocation="beta">https://cdn2.example.com/</BaseURL>
   <ServiceDescription id="1250">
-    <Scope schemeIdUri="urn:mpeg:dash:event:service-description:2024"/>
-    <Latency referenceId="7" target="1250" max="4200" min="750"/>
-    <PlaybackRate max="1.04" min="0.96"/>
+    <Scope schemeIdUri="urn:mpeg:dash:event:service-description:2024"></Scope>
+    <Latency referenceId="7" target="1250" max="4200" min="750"></Latency>
+    <PlaybackRate max="1.04" min="0.96"></PlaybackRate>
     <ClientDataReporting schemeIdUri="urn:mpeg:dash:cta-5004:2023" serviceLocations="beta" adaptationSets="1">
-      <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp nor ot sf v"/>
+      <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp nor ot sf v"></CMCDParameters>
     </ClientDataReporting>
   </ServiceDescription>
   <ServiceDescription id="2500">
-    <Scope schemeIdUri="urn:mpeg:dash:event:service-description:2024"/>
-    <Latency referenceId="7" target="2500" max="4200" min="750"/>
-    <PlaybackRate max="1.04" min="0.96"/>
+    <Scope schemeIdUri="urn:mpeg:dash:event:service-description:2024"></Scope>
+    <Latency referenceId="7" target="2500" max="4200" min="750"></Latency>
+    <PlaybackRate max="1.04" min="0.96"></PlaybackRate>
     <ClientDataReporting schemeIdUri="urn:mpeg:dash:cta-5004:2023" serviceLocations="beta" adaptationSets="1">
-      <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp nor"/>
+      <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp nor"></CMCDParameters>
     </ClientDataReporting>
   </ServiceDescription>
   <Period id="1">
@@ -23,18 +23,19 @@
       <Event presentationTime="0" duration="60000" id="0">1250</Event>
       <Event presentationTime="60000" duration="60000" id="1">2500</Event>
       <Event presentationTime="120000" duration="60000" id="2">
+
+
         <ServiceDescription id="2000">
-          <Latency referenceId="7" target="2000" max="4200" min="750"/>
-          <PlaybackRate max="1.04" min="0.96"/>
+          <Latency referenceId="7" target="2000" max="4200" min="750"></Latency>
+          <PlaybackRate max="1.04" min="0.96"></PlaybackRate>
           <ClientDataReporting schemeIdUri="urn:mpeg:dash:cta-5004:2023" serviceLocations="beta" adaptationSets="1">
-            <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp"/>
+            <CMCDParameters mode="header" includeInRequests="segment" keys="br bl cid dl mtp"></CMCDParameters>
           </ClientDataReporting>
         </ServiceDescription>
       </Event>
     </EventStream>
     <AdaptationSet id="1" segmentAlignment="true" frameRate="30000/1001" mimeType="video/mp4" codecs="avc1.4D401F" startWithSAP="1">
       <BaseURL>video/</BaseURL>
-      <!-- ... -->
     </AdaptationSet>
   </Period>
 </MPD>

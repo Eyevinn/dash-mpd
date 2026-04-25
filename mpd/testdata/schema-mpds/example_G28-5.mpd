@@ -6,11 +6,11 @@
   </ServiceDescription>
   <Period id="P0" start="PT0S">
     <AdaptationSet id="0" contentType="video" par="16:9" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
-      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"/>
-      <RequestParam includeInRequests="steering" queryTemplate="$querypart$&amp;_HLS_pathway=$urn:mpeg:dash:service-location$&amp;_HLS_throughput=$urn:mpeg:dash:throughput$" useMPDUrlQuery="true"/>
-      <SegmentTemplate media="$RepresentationID$-$Number$.mp4" initialization="$RepresentationID$-init.mp4" duration="96" startNumber="868757698" timescale="50"/>
-      <Representation id="0" bandwidth="500000" width="640" height="360" frameRate="25" codecs="hvc1.1.6.L63.B0"/>
-      <Representation id="1" bandwidth="1200000" width="960" height="540" frameRate="50" codecs="hvc1.1.6.L93.B0"/>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <RequestParam queryTemplate="$querypart$&amp;_HLS_pathway=$urn:mpeg:dash:service-location$&amp;_HLS_throughput=$urn:mpeg:dash:throughput$" useMPDUrlQuery="true" includeInRequests="steering"></RequestParam>
+      <SegmentTemplate media="$RepresentationID$-$Number$.mp4" initialization="$RepresentationID$-init.mp4" duration="96" startNumber="868757698" timescale="50"></SegmentTemplate>
+      <Representation id="0" bandwidth="500000" width="640" height="360" frameRate="25" codecs="hvc1.1.6.L63.B0"></Representation>
+      <Representation id="1" bandwidth="1200000" width="960" height="540" frameRate="50" codecs="hvc1.1.6.L93.B0"></Representation>
     </AdaptationSet>
   </Period>
 </MPD>
