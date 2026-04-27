@@ -3,10 +3,23 @@ package mpd
 import (
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Eyevinn/dash-mpd/xml"
 )
+
+// countingWriter wraps an io.Writer and counts the bytes written.
+type countingWriter struct {
+	w io.Writer
+	n int
+}
+
+func (cw *countingWriter) Write(p []byte) (int, error) {
+	n, err := cw.w.Write(p)
+	cw.n += n
+	return n, err
+}
 
 // ReadFromFile reads and unmarshals an MPD from a file.
 func ReadFromFile(path string) (*MPD, error) {
@@ -39,35 +52,38 @@ func MPDFromBytes(data []byte) (*MPD, error) {
 	return &mpd, nil
 }
 
-// Write writes to w, with indentation according to indent and optionally adding an XML header.
-func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (n int, err error) {
-	data, err := xml.MarshalIndent(m, "", indent)
-	if err != nil {
-		return 0, err
-	}
-	nTot := 0
+// Write streams the XML encoding of m to w, with indentation according to indent
+// and optionally prefixing an XML declaration header.  It returns the number of
+// bytes written.  The encoder is pooled for efficiency; do not hold w open after
+// Write returns.
+func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (int, error) {
+	cw := &countingWriter{w: w}
 	if withHeader {
-		n, err = w.Write([]byte(xml.Header))
-		if err != nil {
-			return n, err
+		if _, err := io.WriteString(cw, xml.Header); err != nil {
+			return cw.n, err
 		}
-		nTot += n
 	}
-	n, err = w.Write(data)
-	nTot += n
-	return nTot, err
+	enc := xml.AcquireEncoder(cw)
+	defer xml.ReleaseEncoder(enc)
+	enc.Indent("", indent)
+	if err := enc.Encode(m); err != nil {
+		return cw.n, err
+	}
+	if err := enc.Flush(); err != nil {
+		return cw.n, err
+	}
+	return cw.n, nil
 }
 
-// WriteToString returns a string, with indentation according to indent and optionally adding an XML header.
+// WriteToString returns the XML encoding of m as a string, with indentation
+// according to indent and optionally prefixing an XML declaration header.
 func (m *MPD) WriteToString(indent string, withHeader bool) (string, error) {
-	data, err := xml.MarshalIndent(m, "", indent)
-	if err != nil {
+	var sb strings.Builder
+	sb.Grow(4096)
+	if _, err := m.Write(&sb, indent, withHeader); err != nil {
 		return "", err
 	}
-	if withHeader {
-		return xml.Header + string(data), nil
-	}
-	return string(data), nil
+	return sb.String(), nil
 }
 
 const RFC3339MS string = "2006-01-02T15:04:05.999Z07:00"

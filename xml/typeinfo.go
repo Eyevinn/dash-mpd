@@ -11,10 +11,19 @@ import (
 	"sync"
 )
 
+// attrKey is the map key used for O(1) attribute lookup.
+type attrKey struct {
+	space string
+	local string
+}
+
 // typeInfo holds details for the xml representation of a type.
 type typeInfo struct {
 	xmlname *fieldInfo
 	fields  []fieldInfo
+	nAttrs  int                    // number of fAttr fields; populated at end of getTypeInfo
+	attrs   map[attrKey]*fieldInfo // keyed by (xmlns, name); populated at end of getTypeInfo
+	anyAttr *fieldInfo             // first fAny|fAttr field, nil if none
 }
 
 // fieldInfo holds details for the xml representation of a single field.
@@ -47,6 +56,36 @@ const (
 
 var tinfoMap sync.Map // map[reflect.Type]*typeInfo
 
+// typeImpl caches reflect.Type.Implements results for marshaler
+// interfaces. The checks are deterministic per type, so computing them once
+// and storing the booleans avoids repeated reflect calls in hot paths.
+type typeImpl struct {
+	marshaler, addrMarshaler,
+	marshalerAttr, addrMarshalerAttr,
+	textMarshaler, addrTextMarshaler bool
+}
+
+var typeImplMap sync.Map // map[reflect.Type]typeImpl
+
+// getTypeImpl returns (and caches) the typeImpl for t.
+// It is safe for concurrent use.
+func getTypeImpl(t reflect.Type) typeImpl {
+	if v, ok := typeImplMap.Load(t); ok {
+		return v.(typeImpl)
+	}
+	pt := reflect.PointerTo(t)
+	v := typeImpl{
+		marshaler:         t.Implements(marshalerType),
+		addrMarshaler:     pt.Implements(marshalerType),
+		marshalerAttr:     t.Implements(marshalerAttrType),
+		addrMarshalerAttr: pt.Implements(marshalerAttrType),
+		textMarshaler:     t.Implements(textMarshalerType),
+		addrTextMarshaler: pt.Implements(textMarshalerType),
+	}
+	typeImplMap.Store(t, v)
+	return v
+}
+
 var nameType = reflect.TypeFor[Name]()
 
 // getTypeInfo returns the typeInfo structure with details necessary
@@ -59,7 +98,7 @@ func getTypeInfo(typ reflect.Type) (*typeInfo, error) {
 	tinfo := &typeInfo{}
 	if typ.Kind() == reflect.Struct && typ != nameType {
 		n := typ.NumField()
-		for i := 0; i < n; i++ {
+		for i := range n {
 			f := typ.Field(i)
 			if (!f.IsExported() && !f.Anonymous) || f.Tag.Get("xml") == "-" {
 				continue // Private field
@@ -100,6 +139,25 @@ func getTypeInfo(typ reflect.Type) (*typeInfo, error) {
 			} else if err := addFieldInfo(typ, tinfo, finfo); err != nil {
 				// Add the field if it doesn't conflict with other fields.
 				return nil, err
+			}
+		}
+	}
+
+	// Count fAttr fields so marshalValue can pre-size start.Attr,
+	// and build a map for O(1) attribute lookup during unmarshal.
+	tinfo.attrs = make(map[attrKey]*fieldInfo, len(tinfo.fields))
+	for i := range tinfo.fields {
+		fi := &tinfo.fields[i]
+		switch fi.flags & fMode {
+		case fAttr:
+			tinfo.nAttrs++
+			// Register under (fi.xmlns, fi.name). Lookup in read.go will
+			// try (a.Name.Space, fi.name) first, then ("", fi.name) for
+			// fields registered with an empty namespace.
+			tinfo.attrs[attrKey{fi.xmlns, fi.name}] = fi
+		case fAny | fAttr:
+			if tinfo.anyAttr == nil {
+				tinfo.anyAttr = fi
 			}
 		}
 	}
@@ -275,7 +333,7 @@ Loop:
 			continue
 		}
 		minl := min(len(newf.parents), len(oldf.parents))
-		for p := 0; p < minl; p++ {
+		for p := range minl {
 			if oldf.parents[p] != newf.parents[p] {
 				continue Loop
 			}

@@ -216,6 +216,29 @@ type Decoder struct {
 	linestart      int64
 	offset         int64
 	unmarshalDepth int
+	nameIntern     map[string]string // per-Decoder intern map for element/attribute names
+}
+
+const maxInternEntries = 1024
+
+// internBytes returns a string for b, interning it in the per-Decoder map so
+// that repeated occurrences of the same name (element name, attribute name,
+// namespace URI) share a single allocation.  Attribute values and character
+// data must NOT be interned because their cardinality is unbounded.
+func (d *Decoder) internBytes(b []byte) string {
+	if d.nameIntern == nil {
+		d.nameIntern = make(map[string]string, 128)
+	}
+	// The string(b) conversion in a map key is compiler-optimised since Go 1.5:
+	// it does not allocate when used only as a map key.
+	if s, ok := d.nameIntern[string(b)]; ok {
+		return s
+	}
+	s := string(b)
+	if len(d.nameIntern) < maxInternEntries {
+		d.nameIntern[s] = s
+	}
+	return s
 }
 
 // NewDecoder creates a new XML parser reading from r.
@@ -705,7 +728,7 @@ func (d *Decoder) rawToken() (Token, error) {
 
 		case '[': // <![
 			// Probably <![CDATA[.
-			for i := 0; i < 6; i++ {
+			for i := range 6 {
 				if b, ok = d.mustgetc(); !ok {
 					return nil, d.err
 				}
@@ -807,7 +830,7 @@ func (d *Decoder) rawToken() (Token, error) {
 		return nil, d.err
 	}
 
-	attr = []Attr{}
+	attr = make([]Attr, 0, 8)
 	for {
 		d.space()
 		if b, ok = d.mustgetc(); !ok {
@@ -1223,7 +1246,7 @@ func (d *Decoder) name() (s string, ok bool) {
 		d.err = d.syntaxError("invalid XML name: " + string(b))
 		return "", false
 	}
-	return string(b), true
+	return d.internBytes(b), true
 }
 
 // Read a name and append its bytes to d.buf.

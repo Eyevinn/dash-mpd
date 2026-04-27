@@ -476,31 +476,23 @@ func (d *Decoder) unmarshal(val reflect.Value, start *StartElement, depth int) e
 			}
 		}
 
-		// Assign attributes.
+		// Assign attributes using the O(1) map on typeInfo.
 		for _, a := range start.Attr {
-			handled := false
-			any := -1
-			for i := range tinfo.fields {
-				finfo := &tinfo.fields[i]
-				switch finfo.flags & fMode {
-				case fAttr:
-					strv := finfo.value(sv, initNilPointers)
-					if a.Name.Local == finfo.name && (finfo.xmlns == "" || finfo.xmlns == a.Name.Space) {
-						if err := d.unmarshalAttr(strv, a); err != nil {
-							return err
-						}
-						handled = true
-					}
-
-				case fAny | fAttr:
-					if any == -1 {
-						any = i
-					}
-				}
+			// Try exact match (namespace + local name) first.
+			fi, ok := tinfo.attrs[attrKey{a.Name.Space, a.Name.Local}]
+			if !ok {
+				// A field registered with empty xmlns matches any namespace.
+				fi, ok = tinfo.attrs[attrKey{"", a.Name.Local}]
 			}
-			if !handled && any >= 0 {
-				finfo := &tinfo.fields[any]
-				strv := finfo.value(sv, initNilPointers)
+			if ok {
+				strv := fi.value(sv, initNilPointers)
+				if err := d.unmarshalAttr(strv, a); err != nil {
+					return err
+				}
+				continue
+			}
+			if tinfo.anyAttr != nil {
+				strv := tinfo.anyAttr.value(sv, initNilPointers)
 				if err := d.unmarshalAttr(strv, a); err != nil {
 					return err
 				}
