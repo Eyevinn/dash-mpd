@@ -160,7 +160,7 @@ func NewEncoder(w io.Writer) *Encoder {
 // that writer to the caller's io.Writer before returning the encoder.
 var encoderPool = sync.Pool{
 	New: func() any {
-		e := &Encoder{printer{Writer: bufio.NewWriter(io.Discard)}}
+		e := &Encoder{printer{w: bufio.NewWriter(io.Discard)}}
 		e.p.encoder = e
 		return e
 	},
@@ -171,7 +171,9 @@ var encoderPool = sync.Pool{
 // Do not continue to use the encoder after calling ReleaseEncoder.
 func AcquireEncoder(w io.Writer) *Encoder {
 	enc := encoderPool.Get().(*Encoder)
-	enc.p.Writer.Reset(w)
+	enc.p.w.Reset(w)
+	enc.p.closed = false
+	enc.p.err = nil
 	return enc
 }
 
@@ -180,7 +182,7 @@ func AcquireEncoder(w io.Writer) *Encoder {
 func ReleaseEncoder(enc *Encoder) {
 	// Reset the bufio.Writer to discard so the pooled encoder holds no
 	// reference to the caller's writer.
-	enc.p.Writer.Reset(io.Discard)
+	enc.p.w.Reset(io.Discard)
 	// Clear all mutable printer state.
 	enc.p.seq = 0
 	enc.p.indent = ""
@@ -188,6 +190,8 @@ func ReleaseEncoder(enc *Encoder) {
 	enc.p.depth = 0
 	enc.p.indentedIn = false
 	enc.p.putNewline = false
+	enc.p.closed = false
+	enc.p.err = nil
 	// Truncate the elements slice without releasing its backing array.
 	enc.p.elements = enc.p.elements[:0]
 	encoderPool.Put(enc)
@@ -663,7 +667,11 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 
 		fv := finfo.value(val, dontInitNilPointers)
 
-		if finfo.flags&fOmitEmpty != 0 && isEmptyValue(fv) {
+		if finfo.flags&fOmitEmpty != 0 && (!fv.IsValid() || isEmptyValue(fv)) {
+			continue
+		}
+
+		if !fv.IsValid() {
 			continue
 		}
 
@@ -723,6 +731,10 @@ func (p *printer) marshalValue(val reflect.Value, finfo *fieldInfo, startTemplat
 // numeric/bool/string/[]byte kind (after dereferencing at most one pointer level)
 // and its type does not implement MarshalerAttr or encoding.TextMarshaler.
 func isSimpleAttrVal(val reflect.Value) bool {
+	if !val.IsValid() {
+		return false
+	}
+
 	// Dereference a single pointer level for the type check.
 	v := val
 	if v.Kind() == reflect.Pointer {
