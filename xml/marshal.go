@@ -731,8 +731,7 @@ func (p *printer) marshalAttr(start *StartElement, name Name, val reflect.Value)
 
 	// Walk slices.
 	if val.Kind() == reflect.Slice && val.Type().Elem().Kind() != reflect.Uint8 {
-		n := val.Len()
-		for i := 0; i < n; i++ {
+		for i := range val.Len() {
 			if err := p.marshalAttr(start, name, val.Index(i)); err != nil {
 				return err
 			}
