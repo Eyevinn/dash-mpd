@@ -29,6 +29,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   limit) and several panic fixes. The local customization that disables tab/
   newline escaping in `CharData` byte content is preserved.
 
+### Performance
+
+- Major reduction in allocations and CPU on the XML marshal/unmarshal hot
+  paths (#2–#12 in `discovery/performance_plan.md`). Includes a pooled
+  `*xml.Encoder` (`AcquireEncoder`/`ReleaseEncoder`), an O(1) attribute
+  lookup map on `typeInfo`, cached `reflect.Type.Implements` results, a
+  per-`Decoder` name-intern map, and streaming `(*MPD).Write`.
+
 ### Removed
 
 - EventRestrictionsType (its executeOnce/noJump/skipAfter attributes are
@@ -37,6 +45,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ServiceDescription element on EventStream
 - kL and sspL attributes (dropped in Ed. 6)
 - Pattern field on SegmentTemplateType (Pattern lives on SegmentTimeline)
+- Regex-based duration parser (`xmlDurationRegex` and helpers); replaced by
+  a single-pass scanner with stricter validation and zero allocations.
+- Linear attribute-matching loop in `xml/read.go`; replaced by O(1) map
+  lookup.
+- Repeated `typ.Implements(...)` calls in `xml/marshal.go`; replaced by a
+  `sync.Map`-cached result per `reflect.Type`.
+- `xml.MarshalIndent` round-trip inside `(*MPD).Write`; replaced by direct
+  streaming through a pooled encoder.
 
 ## [0.14.1] - 2026-02-06
 
