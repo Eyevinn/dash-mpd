@@ -64,6 +64,48 @@ func TestParseBadDurations(t *testing.T) {
 	}
 }
 
+func TestParseDurationExtended(t *testing.T) {
+	t.Run("happy path", func(t *testing.T) {
+		cases := []struct {
+			input    string
+			expected float64
+		}{
+			{"PT0S", 0},
+			{"P1D", (24 * time.Hour).Seconds()},
+			{"PT1H", time.Hour.Seconds()},
+			{"PT1M", time.Minute.Seconds()},
+			{"PT1S", time.Second.Seconds()},
+			{"PT0.5S", 0.5},
+			{"P1DT2H3M4.5S", (24*time.Hour + 2*time.Hour + 3*time.Minute + 4*time.Second + 500*time.Millisecond).Seconds()},
+		}
+		for _, tc := range cases {
+			act, err := ParseDuration(tc.input)
+			require.NoError(t, err, tc.input)
+			require.InDelta(t, tc.expected, act.Seconds(), 1e-9, tc.input)
+		}
+	})
+
+	t.Run("error cases", func(t *testing.T) {
+		cases := []string{
+			"",
+			"P",
+			"PT",
+			"P1M",    // M before T
+			"PT1.5M", // decimal not on S
+			"P1H",    // H before T
+			"P-1D",   // negative value inside
+			"P1D2H",  // H before T (no T separator)
+			"P1Y",    // unsupported unit Y
+			"P1S1H",  // order: S before H not valid
+			"P1D1D",  // duplicate D
+		}
+		for _, tc := range cases {
+			_, err := ParseDuration(tc)
+			require.Error(t, err, "expected error for: %s", tc)
+		}
+	})
+}
+
 func TestUnMarshalReMarshalDuration(t *testing.T) {
 	cases := []string{
 		"PT0.0002S",
