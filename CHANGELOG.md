@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `AlternativeMPDReplaceEventType.Clip` is now a `*bool` (default `true`) so that
+  `clip="false"` can be serialized. With a plain `bool` + `omitempty` the `false`
+  value was dropped and conforming clients applied the schema default (`true`),
+  i.e. the opposite of the intent.
+
+### Fixed
+
+- `AlternativeMPDEventType.EarliestResolutionTimeOffset` now renders in plain
+  decimal notation instead of scientific notation (e.g. `5400000` rather than
+  `5.4e+06`) by using the `FloatInf64` type.
+
 ## [0.15.0] - 2026-06-05
 
 ### Added

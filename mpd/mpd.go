@@ -991,7 +991,7 @@ type ClientDataReportingType struct {
 // AlternativeMPDEventType is Alternative MPD event
 type AlternativeMPDEventType struct {
 	Uri                          string            `xml:"uri,attr"`
-	EarliestResolutionTimeOffset float64           `xml:"earliestResolutionTimeOffset,attr,omitempty"`
+	EarliestResolutionTimeOffset FloatInf64        `xml:"earliestResolutionTimeOffset,attr,omitempty"`
 	MaxDuration                  uint64            `xml:"maxDuration,attr,omitempty"`
 	ExecuteOnce                  bool              `xml:"executeOnce,attr,omitempty"`
 	NoJump                       int32             `xml:"noJump,attr,omitempty"`
@@ -1002,7 +1002,7 @@ type AlternativeMPDEventType struct {
 // AlternativeMPDReplaceEventType is Alternative MPD Replacement Event
 type AlternativeMPDReplaceEventType struct {
 	ReturnOffset    uint64 `xml:"returnOffset,attr,omitempty"`
-	Clip            bool   `xml:"clip,attr,omitempty"`
+	Clip            *bool  `xml:"clip,attr"` // default = true; pointer so clip="false" can be rendered
 	StartWithOffset bool   `xml:"startWithOffset,attr,omitempty"`
 	*AlternativeMPDEventType
 }
