@@ -10,6 +10,22 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+coverage.txt
+coverage.html
 
 # Dependency directories (remove the comment below to include it)
 vendor/
+
+# Editor / local config
+.vscode/
+.golangci.bck.yml
+
+# Local scratch and test debug output (not part of the module).
+# The round-trip test writes diffing MPDs to the package dir on failure.
+/mpd/*.mpd
+/mpd/old/
+/mpd/ed5amd1/
+/mpd/testdata/test/
+
+# Local copy of the upstream DASH schema repo used as reference material
+/mpd/DASHSchema-6th-Ed/
