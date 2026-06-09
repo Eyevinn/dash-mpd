@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" availabilityStartTime="2026-06-04T10:20:00Z" minimumUpdatePeriod="PT2S" minBufferTime="PT4S">
+  <Period id="1" start="PT0S">
+    <EventStream timescale="10000000" schemeIdUri="urn:scte:scte35:2014:xml+bin">
+      <Event presentationTime="89028119760" duration="12650" id="872416252">
+        <Signal xmlns="http://www.scte.org/schemas/35/2016">
+          <Binary>/DBIAAAAAAAAAP/wBQb+RPVwgAAyAjBDVUVJNAAD/H/AAAFbcVAMGlRWU1Q6ZnJhbmNlMl8yMDI2MDYwNF8xMDIwNAEBAADstgk/</Binary>
+        </Signal>
+      </Event>
+    </EventStream>
+    <AdaptationSet id="1" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <SegmentTemplate media="$Number$.mp4" initialization="init.mp4" timescale="90000"></SegmentTemplate>
+      <Representation id="1" bandwidth="500000" width="640" height="360" codecs="avc1.4D401F"></Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

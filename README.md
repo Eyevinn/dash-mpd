@@ -44,6 +44,52 @@ needed. The main modifications made were:
 * Change names to plural for all subelement slices, e.g. Periods instead of Period
 * Add ContentProtection elements and corresponding name spaces
 
+## SCTE-35
+
+DASH events carrying SCTE-35 splice information sections are supported with
+types defined in `mpd/scte35.go`, mapped from
+[`scte_35_20230713.xsd`](https://schemas.scte.org/35/) (ANSI/SCTE 35 2023r2).
+The `<Signal>` wrapper element specified by SCTE 214-1 is exposed as
+`EventType.Signal` and the alternative direct form (SCTE-35
+`SpliceInfoSection` placed straight under `Event`, as emitted by AWS
+MediaTailor and others) is exposed as `EventType.SpliceInfoSection`. Use the
+`(*EventType).SpliceInfo` helper to read either form uniformly.
+
+Two SCTE-35 namespace URIs are seen in the wild for the same schema:
+
+* `http://www.scte.org/schemas/35` — the canonical URI, declared as
+  `targetNamespace` by every XSD since 2020 (constant `mpd.SCTE35Namespace`).
+* `http://www.scte.org/schemas/35/2016` — a legacy URI still produced by a
+  large fraction of packagers (constant `mpd.SCTE35Namespace2016`).
+
+Each SCTE-35 type embeds an unnamed `XMLName xml.Name` field. On unmarshal the
+namespace URI is captured from the input document; on marshal it is replayed
+verbatim. An unmarshal/marshal round trip therefore preserves whichever URI
+the source manifest used — including the legacy 2016 variant. This is a
+deliberate exception to the "output names are fixed, and may differ from the
+input names" limitation listed below: SCTE-35 namespaces are passed through.
+
+A fresh value should be built via the `New*` constructors (`mpd.NewSignal`,
+`mpd.NewSpliceInfoSection`, `mpd.NewTimeSignal`, …) so that `XMLName` is set
+to the canonical URI by default. Bypassing them with a struct literal is
+legal but the resulting element will fall back to the Go type name when
+marshaled.
+
+```go
+sig := mpd.NewSignal()
+sis := mpd.NewSpliceInfoSection()
+tier := uint16(4095)
+sis.Tier = &tier
+sis.TimeSignal = mpd.NewTimeSignal()
+ptsTime := uint64(7835775000)
+sis.TimeSignal.SpliceTime = mpd.NewSpliceTime()
+sis.TimeSignal.SpliceTime.PtsTime = &ptsTime
+sig.SpliceInfoSection = sis
+event.Signal = sig
+```
+
+A representative set of round-trip fixtures lives in `mpd/testdata/scte35/`.
+
 ## XML handling
 
 The handling of XML name spaces in the Go standard library `encoding/xml` is incomplete,

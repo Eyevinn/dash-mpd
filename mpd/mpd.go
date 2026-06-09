@@ -183,6 +183,14 @@ type EventStreamType struct {
 
 // EventType is Event. This has settings mixed="true" in the schema, so it can either
 // have charData or child elements or both.
+//
+// The Signal and SpliceInfoSection fields plug SCTE-35 messages into the DASH
+// MPD <xs:any namespace="##other"> extension slot of EventType. Both forms are
+// observed in the wild: Signal is the wrapper specified by SCTE 214-1 (used by
+// Unified Streaming, Broadpeak, etc.); SpliceInfoSection direct is produced by
+// AWS MediaTailor and others, valid because SpliceInfoSection is a global
+// element in the SCTE-35 XSD. Use (*EventType).SpliceInfo for a uniform
+// accessor that returns whichever is populated.
 type EventType struct {
 	XMLName              xml.Name                        `xml:"Event"`
 	PresentationTime     uint64                          `xml:"presentationTime,attr"` // default is 0
@@ -198,6 +206,8 @@ type EventType struct {
 	ReplacePresentation  *AlternativeMPDReplaceEventType `xml:"ReplacePresentation"`
 	SupplementalProperty []*DescriptorType               `xml:"SupplementalProperty"`
 	EssentialProperty    []*DescriptorType               `xml:"EssentialProperty"`
+	Signal               *SignalType                     `xml:"Signal,omitempty"`            // SCTE-35 Signal wrapper (SCTE 214-1)
+	SpliceInfoSection    *SpliceInfoSectionType          `xml:"SpliceInfoSection,omitempty"` // SCTE-35 SpliceInfoSection, direct form
 }
 
 // SelectionInfoType is SelectionInfo
