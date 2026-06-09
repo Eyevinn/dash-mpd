@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT1H" minBufferTime="PT4S">
+  <Period id="1">
+    <EventStream timescale="1" schemeIdUri="urn:scte:scte35:2013:xml">
+      <Event presentationTime="0" id="0">
+        <Signal xmlns="http://www.scte.org/schemas/35">
+          <SpliceInfoSection>
+            <SpliceSchedule>
+              <Event spliceEventId="1" outOfNetworkIndicator="true" uniqueProgramId="1" availNum="1" availsExpected="1">
+                <Program utcSpliceTime="2024-01-01T12:00:00Z"></Program>
+                <BreakDuration autoReturn="true" duration="2700000"></BreakDuration>
+              </Event>
+            </SpliceSchedule>
+          </SpliceInfoSection>
+        </Signal>
+      </Event>
+    </EventStream>
+    <AdaptationSet id="1" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <SegmentTemplate media="$Number$.mp4" initialization="init.mp4" timescale="90000"></SegmentTemplate>
+      <Representation id="1" bandwidth="500000" width="640" height="360" codecs="avc1.4D401F"></Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

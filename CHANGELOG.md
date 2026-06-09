@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now delegates to it.
 - `(*Period).Write(w io.Writer, indent string)` and
   `(*Period).WriteToString(indent string)` for serializing a single Period.
+- SCTE-35 splice information signalling on `EventType` per ANSI/SCTE 35
+  2023r2: new `Signal` (SCTE 214-1 wrapper) and `SpliceInfoSection`
+  (direct-under-Event) fields, all six splice commands and six splice
+  descriptors, plus `Binary`, `Ext` and `anyAttribute` extensibility.
+- SCTE-35 namespace pass-through: the URI seen on unmarshal
+  (`http://www.scte.org/schemas/35` or the legacy `…/35/2016`) is replayed
+  verbatim on marshal.
 
 ## [0.15.1] - 2026-06-07
 
