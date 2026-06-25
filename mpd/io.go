@@ -52,12 +52,13 @@ func MPDFromBytes(data []byte) (*MPD, error) {
 	return &mpd, nil
 }
 
-// Write streams the XML encoding of m to w, with indentation according to indent
-// and optionally prefixing an XML declaration header.  It returns the number of
-// bytes written.  The encoder is pooled for efficiency; do not hold w open after
-// Write returns.
-func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (int, error) {
+// WriteXML streams the XML encoding of elem to w, with indentation according to
+// indent and optionally prefixing an XML declaration header.  It returns the
+// number of bytes written.  The encoder is pooled for efficiency; do not hold w
+// open after WriteXML returns.
+func WriteXML(elem any, w io.Writer, indent string, withHeader bool) (int, error) {
 	cw := &countingWriter{w: w}
+
 	if withHeader {
 		if _, err := io.WriteString(cw, xml.Header); err != nil {
 			return cw.n, err
@@ -66,7 +67,8 @@ func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (int, error) {
 	enc := xml.AcquireEncoder(cw)
 	defer xml.ReleaseEncoder(enc)
 	enc.Indent("", indent)
-	if err := enc.Encode(m); err != nil {
+
+	if err := enc.Encode(elem); err != nil {
 		return cw.n, err
 	}
 	if err := enc.Flush(); err != nil {
@@ -75,12 +77,38 @@ func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (int, error) {
 	return cw.n, nil
 }
 
+// Write streams the XML encoding of m to w, with indentation according to indent
+// and optionally prefixing an XML declaration header.  It returns the number of
+// bytes written.  The encoder is pooled for efficiency; do not hold w open after
+// Write returns.
+func (m *MPD) Write(w io.Writer, indent string, withHeader bool) (int, error) {
+	return WriteXML(m, w, indent, withHeader)
+}
+
 // WriteToString returns the XML encoding of m as a string, with indentation
 // according to indent and optionally prefixing an XML declaration header.
 func (m *MPD) WriteToString(indent string, withHeader bool) (string, error) {
 	var sb strings.Builder
 	sb.Grow(4096)
 	if _, err := m.Write(&sb, indent, withHeader); err != nil {
+		return "", err
+	}
+	return sb.String(), nil
+}
+
+// Write streams the XML encoding of p to w, with indentation according to indent.
+// It returns the number of bytes written. The encoder is pooled for efficiency;
+// do not hold w open after Write returns.
+func (p *Period) Write(w io.Writer, indent string) (int, error) {
+	return WriteXML(p, w, indent, false)
+}
+
+// WriteToString returns the XML encoding of p as a string, with indentation
+// according to indent.
+func (p *Period) WriteToString(indent string) (string, error) {
+	var sb strings.Builder
+	sb.Grow(4096)
+	if _, err := p.Write(&sb, indent); err != nil {
 		return "", err
 	}
 	return sb.String(), nil

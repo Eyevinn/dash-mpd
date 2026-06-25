@@ -1,11 +1,71 @@
 package mpd_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/Eyevinn/dash-mpd/mpd"
 	"github.com/stretchr/testify/require"
 )
+
+func TestWriteXML(t *testing.T) {
+	m := mpd.NewMPD(mpd.STATIC_TYPE)
+	p := mpd.NewPeriod()
+	p.Id = "p0"
+	p.Start = mpd.Seconds2DurPtr(0)
+	m.AppendPeriod(p)
+
+	// WriteXML and (*MPD).Write produce identical output, since Write delegates.
+	var viaWriteXML, viaMethod strings.Builder
+	nXML, err := mpd.WriteXML(m, &viaWriteXML, "  ", true)
+	require.NoError(t, err)
+	nMethod, err := m.Write(&viaMethod, "  ", true)
+	require.NoError(t, err)
+	require.Equal(t, viaMethod.String(), viaWriteXML.String())
+	require.Equal(t, nMethod, nXML)
+
+	// The returned byte count matches the bytes actually written.
+	require.Equal(t, viaWriteXML.Len(), nXML)
+	// withHeader=true prepends the XML declaration.
+	require.True(t, strings.HasPrefix(viaWriteXML.String(), "<?xml"))
+
+	// withHeader=false omits the declaration.
+	var noHeader strings.Builder
+	_, err = mpd.WriteXML(m, &noHeader, "  ", false)
+	require.NoError(t, err)
+	require.False(t, strings.HasPrefix(noHeader.String(), "<?xml"))
+	require.True(t, strings.HasPrefix(noHeader.String(), "<MPD"))
+}
+
+func TestPeriodWriteToString(t *testing.T) {
+	p := mpd.NewPeriod()
+	p.Id = "p0"
+	p.Start = mpd.Seconds2DurPtr(0)
+
+	out, err := p.WriteToString("  ")
+	require.NoError(t, err)
+	require.True(t, strings.HasPrefix(out, "<Period"))
+	require.Contains(t, out, `id="p0"`)
+	require.Contains(t, out, `start="PT0S"`)
+	// A bare Period fragment carries no XML declaration.
+	require.NotContains(t, out, "<?xml")
+}
+
+func TestPeriodWrite(t *testing.T) {
+	p := mpd.NewPeriod()
+	p.Id = "p0"
+	p.Start = mpd.Seconds2DurPtr(0)
+
+	var sb strings.Builder
+	n, err := p.Write(&sb, "  ")
+	require.NoError(t, err)
+	require.Equal(t, sb.Len(), n)
+
+	// (*Period).Write and (*Period).WriteToString agree.
+	str, err := p.WriteToString("  ")
+	require.NoError(t, err)
+	require.Equal(t, str, sb.String())
+}
 
 func TestDateTime(t *testing.T) {
 	cases := []struct {

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `WriteXML(elem any, w io.Writer, indent string, withHeader bool)` exported
+  function that streams the XML encoding of any element to `w`. `(*MPD).Write`
+  now delegates to it.
+- `(*Period).Write(w io.Writer, indent string)` and
+  `(*Period).WriteToString(indent string)` for serializing a single Period.
+
 ## [0.15.1] - 2026-06-07
 
 ### Changed
