@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="static" mediaPresentationDuration="PT2M" minBufferTime="PT2S">
+  <Period id="1">
+    <AssetIdentifier schemeIdUri="urn:scte:dash:asset-id:upid:2015">
+      <scte214:ContentIdentifier xmlns:scte214="urn:scte:dash:scte214-extensions" type="ADI" value="cablelabs.com/MOVE1234567890123456"></scte214:ContentIdentifier>
+      <scte214:ContentIdentifier xmlns:scte214="urn:scte:dash:scte214-extensions" type="MPU" value="CSP1DE12AB327FE312AF"></scte214:ContentIdentifier>
+    </AssetIdentifier>
+    <AdaptationSet id="1" segmentAlignment="true" mimeType="video/mp4" startWithSAP="1">
+      <SegmentTemplate media="content_$Number$.mp4" initialization="content_init.mp4" timescale="90000" duration="180000"></SegmentTemplate>
+      <Representation id="video" bandwidth="3000000" width="1280" height="720" codecs="avc1.4D401F"></Representation>
+    </AdaptationSet>
+    <SupplementalProperty schemeIdUri="urn:scte:dash:asset-id:upid:2015">
+      <scte214:ContentIdentifier xmlns:scte214="urn:scte:dash:scte214-extensions" type="AiringID" value="0xDEADBEEF"></scte214:ContentIdentifier>
+    </SupplementalProperty>
+  </Period>
+</MPD>

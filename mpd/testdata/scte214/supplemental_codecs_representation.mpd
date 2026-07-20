@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" type="static" mediaPresentationDuration="PT1M11.708S" minBufferTime="PT2S">
+  <Period id="1">
+    <AdaptationSet id="1" maxWidth="1920" maxHeight="1080" segmentAlignment="true" subsegmentAlignment="true" subsegmentStartsWithSAP="1" mimeType="video/mp4" startWithSAP="1">
+      <EssentialProperty schemeIdUri="urn:mpeg:mpegB:cicp:TransferCharacteristics" value="16"></EssentialProperty>
+      <Representation id="video-720p" bandwidth="1630943" width="1280" height="720" frameRate="24" codecs="hvc1.2.4.L93.b0" xmlns:scte214="urn:scte:dash:scte214-extensions" scte214:supplementalProfiles="db1p" scte214:supplementalCodecs="dvh1.08.01">
+        <BaseURL>video_720p.mp4</BaseURL>
+      </Representation>
+      <Representation id="video-1080p" bandwidth="5139658" width="1920" height="1080" frameRate="24" codecs="hvc1.2.4.L120.b0" xmlns:scte214="urn:scte:dash:scte214-extensions" scte214:supplementalProfiles="db1p" scte214:supplementalCodecs="dvh1.08.03">
+        <BaseURL>video_1080p.mp4</BaseURL>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

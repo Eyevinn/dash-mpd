@@ -487,23 +487,27 @@ func (s *SubRepresentationType) Parent() *RepresentationType {
 
 // RepresentationBaseType is Representation base (common attributes and elements).
 type RepresentationBaseType struct {
-	Profiles                   ListOfProfilesType               `xml:"profiles,attr,omitempty"`
-	Width                      uint32                           `xml:"width,attr,omitempty"`
-	Height                     uint32                           `xml:"height,attr,omitempty"`
-	Sar                        RatioType                        `xml:"sar,attr,omitempty"`
-	FrameRate                  FrameRateType                    `xml:"frameRate,attr,omitempty"`
-	AudioSamplingRate          *UIntVectorType                  `xml:"audioSamplingRate,attr,omitempty"`
-	MimeType                   string                           `xml:"mimeType,attr,omitempty"`
-	SegmentProfiles            *ListOf4CCType                   `xml:"segmentProfiles,attr,omitempty"`
-	Codecs                     string                           `xml:"codecs,attr,omitempty"`
-	ContainerProfiles          *ListOf4CCType                   `xml:"containerProfiles,attr,omitempty"`
-	MaximumSAPPeriod           float64                          `xml:"maximumSAPPeriod,attr,omitempty"`
-	StartWithSAP               uint32                           `xml:"startWithSAP,attr,omitempty"`
-	MaxPlayoutRate             float64                          `xml:"maxPlayoutRate,attr,omitempty"`
-	CodingDependency           *bool                            `xml:"codingDependency,attr,omitempty"`
-	ScanType                   VideoScanType                    `xml:"scanType,attr,omitempty"`
-	SelectionPriority          *uint32                          `xml:"selectionPriority,attr"` // default = 1
-	Tag                        string                           `xml:"tag,attr,omitempty"`
+	Profiles          ListOfProfilesType `xml:"profiles,attr,omitempty"`
+	Width             uint32             `xml:"width,attr,omitempty"`
+	Height            uint32             `xml:"height,attr,omitempty"`
+	Sar               RatioType          `xml:"sar,attr,omitempty"`
+	FrameRate         FrameRateType      `xml:"frameRate,attr,omitempty"`
+	AudioSamplingRate *UIntVectorType    `xml:"audioSamplingRate,attr,omitempty"`
+	MimeType          string             `xml:"mimeType,attr,omitempty"`
+	SegmentProfiles   *ListOf4CCType     `xml:"segmentProfiles,attr,omitempty"`
+	Codecs            string             `xml:"codecs,attr,omitempty"`
+	ContainerProfiles *ListOf4CCType     `xml:"containerProfiles,attr,omitempty"`
+	MaximumSAPPeriod  float64            `xml:"maximumSAPPeriod,attr,omitempty"`
+	StartWithSAP      uint32             `xml:"startWithSAP,attr,omitempty"`
+	MaxPlayoutRate    float64            `xml:"maxPlayoutRate,attr,omitempty"`
+	CodingDependency  *bool              `xml:"codingDependency,attr,omitempty"`
+	ScanType          VideoScanType      `xml:"scanType,attr,omitempty"`
+	SelectionPriority *uint32            `xml:"selectionPriority,attr"` // default = 1
+	Tag               string             `xml:"tag,attr,omitempty"`
+	// SupplementalProfiles is a whitespace-separated list of SCTE 214-1 supplemental brands or URIs.
+	SupplementalProfiles StringVectorType `xml:"urn:scte:dash:scte214-extensions scte214:supplementalProfiles,attr,omitempty"`
+	// SupplementalCodecs is a whitespace-separated list of SCTE 214-1 supplemental RFC 6381 codec strings.
+	SupplementalCodecs         StringVectorType                 `xml:"urn:scte:dash:scte214-extensions scte214:supplementalCodecs,attr,omitempty"`
 	FramePackings              []*DescriptorType                `xml:"FramePacking"`
 	AudioChannelConfigurations []*DescriptorType                `xml:"AudioChannelConfiguration"`
 	ContentProtections         []*ContentProtectionType         `xml:"ContentProtection"`
@@ -921,6 +925,8 @@ type DescriptorType struct {
 	Id              string               `xml:"id,attr,omitempty"`
 	UrlQueryInfo    *UrlQueryInfoType    `xml:"urn:mpeg:dash:schema:urlparam:2014 up:UrlQueryInfo,omitempty"`
 	ExtUrlQueryInfo *ExtendedUrlInfoType `xml:"urn:mpeg:dash:schema:urlparam:2016 up:ExtUrlQueryInfo,omitempty"`
+	// ContentIdentifiers are SCTE 214-1 UPID content identifiers for asset identification.
+	ContentIdentifiers []*ContentIdentifierType `xml:"urn:scte:dash:scte214-extensions scte214:ContentIdentifier"`
 }
 
 // NewDescriptor returns a new DescriptorType.

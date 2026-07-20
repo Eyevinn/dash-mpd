@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- SCTE-214 MPD extensions per ANSI/SCTE 214-1 2024: `supplementalProfiles` and
+  `supplementalCodecs` attributes on `RepresentationBaseType` (available on
+  AdaptationSet, Representation and SubRepresentation), and `ContentIdentifier`
+  elements on `DescriptorType` for UPID-based asset identification in
+  `AssetIdentifier` and `SupplementalProperty`.
+- Exported constants for the SCTE-214 namespaces (`SCTE214Namespace`,
+  `SCTE214Namespace2021`) and the descriptor scheme URIs defined by the
+  specification (`SCTE214SchemeId*`).
+
 ## [0.16.0] - 2026-06-26
 
 ### Added

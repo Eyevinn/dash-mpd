@@ -89,6 +89,42 @@ event.Signal = sig
 
 A representative set of round-trip fixtures lives in `mpd/testdata/scte35/`.
 
+## SCTE-214
+
+The MPD extensions defined by ANSI/SCTE 214-1 2024 (MPEG DASH for IP-Based
+Cable Services Part 1: MPD Constraints and Extensions) are supported with
+types and constants in `mpd/scte214.go`:
+
+* `supplementalProfiles` and `supplementalCodecs` attributes on
+  `RepresentationBaseType`, and thereby on AdaptationSet, Representation and
+  SubRepresentation. Both are space-separated lists, used e.g. for
+  backwards-compatible Dolby Vision and HDR10+ signalling.
+* `ContentIdentifier` elements on `DescriptorType` for UPID-based asset
+  identification inside `AssetIdentifier` and `SupplementalProperty`
+  descriptors with the `urn:scte:dash:asset-id:upid:2015` scheme.
+* The descriptor scheme URIs defined by the specification as
+  `SCTE214SchemeId*` constants.
+
+All extension elements and attributes belong to the
+`urn:scte:dash:scte214-extensions` namespace (`mpd.SCTE214Namespace`). The
+`scte214` prefix is emitted on marshal, declared on the carrying element; on
+unmarshal any prefix bound to the namespace URI is matched.
+
+```go
+rep := mpd.NewRepresentation()
+rep.Codecs = "hvc1.2.4.L120.b0"
+rep.SupplementalCodecs = "dvh1.08.03"
+rep.SupplementalProfiles = "db1p"
+
+asset := mpd.NewDescriptor(mpd.SCTE214SchemeIdAssetIdUpid, "", "")
+asset.ContentIdentifiers = []*mpd.ContentIdentifierType{
+    mpd.NewContentIdentifier("EIDR", "10.5240/EA73-79D7-1B2B-B378-3A73-M"),
+}
+period.AssetIdentifier = asset
+```
+
+A representative set of round-trip fixtures lives in `mpd/testdata/scte214/`.
+
 ## XML handling
 
 The handling of XML name spaces in the Go standard library `encoding/xml` is incomplete,
