@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-on-demand:2011" type="static" mediaPresentationDuration="PT30S" minBufferTime="PT2S">
+  <Period id="1">
+    <AdaptationSet id="1" segmentAlignment="true" mimeType="video/mp4" codecs="hev1.2.4.L153.B0" containerProfiles="cmfc chd1" startWithSAP="1" xmlns:scte214="urn:scte:dash:scte214-extensions" scte214:supplementalProfiles="db1p cdm4" scte214:supplementalCodecs="dvh1.08.09">
+      <EssentialProperty schemeIdUri="urn:mpeg:mpegB:cicp:MatrixCoefficients" value="9"></EssentialProperty>
+      <EssentialProperty schemeIdUri="urn:mpeg:mpegB:cicp:ColourPrimaries" value="9"></EssentialProperty>
+      <EssentialProperty schemeIdUri="urn:mpeg:mpegB:cicp:TransferCharacteristics" value="16"></EssentialProperty>
+      <SegmentTemplate media="video_$Number$.mp4" initialization="video_init.mp4" timescale="90000" duration="180000"></SegmentTemplate>
+      <Representation id="video-2160p" bandwidth="12000000" width="3840" height="2160"></Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>

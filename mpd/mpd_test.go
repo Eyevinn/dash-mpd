@@ -29,6 +29,7 @@ func TestDecodeEncodeMPDs(t *testing.T) {
 		"testdata/hbbtv",
 		"testdata/other",
 		"testdata/scte35",
+		"testdata/scte214",
 	}
 	for _, testDir := range testDirs {
 		fsys := os.DirFS(testDir)
