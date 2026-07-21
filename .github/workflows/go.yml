@@ -13,16 +13,16 @@ jobs:
     strategy:
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
-        go-version: ["1.23", "1.26"]
+        go-version: ["1.25", "1.26"]
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download Go dependencies
         run: go mod download
