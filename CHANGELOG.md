@@ -13,7 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `supplementalCodecs` attributes on `RepresentationBaseType` (available on
   AdaptationSet, Representation and SubRepresentation), and `ContentIdentifier`
   elements on `DescriptorType` for UPID-based asset identification in
-  `AssetIdentifier` and `SupplementalProperty`.
+  `AssetIdentifier` and `SupplementalProperty`. The Go identifiers carry an
+  `SCTE214` prefix (`SCTE214SupplementalCodecs`, `SCTE214ContentIdentifiers`,
+  `SCTE214ContentIdentifierType`, ...) to keep the plain names free for future
+  DASH MPD schema updates.
 - Exported constants for the SCTE-214 namespaces (`SCTE214Namespace`,
   `SCTE214Namespace2021`) and the descriptor scheme URIs defined by the
   specification (`SCTE214SchemeId*`).

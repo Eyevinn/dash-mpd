@@ -84,20 +84,20 @@ const (
 	SCTE214SchemeIdSegmentModel = "urn:scte:dash:segment-model:2024"
 )
 
-// ContentIdentifierType is the scte214:ContentIdentifier element (XSD
+// SCTE214ContentIdentifierType is the scte214:ContentIdentifier element (XSD
 // complexType UPID) defined in Sec. 9.2 of ANSI/SCTE 214-1 2024. Type is an
 // SCTE-35 UPID type name and Value its textual representation, both as
 // specified by table 9-7 of ANSI/SCTE 35. One or more ContentIdentifier
 // elements appear inside an AssetIdentifier or SupplementalProperty
 // descriptor with schemeIdUri SCTE214SchemeIdAssetIdUpid.
-type ContentIdentifierType struct {
+type SCTE214ContentIdentifierType struct {
 	Type     string     `xml:"type,attr"`
 	Value    string     `xml:"value,attr"`
 	AnyAttrs []xml.Attr `xml:",any,attr"`
 }
 
-// NewContentIdentifier returns a ContentIdentifier with the given SCTE-35
-// UPID type name and value.
-func NewContentIdentifier(idType, idValue string) *ContentIdentifierType {
-	return &ContentIdentifierType{Type: idType, Value: idValue}
+// NewSCTE214ContentIdentifier returns a ContentIdentifier with the given
+// SCTE-35 UPID type name and value.
+func NewSCTE214ContentIdentifier(idType, idValue string) *SCTE214ContentIdentifierType {
+	return &SCTE214ContentIdentifierType{Type: idType, Value: idValue}
 }

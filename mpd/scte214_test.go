@@ -37,8 +37,8 @@ func TestSCTE214SupplementalAttributes(t *testing.T) {
 			reps := m.Periods[0].AdaptationSets[0].Representations
 			require.Len(t, reps, len(tc.wantCodecs))
 			for i, rep := range reps {
-				require.Equal(t, tc.wantProfiles[i], rep.SupplementalProfiles)
-				require.Equal(t, tc.wantCodecs[i], rep.SupplementalCodecs)
+				require.Equal(t, tc.wantProfiles[i], rep.SCTE214SupplementalProfiles)
+				require.Equal(t, tc.wantCodecs[i], rep.SCTE214SupplementalCodecs)
 			}
 		})
 	}
@@ -53,8 +53,8 @@ func TestSCTE214SupplementalAttributesOnAdaptationSet(t *testing.T) {
 	require.NoError(t, err)
 
 	as := m.Periods[0].AdaptationSets[0]
-	require.Equal(t, mpd.StringVectorType("db1p cdm4"), as.SupplementalProfiles)
-	require.Equal(t, mpd.StringVectorType("dvh1.08.09"), as.SupplementalCodecs)
+	require.Equal(t, mpd.StringVectorType("db1p cdm4"), as.SCTE214SupplementalProfiles)
+	require.Equal(t, mpd.StringVectorType("dvh1.08.09"), as.SCTE214SupplementalCodecs)
 }
 
 // TestSCTE214NamespacePrefixInsensitive verifies that the attributes are
@@ -72,8 +72,8 @@ func TestSCTE214NamespacePrefixInsensitive(t *testing.T) {
 	m, err := mpd.MPDFromBytes([]byte(input))
 	require.NoError(t, err)
 	rep := m.Periods[0].AdaptationSets[0].Representations[0]
-	require.Equal(t, mpd.StringVectorType("db1p"), rep.SupplementalProfiles)
-	require.Equal(t, mpd.StringVectorType("dvh1.08.05"), rep.SupplementalCodecs)
+	require.Equal(t, mpd.StringVectorType("db1p"), rep.SCTE214SupplementalProfiles)
+	require.Equal(t, mpd.StringVectorType("dvh1.08.05"), rep.SCTE214SupplementalCodecs)
 
 	// On marshal, the attributes come out with the scte214 prefix declared
 	// on the carrying element.
@@ -98,18 +98,18 @@ func TestSCTE214ContentIdentifiers(t *testing.T) {
 	ai := p.AssetIdentifier
 	require.NotNil(t, ai)
 	require.Equal(t, mpd.AnyURI(mpd.SCTE214SchemeIdAssetIdUpid), ai.SchemeIdUri)
-	require.Len(t, ai.ContentIdentifiers, 2)
-	require.Equal(t, "ADI", ai.ContentIdentifiers[0].Type)
-	require.Equal(t, "cablelabs.com/MOVE1234567890123456", ai.ContentIdentifiers[0].Value)
-	require.Equal(t, "MPU", ai.ContentIdentifiers[1].Type)
-	require.Equal(t, "CSP1DE12AB327FE312AF", ai.ContentIdentifiers[1].Value)
+	require.Len(t, ai.SCTE214ContentIdentifiers, 2)
+	require.Equal(t, "ADI", ai.SCTE214ContentIdentifiers[0].Type)
+	require.Equal(t, "cablelabs.com/MOVE1234567890123456", ai.SCTE214ContentIdentifiers[0].Value)
+	require.Equal(t, "MPU", ai.SCTE214ContentIdentifiers[1].Type)
+	require.Equal(t, "CSP1DE12AB327FE312AF", ai.SCTE214ContentIdentifiers[1].Value)
 
 	require.Len(t, p.SupplementalProperties, 1)
 	sp := p.SupplementalProperties[0]
 	require.Equal(t, mpd.AnyURI(mpd.SCTE214SchemeIdAssetIdUpid), sp.SchemeIdUri)
-	require.Len(t, sp.ContentIdentifiers, 1)
-	require.Equal(t, "AiringID", sp.ContentIdentifiers[0].Type)
-	require.Equal(t, "0xDEADBEEF", sp.ContentIdentifiers[0].Value)
+	require.Len(t, sp.SCTE214ContentIdentifiers, 1)
+	require.Equal(t, "AiringID", sp.SCTE214ContentIdentifiers[0].Type)
+	require.Equal(t, "0xDEADBEEF", sp.SCTE214ContentIdentifiers[0].Value)
 }
 
 // TestSCTE214ProgrammaticConstruction builds the SCTE-214 signalling
@@ -125,8 +125,8 @@ func TestSCTE214ProgrammaticConstruction(t *testing.T) {
 	m.AppendPeriod(p)
 
 	ai := mpd.NewDescriptor(mpd.SCTE214SchemeIdAssetIdUpid, "", "")
-	ai.ContentIdentifiers = []*mpd.ContentIdentifierType{
-		mpd.NewContentIdentifier("EIDR", "10.5240/EA73-79D7-1B2B-B378-3A73-M"),
+	ai.SCTE214ContentIdentifiers = []*mpd.SCTE214ContentIdentifierType{
+		mpd.NewSCTE214ContentIdentifier("EIDR", "10.5240/EA73-79D7-1B2B-B378-3A73-M"),
 	}
 	p.AssetIdentifier = ai
 
@@ -138,8 +138,8 @@ func TestSCTE214ProgrammaticConstruction(t *testing.T) {
 	rep.Id = "video"
 	rep.Bandwidth = 5139658
 	rep.Codecs = "hvc1.2.4.L120.b0"
-	rep.SupplementalProfiles = "db1p cdm4"
-	rep.SupplementalCodecs = "dvh1.08.03"
+	rep.SCTE214SupplementalProfiles = "db1p cdm4"
+	rep.SCTE214SupplementalCodecs = "dvh1.08.03"
 	as.AppendRepresentation(rep)
 
 	out, err := xml.MarshalIndent(m, "", "  ")
@@ -154,10 +154,10 @@ func TestSCTE214ProgrammaticConstruction(t *testing.T) {
 	rt, err := mpd.MPDFromBytes(out)
 	require.NoError(t, err)
 	rtRep := rt.Periods[0].AdaptationSets[0].Representations[0]
-	require.Equal(t, mpd.StringVectorType("db1p cdm4"), rtRep.SupplementalProfiles)
-	require.Equal(t, mpd.StringVectorType("dvh1.08.03"), rtRep.SupplementalCodecs)
+	require.Equal(t, mpd.StringVectorType("db1p cdm4"), rtRep.SCTE214SupplementalProfiles)
+	require.Equal(t, mpd.StringVectorType("dvh1.08.03"), rtRep.SCTE214SupplementalCodecs)
 	rtAi := rt.Periods[0].AssetIdentifier
 	require.NotNil(t, rtAi)
-	require.Len(t, rtAi.ContentIdentifiers, 1)
-	require.Equal(t, "EIDR", rtAi.ContentIdentifiers[0].Type)
+	require.Len(t, rtAi.SCTE214ContentIdentifiers, 1)
+	require.Equal(t, "EIDR", rtAi.SCTE214ContentIdentifiers[0].Type)
 }
