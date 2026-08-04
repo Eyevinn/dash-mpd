@@ -20,6 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exported constants for the SCTE-214 namespaces (`SCTE214Namespace`,
   `SCTE214Namespace2021`) and the descriptor scheme URIs defined by the
   specification (`SCTE214SchemeId*`).
+- `AUDIO_CHANNEL_CONFIGURATION_CICP` (`urn:mpeg:mpegB:cicp:ChannelConfiguration`),
+  the `AudioChannelConfiguration` scheme preferred for all codecs, and
+  `AUDIO_CHANNEL_CONFIGURATION_DOLBY_2015`
+  (`tag:dolby.com,2015:dash:audio_channel_configuration:2015`) for AC-4 immersive
+  audio. All `AUDIO_CHANNEL_CONFIGURATION_*` constants now document their
+  defining specification and status (issue #61).
+
+### Deprecated
+
+- `AUDIO_CHANNEL_CONFIGURATION_MPEG_DOLBY` is renamed to
+  `AUDIO_CHANNEL_CONFIGURATION_DOLBY`, since the scheme is defined by Dolby and
+  not by MPEG. The old name remains as an alias.
 
 ## [0.16.0] - 2026-06-26
 

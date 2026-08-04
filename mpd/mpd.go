@@ -34,13 +34,43 @@ const (
 )
 
 const (
-	DASH_NAMESPACE                         = "urn:mpeg:dash:schema:mpd:2011"
-	AUDIO_CHANNEL_CONFIGURATION_MPEG_DASH  = "urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
-	AUDIO_CHANNEL_CONFIGURATION_MPEG_DOLBY = "tag:dolby.com,2014:dash:audio_channel_configuration:2011"
-	MIME_TYPE_VIDEO_MP4                    = "video/mp4"
-	MIME_TYPE_AUDIO_MP4                    = "audio/mp4"
-	MIME_TYPE_SUBTITLE_VTT                 = "text/vtt"
-	MIME_TYPE_TTML                         = "application/ttml+xml"
+	DASH_NAMESPACE = "urn:mpeg:dash:schema:mpd:2011"
+
+	// AUDIO_CHANNEL_CONFIGURATION_CICP signals the channel configuration with a
+	// CICP ChannelConfiguration index as defined in ISO/IEC 23091-3, clause 6.2.
+	// It is the scheme preferred for all codecs by the DASH-IF identifier registry
+	// https://dashif.org/identifiers/audio_source_metadata/.
+	AUDIO_CHANNEL_CONFIGURATION_CICP = "urn:mpeg:mpegB:cicp:ChannelConfiguration"
+	// AUDIO_CHANNEL_CONFIGURATION_MPEG_DASH signals the channel configuration with
+	// a channelConfigurationIndex from ISO/IEC 23003-3, Table 68, as defined in
+	// ISO/IEC 23009-1, clause 5.8.5.4.
+	AUDIO_CHANNEL_CONFIGURATION_MPEG_DASH = "urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
+	// AUDIO_CHANNEL_CONFIGURATION_DOLBY signals the Dolby channel configuration as a
+	// four-digit hexadecimal representation of a 16-bit field, as defined in
+	// ETSI TS 102 366, clause I.1.2 (AC-3 and Enhanced AC-3).
+	//
+	// DASH-IF lists this scheme as legacy and discourages it for new deployments,
+	// and Dolby prefers AUDIO_CHANNEL_CONFIGURATION_CICP where applicable, but the
+	// scheme is still common in deployed content.
+	AUDIO_CHANNEL_CONFIGURATION_DOLBY = "tag:dolby.com,2014:dash:audio_channel_configuration:2011"
+	// AUDIO_CHANNEL_CONFIGURATION_DOLBY_2015 signals the Dolby immersive audio channel
+	// configuration as a six-digit hexadecimal representation of a 24-bit field, as
+	// defined in ETSI TS 103 190-2, clause G.3.1 (AC-4).
+	//
+	// DASH-IF lists this scheme as legacy and discourages it for new deployments, and
+	// DVB-DASH prefers AUDIO_CHANNEL_CONFIGURATION_CICP, but DASH-IF interoperability
+	// for ATSC 3.0 requires this scheme.
+	AUDIO_CHANNEL_CONFIGURATION_DOLBY_2015 = "tag:dolby.com,2015:dash:audio_channel_configuration:2015"
+	// AUDIO_CHANNEL_CONFIGURATION_MPEG_DOLBY is a misnomer, since the scheme is defined
+	// by Dolby and not by MPEG.
+	//
+	// Deprecated: use AUDIO_CHANNEL_CONFIGURATION_DOLBY instead.
+	AUDIO_CHANNEL_CONFIGURATION_MPEG_DOLBY = AUDIO_CHANNEL_CONFIGURATION_DOLBY
+
+	MIME_TYPE_VIDEO_MP4    = "video/mp4"
+	MIME_TYPE_AUDIO_MP4    = "audio/mp4"
+	MIME_TYPE_SUBTITLE_VTT = "text/vtt"
+	MIME_TYPE_TTML         = "application/ttml+xml"
 )
 
 const (
