@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-08-18
+
 ### Added
 
 - SCTE-214 MPD extensions per ANSI/SCTE 214-1 2024: `supplementalProfiles` and
@@ -32,6 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AUDIO_CHANNEL_CONFIGURATION_MPEG_DOLBY` is renamed to
   `AUDIO_CHANNEL_CONFIGURATION_DOLBY`, since the scheme is defined by Dolby and
   not by MPEG. The old name remains as an alias.
+
+### Chore
+
+- Updated dependencies
 
 ## [0.16.0] - 2026-06-26
 
@@ -296,7 +302,8 @@ Lots of convenience functions to create MPDs
 - Tests with well-known MPDs
 - Tweaked XML library to support namespaces
 
-[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.17.0...HEAD
+[0.17.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/Eyevinn/dash-mpd/compare/v0.15.0...v0.15.1
 [0.15.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.14.1...v0.15.0
