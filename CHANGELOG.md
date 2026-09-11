@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-09-11
+
 ### Changed
 
 - **Breaking**: `EventType.Duration` changes type from `uint64` to `*uint64`, so that an
@@ -318,7 +320,8 @@ Lots of convenience functions to create MPDs
 - Tests with well-known MPDs
 - Tweaked XML library to support namespaces
 
-[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.17.0...HEAD
+[Unreleased]: https://github.com/Eyevinn/dash-mpd/compare/v0.18.0...HEAD
+[0.18.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/Eyevinn/dash-mpd/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/Eyevinn/dash-mpd/compare/v0.15.0...v0.15.1
