@@ -295,3 +295,42 @@ func TestContentProtectionCerturl(t *testing.T) {
 		})
 	}
 }
+
+// TestEventDuration checks that a zero Event@duration can be expressed and survives a round
+// trip. ISO/IEC 23009-1 gives an absent @duration the meaning "the duration is unknown", so a
+// known, zero-length event is a different thing and needs to be written out. SCTE 214-1
+// §6.7.2.1 relies on the difference: an SCTE-35 event that closes an earlier one "should have
+// a duration of zero and shall not be infinite".
+func TestEventDuration(t *testing.T) {
+	cases := []struct {
+		desc     string
+		duration *uint64
+		wantAttr string
+	}{
+		{desc: "unknown duration is left out", duration: nil, wantAttr: ""},
+		{desc: "zero duration is written", duration: m.Ptr(uint64(0)), wantAttr: ` duration="0"`},
+		{desc: "non-zero duration is written", duration: m.Ptr(uint64(90000)), wantAttr: ` duration="90000"`},
+	}
+	for _, c := range cases {
+		t.Run(c.desc, func(t *testing.T) {
+			ev := &m.EventType{
+				PresentationTime: 900000,
+				Duration:         c.duration,
+				Id:               m.Ptr(uint64(1)),
+			}
+			out, err := xml.Marshal(ev)
+			require.NoError(t, err)
+			want := `<Event presentationTime="900000"` + c.wantAttr + ` id="1"></Event>`
+			require.Equal(t, want, string(out))
+
+			var got m.EventType
+			require.NoError(t, xml.Unmarshal(out, &got))
+			if c.duration == nil {
+				require.Nil(t, got.Duration, "an absent @duration must stay unknown")
+				return
+			}
+			require.NotNil(t, got.Duration)
+			require.Equal(t, *c.duration, *got.Duration)
+		})
+	}
+}

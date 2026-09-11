@@ -213,7 +213,7 @@ func TestSCTE35ProgrammaticRoundTrip(t *testing.T) {
 	id := uint64(7)
 	ev := &mpd.EventType{
 		PresentationTime: 900000,
-		Duration:         2700000,
+		Duration:         mpd.Ptr(uint64(2700000)),
 		Id:               &id,
 		Signal:           sig,
 	}
