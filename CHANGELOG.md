@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking**: `EventType.Duration` changes type from `uint64` to `*uint64`, so that an
+  absent and a zero `Event@duration` stay distinguishable (see Fixed below). Setting it
+  needs `mpd.Ptr(uint64(d))`, and reading it needs a nil check: nil now means the
+  duration is unknown, which is not the same as zero.
+
+### Fixed
+
+- An `Event@duration` of zero can now be expressed. ISO/IEC 23009-1 gives an absent
+  `@duration` the meaning "the duration is unknown", which is not the same as a known,
+  zero-length event, but with a plain `uint64` and `omitempty` the zero was dropped on
+  marshal and the two cases were indistinguishable on unmarshal. SCTE 214-1 §6.7.2.1
+  relies on the difference: an SCTE-35 event that closes an earlier one "should have a
+  duration of zero and shall not be infinite".
+
 ## [0.17.0] - 2026-08-18
 
 ### Added

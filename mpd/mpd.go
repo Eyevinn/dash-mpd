@@ -222,9 +222,14 @@ type EventStreamType struct {
 // element in the SCTE-35 XSD. Use (*EventType).SpliceInfo for a uniform
 // accessor that returns whichever is populated.
 type EventType struct {
-	XMLName              xml.Name                        `xml:"Event"`
-	PresentationTime     uint64                          `xml:"presentationTime,attr"` // default is 0
-	Duration             uint64                          `xml:"duration,attr,omitempty"`
+	XMLName          xml.Name `xml:"Event"`
+	PresentationTime uint64   `xml:"presentationTime,attr"` // default is 0
+	// Duration is optional: a nil value means the duration is unknown, per the Event
+	// semantics of ISO/IEC 23009-1 ("If not present, the value of the duration is
+	// unknown"), while a pointer to 0 is a known, zero-length event. SCTE 214-1
+	// §6.7.2.1 relies on the difference: an SCTE-35 event that closes another one
+	// "should have a duration of zero and shall not be infinite".
+	Duration             *uint64                         `xml:"duration,attr,omitempty"`
 	Id                   *uint64                         `xml:"id,attr"`
 	Status               string                          `xml:"status,attr,omitempty"`
 	ContentEncoding      ContentEncodingType             `xml:"contentEncoding,attr,omitempty"`
