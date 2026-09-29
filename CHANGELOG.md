@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `GroupLabel` elements are now parsed and written as `GroupLabel`. `LabelType` no longer has an
+  `XMLName` field, which made them fail to unmarshal and marshal as `Label`.
+
 ## [0.18.0] - 2026-09-11
 
 ### Changed

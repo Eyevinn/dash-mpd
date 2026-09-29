@@ -334,3 +334,32 @@ func TestEventDuration(t *testing.T) {
 		})
 	}
 }
+
+func TestGroupLabel(t *testing.T) {
+	const mpdStr = `<MPD xmlns="urn:mpeg:dash:schema:mpd:2011">
+  <Period>
+    <GroupLabel id="2">Audio</GroupLabel>
+    <AdaptationSet>
+      <GroupLabel id="1" lang="en">Main video</GroupLabel>
+      <Label id="1" lang="sv-SE">Huvudvideo</Label>
+      <Representation id="V300">
+        <Label id="1" lang="en">Main video 300kbps</Label>
+      </Representation>
+    </AdaptationSet>
+  </Period>
+</MPD>`
+	mpd, err := m.ReadFromString(mpdStr)
+	require.NoError(t, err)
+	p := mpd.Periods[0]
+	require.Equal(t, []*m.LabelType{{Id: 2, Value: "Audio"}}, p.GroupLabels)
+	as := p.AdaptationSets[0]
+	require.Equal(t, []*m.LabelType{{Id: 1, Lang: "en", Value: "Main video"}}, as.GroupLabels)
+	require.Equal(t, []*m.LabelType{{Id: 1, Lang: "sv-SE", Value: "Huvudvideo"}}, as.Labels)
+	require.Equal(t, []*m.LabelType{{Id: 1, Lang: "en", Value: "Main video 300kbps"}},
+		as.Representations[0].Labels)
+
+	out, err := xml.Marshal(as)
+	require.NoError(t, err)
+	require.Contains(t, string(out), `<GroupLabel id="1" lang="en">Main video</GroupLabel>`)
+	require.Contains(t, string(out), `<Label id="1" lang="sv-SE">Huvudvideo</Label>`)
+}

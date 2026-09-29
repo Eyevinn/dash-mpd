@@ -715,11 +715,11 @@ type ContentPopularityRateType struct {
 }
 
 // LabelType is Label and Group Label.
+// It therefore has no XMLName.
 type LabelType struct {
-	XMLName xml.Name `xml:"Label"`
-	Id      uint32   `xml:"id,attr,omitempty"` // default = 0
-	Lang    string   `xml:"lang,attr,omitempty"`
-	Value   string   `xml:",chardata"`
+	Id    uint32 `xml:"id,attr,omitempty"` // default = 0
+	Lang  string `xml:"lang,attr,omitempty"`
+	Value string `xml:",chardata"`
 }
 
 // ProducerReferenceTimeType is Producer Reference time.
