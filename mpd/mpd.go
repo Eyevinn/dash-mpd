@@ -261,23 +261,23 @@ type SelectionType struct {
 
 // InitializationSetType is Initialization Set.
 type InitializationSetType struct {
-	XMLName         xml.Name               `xml:"InitializationSet"`
-	XlinkHref       string                 `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
-	XlinkActuate    string                 `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
-	XlinkType       string                 `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
-	Id              uint32                 `xml:"id,attr"`
-	InAllPeriods    *bool                  `xml:"inAllPeriods,attr"` // default is true
-	ContentType     RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
-	Par             RatioType              `xml:"par,attr,omitempty"`
-	MaxWidth        uint32                 `xml:"maxWidth,attr,omitempty"`
-	MaxHeight       uint32                 `xml:"maxHeight,attr,omitempty"`
-	MaxFrameRate    string                 `xml:"maxFrameRate,attr,omitempty"`
-	Initialization  AnyURI                 `xml:"initialization,attr,omitempty"`
-	Accessibilities []*DescriptorType      `xml:"Accessibility"`
-	Roles           []*DescriptorType      `xml:"Role"`
-	Ratings         []*DescriptorType      `xml:"Rating"`
-	Viewpoints      []*DescriptorType      `xml:"Viewpoint"`
+	XMLName        xml.Name               `xml:"InitializationSet"`
+	XlinkHref      string                 `xml:"http://www.w3.org/1999/xlink xlink:href,attr,omitempty"`
+	XlinkActuate   string                 `xml:"http://www.w3.org/1999/xlink xlink:actuate,attr,omitempty"` // default = "onRequest"
+	XlinkType      string                 `xml:"http://www.w3.org/1999/xlink xlink:type,attr,omitempty"`    // fixed = "simple"
+	Id             uint32                 `xml:"id,attr"`
+	InAllPeriods   *bool                  `xml:"inAllPeriods,attr"` // default is true
+	ContentType    RFC6838ContentTypeType `xml:"contentType,attr,omitempty"`
+	Par            RatioType              `xml:"par,attr,omitempty"`
+	MaxWidth       uint32                 `xml:"maxWidth,attr,omitempty"`
+	MaxHeight      uint32                 `xml:"maxHeight,attr,omitempty"`
+	MaxFrameRate   string                 `xml:"maxFrameRate,attr,omitempty"`
+	Initialization AnyURI                 `xml:"initialization,attr,omitempty"`
 	RepresentationBaseType
+	Accessibilities []*DescriptorType `xml:"Accessibility"`
+	Roles           []*DescriptorType `xml:"Role"`
+	Ratings         []*DescriptorType `xml:"Rating"`
+	Viewpoints      []*DescriptorType `xml:"Viewpoint"`
 }
 
 // ServiceDescriptionType is Service Description.
@@ -741,11 +741,11 @@ type PreselectionType struct {
 	PreselectionComponents *StringVectorType     `xml:"preselectionComponents,attr"`
 	Lang                   string                `xml:"lang,attr,omitempty"`
 	Order                  PreselectionOrderType `xml:"order,attr,omitempty"`
-	Accessibilities        []*DescriptorType     `xml:"Accessibility"`
-	Roles                  []*DescriptorType     `xml:"Role"`
-	Ratings                []*DescriptorType     `xml:"Rating"`
-	Viewpoints             []*DescriptorType     `xml:"Viewpoint"`
 	RepresentationBaseType
+	Accessibilities []*DescriptorType `xml:"Accessibility"`
+	Roles           []*DescriptorType `xml:"Role"`
+	Ratings         []*DescriptorType `xml:"Rating"`
+	Viewpoints      []*DescriptorType `xml:"Viewpoint"`
 }
 
 // AudioSamplingRateType is UIntVectorType with 1 or 2 components.

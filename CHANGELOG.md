@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `Preselection` and `InitializationSet` write `AudioChannelConfiguration` and the other common
+  RepresentationBase elements before `Accessibility`, `Role`, `Rating` and `Viewpoint`, as the MPD schema requires.
+
 ## [0.18.1] - 2026-09-30
 
 ### Fixed
