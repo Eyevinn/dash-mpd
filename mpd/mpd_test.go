@@ -363,3 +363,28 @@ func TestGroupLabel(t *testing.T) {
 	require.Contains(t, string(out), `<GroupLabel id="1" lang="en">Main video</GroupLabel>`)
 	require.Contains(t, string(out), `<Label id="1" lang="sv-SE">Huvudvideo</Label>`)
 }
+
+// TestRepresentationBaseElementOrder checks that InitializationSet and Preselection write the
+// RepresentationBase elements before Accessibility, Role, Rating and Viewpoint, as the schema requires.
+func TestRepresentationBaseElementOrder(t *testing.T) {
+	const initSet = `<InitializationSet id="1" contentType="video">` +
+		`<EssentialProperty schemeIdUri="urn:example:feature"></EssentialProperty>` +
+		`<Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>` +
+		`</InitializationSet>`
+	const presel = `<Preselection id="1" preselectionComponents="1" lang="und">` +
+		`<AudioChannelConfiguration schemeIdUri="urn:mpeg:mpegB:cicp:ChannelConfiguration" value="16">` +
+		`</AudioChannelConfiguration>` +
+		`<Accessibility schemeIdUri="urn:mpeg:dash:role:2011" value="description"></Accessibility>` +
+		`<Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>` +
+		`</Preselection>`
+	mpdStr := `<MPD xmlns="urn:mpeg:dash:schema:mpd:2011">` + initSet + `<Period>` + presel + `</Period></MPD>`
+	mpd, err := m.ReadFromString(mpdStr)
+	require.NoError(t, err)
+
+	out, err := xml.Marshal(mpd.InitializationSet[0])
+	require.NoError(t, err)
+	require.Equal(t, initSet, string(out))
+	out, err = xml.Marshal(mpd.Periods[0].Preselections[0])
+	require.NoError(t, err)
+	require.Equal(t, presel, string(out))
+}
