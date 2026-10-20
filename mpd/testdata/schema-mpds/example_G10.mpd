@@ -6,7 +6,7 @@
   <Period id="1">
     <AdaptationSet segmentAlignment="true" subsegmentAlignment="true" subsegmentStartsWithSAP="1">
       <SupplementalProperty schemeIdUri="urn:mpeg:dash:srd:2014" value="0,0,0,2,2,2,2"></SupplementalProperty>
-      <SupplementalProperty schemeIdUri="urn:mpeg:dash:sai:2014" value="1"></SupplementalProperty>
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:sai:2015" value="1"></SupplementalProperty>
       <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
       <Representation id="1" bandwidth="226597" width="640" height="360" mimeType="video/mp4" codecs="avc1.42c01e" startWithSAP="1">
         <BaseURL> full_video_small.mp4</BaseURL>
