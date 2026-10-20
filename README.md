@@ -17,7 +17,7 @@ ISO/IEC 23001-7 and proprietary structures and name spaces for some DRM systems.
 
 The XML Schema for MPEG DASH MPD being used is the 6'th edition fetched from the
 [DASHSchema repo](https://github.com/MPEGGroup/DASHSchema) `6th-Ed` branch at
-commit `a855144`.
+commit `cc941bd`.
 
 It was fed to a forked modified version of [xgen](https://github.com/xuri/xgen).
 The fork modified `xgen` so that it could deal with DOCTYPE,

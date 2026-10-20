@@ -388,3 +388,43 @@ func TestRepresentationBaseElementOrder(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, presel, string(out))
 }
+
+// TestEventServiceDescriptions checks that an Event keeps all its ServiceDescription elements,
+// since the 6th edition schema allows more than one.
+func TestEventServiceDescriptions(t *testing.T) {
+	const event = `<Event presentationTime="0" id="1">` +
+		`<ServiceDescription id="1"></ServiceDescription>` +
+		`<ServiceDescription id="2"></ServiceDescription>` +
+		`</Event>`
+	var ev m.EventType
+	require.NoError(t, xml.Unmarshal([]byte(event), &ev))
+	require.Len(t, ev.ServiceDescriptions, 2)
+	out, err := xml.Marshal(&ev)
+	require.NoError(t, err)
+	require.Equal(t, event, string(out))
+}
+
+// TestSegmentSequenceProperties checks that @alignment is read and written as a
+// whitespace-separated list of AdaptationSet ids, and that event="false" is kept, since a
+// missing @event means true.
+func TestSegmentSequenceProperties(t *testing.T) {
+	const ssp = `<SegmentSequenceProperties sapType="1" cadence="4" event="false" alignment="1 2">` +
+		`</SegmentSequenceProperties>`
+	mpdStr := `<MPD xmlns="urn:mpeg:dash:schema:mpd:2011"><Period><AdaptationSet id="1">` + ssp +
+		`</AdaptationSet></Period></MPD>`
+	mpd, err := m.ReadFromString(mpdStr)
+	require.NoError(t, err)
+	as := mpd.Periods[0].AdaptationSets[0]
+	props := as.SegmentSequenceProperties[0]
+	require.Equal(t, &m.StringNoWhitespaceVectorType{"1", "2"}, props.Alignment)
+	require.Equal(t, m.Ptr(false), props.Event)
+	out, err := xml.Marshal(as)
+	require.NoError(t, err)
+	require.Contains(t, string(out), ssp)
+
+	// nil => attribute omitted, so a conforming client applies the default (true).
+	props.Event = nil
+	out, err = xml.Marshal(as)
+	require.NoError(t, err)
+	require.NotContains(t, string(out), "event=")
+}

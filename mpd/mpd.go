@@ -231,12 +231,12 @@ type EventType struct {
 	// "should have a duration of zero and shall not be infinite".
 	Duration             *uint64                         `xml:"duration,attr,omitempty"`
 	Id                   *uint64                         `xml:"id,attr"`
-	Status               string                          `xml:"status,attr,omitempty"`
+	Status               string                          `xml:"status,attr,omitempty"` // default is "repeat"
 	ContentEncoding      ContentEncodingType             `xml:"contentEncoding,attr,omitempty"`
 	MessageData          string                          `xml:"messageData,attr,omitempty"`
 	Value                string                          `xml:",chardata"` // Is this still present in Ed. 6?
 	SelectionInfo        *SelectionInfoType              `xml:"SelectionInfo"`
-	ServiceDescription   *ServiceDescriptionType         `xml:"ServiceDescription"`
+	ServiceDescriptions  []*ServiceDescriptionType       `xml:"ServiceDescription"`
 	InsertPresentation   *AlternativeMPDEventType        `xml:"InsertPresentation"`
 	ReplacePresentation  *AlternativeMPDReplaceEventType `xml:"ReplacePresentation"`
 	SupplementalProperty []*DescriptorType               `xml:"SupplementalProperty"`
@@ -1000,6 +1000,20 @@ type LeapSecondInformationType struct {
 // StringNoWhitespaceVectorType is Whitespace-separated list of no-whitespace strings
 type StringNoWhitespaceVectorType []string
 
+// MarshalXMLAttr writes the list as one space-separated attribute value.
+func (v *StringNoWhitespaceVectorType) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
+	if v == nil {
+		return xml.Attr{}, nil
+	}
+	return xml.Attr{Name: name, Value: strings.Join(*v, " ")}, nil
+}
+
+// UnmarshalXMLAttr splits a whitespace-separated attribute value into the list.
+func (v *StringNoWhitespaceVectorType) UnmarshalXMLAttr(attr xml.Attr) error {
+	*v = strings.Fields(attr.Value)
+	return nil
+}
+
 // ContentSteeringType is Content Steering.
 type ContentSteeringType struct {
 	DefaultServiceLocation string `xml:"defaultServiceLocation,attr,omitempty"`
@@ -1025,10 +1039,10 @@ type SupVideoInfoType struct {
 
 // SegmentSequencePropertiesType is Segment Sequence properties
 type SegmentSequencePropertiesType struct {
-	SapType   uint32                 `xml:"sapType,attr"`
-	Cadence   uint32                 `xml:"cadence,attr,omitempty"`
-	Event     bool                   `xml:"event,attr,omitempty"`
-	Alignment StringNoWhitespaceType `xml:"alignment,attr,omitempty"`
+	SapType   uint32                        `xml:"sapType,attr"`
+	Cadence   uint32                        `xml:"cadence,attr,omitempty"`   // default is 1
+	Event     *bool                         `xml:"event,attr"`               // default = true; pointer so event="false" can be rendered
+	Alignment *StringNoWhitespaceVectorType `xml:"alignment,attr,omitempty"` // list of AdaptationSet ids
 }
 
 // ClientDataReportingType is Client Data Reporting
@@ -1042,7 +1056,8 @@ type ClientDataReportingType struct {
 // AlternativeMPDEventType is Alternative MPD event
 type AlternativeMPDEventType struct {
 	Uri                          string            `xml:"uri,attr"`
-	EarliestResolutionTimeOffset FloatInf64        `xml:"earliestResolutionTimeOffset,attr,omitempty"`
+	EarliestResolutionTimeOffset *uint64           `xml:"earliestResolutionTimeOffset,attr,omitempty"` // no default; pointer so 0 can be rendered
+	ServiceDescriptionId         *uint32           `xml:"serviceDescriptionId,attr,omitempty"`         // refers to a ServiceDescription@id
 	MaxDuration                  uint64            `xml:"maxDuration,attr,omitempty"`
 	ExecuteOnce                  bool              `xml:"executeOnce,attr,omitempty"`
 	NoJump                       int32             `xml:"noJump,attr,omitempty"`

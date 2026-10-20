@@ -1,10 +1,10 @@
 package mpd_test
 
 import (
-	"strings"
 	"testing"
 
 	m "github.com/Eyevinn/dash-mpd/mpd"
+	"github.com/Eyevinn/dash-mpd/xml"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,7 +24,7 @@ func buildAltReplaceMPD(clip *bool) *m.MPD {
 				Clip: clip,
 				AlternativeMPDEventType: &m.AlternativeMPDEventType{
 					Uri:                          "http://example.com/ad.mpd",
-					EarliestResolutionTimeOffset: 5400000,
+					EarliestResolutionTimeOffset: m.Ptr(uint64(5400000)),
 					MaxDuration:                  1350000,
 				},
 			},
@@ -52,12 +52,37 @@ func TestAlternativeMPDReplaceClipRendering(t *testing.T) {
 	require.NotContains(t, out, "clip=")
 }
 
-// TestEarliestResolutionTimeOffsetFixedNotation verifies that the (large) xs:double
-// earliestResolutionTimeOffset renders in plain decimal, not scientific notation
-// (60s * 90000 = 5400000 previously rendered as "5.4e+06").
-func TestEarliestResolutionTimeOffsetFixedNotation(t *testing.T) {
-	out, err := buildAltReplaceMPD(m.Ptr(true)).WriteToString("  ", false)
-	require.NoError(t, err)
-	require.Contains(t, out, `earliestResolutionTimeOffset="5400000"`)
-	require.NotContains(t, strings.ToLower(out), "e+0")
+// TestAlternativeMPDEventAttributes verifies that earliestResolutionTimeOffset, which has no
+// default, is left out when nil but written when 0, that a large value renders in plain decimal
+// (5400000 once rendered as "5.4e+06"), and that serviceDescriptionId round trips.
+func TestAlternativeMPDEventAttributes(t *testing.T) {
+	cases := []struct {
+		desc     string
+		offset   *uint64
+		wantAttr string
+	}{
+		{desc: "absent offset is left out", offset: nil, wantAttr: ""},
+		{desc: "zero offset is written", offset: m.Ptr(uint64(0)), wantAttr: ` earliestResolutionTimeOffset="0"`},
+		{desc: "large offset is plain decimal", offset: m.Ptr(uint64(5400000)), wantAttr: ` earliestResolutionTimeOffset="5400000"`},
+	}
+	for _, c := range cases {
+		t.Run(c.desc, func(t *testing.T) {
+			ev := &m.EventType{
+				InsertPresentation: &m.AlternativeMPDEventType{
+					Uri:                          "http://example.com/ad.mpd",
+					EarliestResolutionTimeOffset: c.offset,
+					ServiceDescriptionId:         m.Ptr(uint32(2)),
+				},
+			}
+			out, err := xml.Marshal(ev)
+			require.NoError(t, err)
+			want := `<Event presentationTime="0"><InsertPresentation uri="http://example.com/ad.mpd"` +
+				c.wantAttr + ` serviceDescriptionId="2"></InsertPresentation></Event>`
+			require.Equal(t, want, string(out))
+
+			var got m.EventType
+			require.NoError(t, xml.Unmarshal(out, &got))
+			require.Equal(t, ev.InsertPresentation, got.InsertPresentation)
+		})
+	}
 }

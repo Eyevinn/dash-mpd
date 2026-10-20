@@ -2,7 +2,7 @@
 
 The files in this directory are copied from
 [MPEGGroup/DASHSchema](https://github.com/MPEGGroup/DASHSchema), branch
-`6th-Ed`, commit `a855144` (2026-04-22), and re-saved through this
+`6th-Ed`, commit `cc941bd` (2026-06-13), and re-saved through this
 package's marshaller so that decode→encode is byte-stable.
 
 The re-save normalises:

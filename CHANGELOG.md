@@ -7,8 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `AlternativeMPDEventType.ServiceDescriptionId` for the `serviceDescriptionId` attribute.
+
+### Changed
+
+- DASH schema and example MPDs aligned with the final 6th edition, `MPEGGroup/DASHSchema` 6th-Ed
+  commit `cc941bd` (2026-06-13)
+- **Breaking**: `EventType.ServiceDescription` is now `ServiceDescriptions []*ServiceDescriptionType`,
+  since an `Event` may hold several.
+- **Breaking**: `AlternativeMPDEventType.EarliestResolutionTimeOffset` is now `*uint64` (was `FloatInf64`):
+  the attribute is an integer with no default, so nil (absent) and 0 differ.
+- **Breaking**: `SegmentSequencePropertiesType.Alignment` is now a `*StringNoWhitespaceVectorType` list of ids.
+- **Breaking**: `SegmentSequencePropertiesType.Event` is now `*bool`, so `event="false"` is written
+  instead of being dropped and read back as the default `true`.
+
 ### Fixed
 
+- `StringNoWhitespaceVectorType` (`CMCDParameters@keys` and `@includeInRequests`) is now read and written
+  as one space-separated attribute value, instead of one entry per attribute.
 - `Preselection` and `InitializationSet` write `AudioChannelConfiguration` and the other common
   RepresentationBase elements before `Accessibility`, `Role`, `Rating` and `Viewpoint`, as the MPD schema requires.
 
